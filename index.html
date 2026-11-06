@@ -4230,6 +4230,47 @@ hr,.divider{border-color:#765b14!important}
   margin-bottom: 6px !important;
 }
 
+
+/* Deposit flow premium live */
+.confirm-overlay{backdrop-filter:blur(10px);background:rgba(0,0,0,.78)}
+.confirm-box{animation:riseIn .35s ease}
+#depositPhoneModal .confirm-box,
+#depositAmountModal .confirm-box,
+#depositConfirmModal .confirm-box,
+#depositPaymentModal .confirm-box,
+#depositProofModal .confirm-box{
+  background:linear-gradient(160deg,#1c2330,#121820)!important;
+  border:1px solid rgba(242,204,130,.28)!important;
+}
+#depositPhoneModal select,
+#depositPhoneModal input,
+#depositAmountModal select,
+#depositAmountModal input{
+  background:#0d121a!important;
+  border:1px solid #3a4658!important;
+  color:#fff!important;
+}
+.deposit-cta-card{
+  background:linear-gradient(145deg,#241c10,#141018)!important;
+  border:1px solid rgba(242,204,130,.3)!important;
+  border-radius:22px!important;
+  padding:22px!important;
+}
+.deposit-steps .step{
+  background:rgba(242,204,130,.08);
+  border:1px solid rgba(242,204,130,.2);
+  border-radius:12px;
+  padding:10px 8px;
+  text-align:center;
+  font-size:12px;
+}
+.deposit-steps .step b{
+  display:block;
+  color:#f2cc82;
+  font-size:16px;
+  margin-bottom:4px;
+}
+
 </style>
 
 </head>
@@ -4428,7 +4469,7 @@ hr,.divider{border-color:#765b14!important}
             <div class="step"><b>4</b>Payer</div>
             <div class="step"><b>5</b>Preuve</div>
           </div>
-          <button class="primary" type="button" onclick="startDepositFlow()" style="max-width:280px;margin:0 auto;display:block;width:100%">Commencer un dépôt sécurisé</button>
+          <button class="primary" type="button" onclick="startDepositFlow()" style="max-width:100%;margin:12px auto 0;display:block;width:100%;min-height:56px;font-size:17px;border-radius:16px;font-weight:900;letter-spacing:.3px">🔐 Commencer un dépôt sécurisé</button>
           <div class="security-strip">
             <span>🔐 Données protégées</span>
             <span>✓ Vérification humaine</span>
@@ -4479,8 +4520,7 @@ hr,.divider{border-color:#765b14!important}
               <option>Wave</option>
               <option>Orange Money</option>
               <option>MTN Money</option>
-              <option>Moov Money</option>
-            </select>
+                          </select>
           </label>
           <label>Numéro de réception (Mobile Money)
             <input type="tel" id="withdrawPhone" required placeholder="Ex. 07 XX XX XX XX">
@@ -4553,7 +4593,7 @@ hr,.divider{border-color:#765b14!important}
         <p class="muted" id="walletSummary">Aucun portefeuille enregistré.</p>
         <form id="walletForm" class="form" style="margin-top:14px">
           <label>Moyen de paiement
-            <select id="walletMethod"><option>Orange Money</option><option>MTN Money</option><option>Moov Money</option><option>Wave</option></select>
+            <select id="walletMethod"><option>Orange Money</option><option>MTN Money</option><option>Wave</option></select>
           </label>
           <label>Numéro du portefeuille
             <input id="walletPhone" type="tel" required placeholder="Ex. +228 90 00 00 00">
@@ -4625,7 +4665,7 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <div class="faq-item" data-cat="depot">
           <button type="button" class="faq-q">Quels moyens de paiement sont acceptés ?</button>
-          <div class="faq-a">Les paiements passent par le lien sécurisé affiché lors de l’étape « Payer maintenant ». Ce lien est compatible avec les solutions Mobile Money courantes en Afrique de l’Ouest (Orange Money, MTN, Wave, Moov selon le pays).</div>
+          <div class="faq-a">Les paiements passent par le lien sécurisé affiché lors de l’étape « Payer maintenant ». Ce lien est compatible avec les solutions Mobile Money courantes en Afrique de l’Ouest (Orange Money, MTN, Wave).</div>
         </div>
         <div class="faq-item" data-cat="retrait">
           <button type="button" class="faq-q">Quel est le minimum de retrait et les frais ?</button>
@@ -4693,7 +4733,7 @@ hr,.divider{border-color:#765b14!important}
           <ul style="padding-left:18px;color:var(--muted);line-height:1.8;font-size:14px">
             <li>Indiquez toujours l’e-mail exact de votre compte SOULIER D’OR.</li>
             <li>Pour un dépôt : montant, date approximative et capture d’écran claire.</li>
-            <li>Pour un retrait : montant demandé, moyen (Orange/MTN/Wave…) et numéro de réception.</li>
+            <li>Pour un retrait : montant demandé, moyen (Orange / MTN / Wave) et numéro de réception.</li>
             <li>Évitez d’envoyer plusieurs messages identiques ; cela ralentit le traitement.</li>
             <li>Ne communiquez jamais votre mot de passe, même à quelqu’un qui prétend être le support.</li>
           </ul>
@@ -4857,40 +4897,45 @@ hr,.divider{border-color:#765b14!important}
 <footer class="foot">SOULIER D’OR</footer>
 
 <div class="confirm-overlay" id="depositPhoneModal" role="dialog" aria-modal="true" aria-labelledby="depositPhoneTitle">
-  <div class="confirm-box">
-    <h2 id="depositPhoneTitle">Étape 1/5 — Numéro Mobile Money</h2>
-    <p style="margin-bottom:12px;color:var(--muted)">Saisissez le numéro exact qui effectuera le paiement. Il doit correspondre à la preuve envoyée.</p>
-    <label>Pays
-      <select id="depositCountry" required style="width:100%;margin-top:6px">
-        <option value="CI" selected>🇨🇮 Côte d’Ivoire</option>
-        <option value="BJ">🇧🇯 Bénin</option><option value="TG">🇹🇬 Togo</option>
-        <option value="BF">🇧🇫 Burkina Faso</option><option value="CM">🇨🇲 Cameroun</option>
-        <option value="SN">🇸🇳 Sénégal</option><option value="GH">🇬🇭 Ghana</option>
-        <option value="ML">🇲🇱 Mali</option><option value="GN">🇬🇳 Guinée</option>
-      </select>
-    </label>
-    <label style="display:block;margin-top:12px">Moyen de paiement
-      <select id="depositMethod" required style="width:100%;margin-top:6px">
-        <option value="Wave">Wave</option>
-        <option value="MTN Money">MTN Money</option>
-        <option value="Orange Money">Orange Money</option>
-      </select>
-    </label>
-    <label style="display:block;margin-top:12px">Votre numéro de téléphone
-      <input type="tel" id="depositPhone" required minlength="8" placeholder="Ex. 07 00 00 00 00" style="width:100%;margin-top:6px">
-    </label>
-    <div id="foreignPayInfo" class="hidden" style="margin-top:14px;padding:14px;border:1px solid #d6a51d;border-radius:14px;background:#fff9e8;color:#26384b">
-      <b>Destinataire : SOULIER D’OR</b>
-      <p style="margin:8px 0">Choisissez Wave, MTN Money ou Orange Money et envoyez votre paiement au numéro indiqué :</p>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <strong id="foreignPayNumber" style="font-size:22px;letter-spacing:1px">0596180495</strong>
-        <button class="secondary" type="button" onclick="copyForeignPayNumber()">Copier le numéro</button>
-      </div>
-      <p class="small" style="margin-top:8px">Après le paiement, joignez la capture d’écran de la transaction.</p>
+  <div class="confirm-box" style="max-width:440px;border:1px solid rgba(242,204,130,.35);box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="text-align:center;margin-bottom:6px">
+      <span style="display:inline-block;background:rgba(242,204,130,.12);color:#f2cc82;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:6px 12px;border-radius:999px">ÉTAPE 1 / 5</span>
     </div>
-    <div class="actions" style="margin-top:18px">
-      <button class="secondary" type="button" onclick="closeDepositFlow()">Annuler</button>
-      <button class="primary" type="button" onclick="nextDepositAmount()">Continuer</button>
+    <h2 id="depositPhoneTitle" style="text-align:center;margin:10px 0 6px">Numéro Mobile Money</h2>
+    <p style="margin-bottom:14px;color:var(--muted);text-align:center;font-size:13px">Saisissez le numéro exact qui effectuera le paiement. Il doit correspondre à la preuve envoyée.</p>
+    <label style="display:block;margin-bottom:12px">Pays
+      <select id="depositCountry" required style="width:100%;margin-top:6px;min-height:48px;font-size:15px;border-radius:14px">
+        <option value="CI">🇨🇮 Côte d’Ivoire</option>
+        <option value="BJ">🇧🇯 Bénin</option>
+        <option value="TG">🇹🇬 Togo</option>
+        <option value="BF">🇧🇫 Burkina Faso</option>
+        <option value="CM">🇨🇲 Cameroun</option>
+        <option value="SN">🇸🇳 Sénégal</option>
+        <option value="GH">🇬🇭 Ghana</option>
+        <option value="ML">🇲🇱 Mali</option>
+        <option value="GN">🇬🇳 Guinée</option>
+      </select>
+    </label>
+    <label style="display:block;margin-bottom:12px">Moyen de paiement
+      <select id="depositMethod" required style="width:100%;margin-top:6px;min-height:48px;font-size:15px;border-radius:14px">
+        <option value="Wave">Wave</option>
+        <option value="Orange Money">Orange Money</option>
+        <option value="MTN Money">MTN Money</option>
+      </select>
+    </label>
+    <label style="display:block;margin-bottom:12px">Votre numéro de téléphone
+      <input type="tel" id="depositPhone" required placeholder="Ex. 07 XX XX XX XX" style="width:100%;margin-top:6px;min-height:48px;font-size:16px;border-radius:14px">
+    </label>
+    <div id="foreignPayInfo" style="margin-top:8px;padding:16px;border:1px solid rgba(212,175,55,.4);border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);color:#f7f0dc">
+      <b style="color:#f2cc82">Destinataire : SOULIER D’OR</b>
+      <p style="margin:8px 0;font-size:13px;opacity:.9">Envoyez votre paiement par Wave, Orange Money ou MTN Money au numéro :</p>
+      <strong id="foreignPayNumber" style="font-size:26px;letter-spacing:1.5px;display:block;margin:10px 0;color:#ffe9a8">0596180495</strong>
+      <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;min-height:48px;font-size:15px;border-radius:14px">📋 Copier le numéro</button>
+      <p class="small" style="margin-top:10px;opacity:.8">Après le paiement, joignez la capture d’écran de la transaction.</p>
+    </div>
+    <div class="actions" style="margin-top:18px;display:flex;gap:10px">
+      <button class="secondary" type="button" onclick="closeDepositFlow()" style="flex:1;min-height:50px;font-size:15px;border-radius:14px">Annuler</button>
+      <button class="primary" type="button" onclick="nextDepositAmount()" style="flex:1.4;min-height:50px;font-size:16px;border-radius:14px;font-weight:900">Continuer →</button>
     </div>
   </div>
 </div>
@@ -4914,9 +4959,9 @@ hr,.divider{border-color:#765b14!important}
     <label id="customDepositWrap" class="hidden" style="display:block;margin-top:12px">Montant personnalisé (FCFA)
       <input type="number" id="customDepositAmount" min="3000" step="500" placeholder="Minimum 3 000" style="width:100%;margin-top:6px">
     </label>
-    <div class="actions" style="margin-top:18px">
-      <button class="secondary" type="button" onclick="showDepositStep('depositPhoneModal')">Retour</button>
-      <button class="primary" type="button" onclick="nextDepositConfirm()">Continuer</button>
+    <div class="actions" style="margin-top:18px;display:flex;gap:10px">
+      <button class="secondary" type="button" onclick="showDepositStep('depositPhoneModal')" style="flex:1;min-height:50px;font-size:15px;border-radius:14px">Retour</button>
+      <button class="primary" type="button" onclick="nextDepositConfirm()" style="flex:1.4;min-height:50px;font-size:16px;border-radius:14px;font-weight:900">Continuer →</button>
     </div>
   </div>
 </div>
@@ -4927,8 +4972,8 @@ hr,.divider{border-color:#765b14!important}
     <p>Vérifiez vos informations :</p>
     <div id="depositSummary" style="text-align:left;line-height:1.9;margin:14px 0"></div>
     <div class="actions">
-      <button class="secondary" type="button" onclick="showDepositStep('depositAmountModal')">Modifier</button>
-      <button class="primary" type="button" onclick="goToPayment()">Payer maintenant</button>
+      <button class="secondary" type="button" onclick="showDepositStep('depositAmountModal')" style="flex:1;min-height:50px;border-radius:14px">Modifier</button>
+      <button class="primary" type="button" onclick="goToPayment()" style="flex:1.4;min-height:50px;font-size:16px;border-radius:14px;font-weight:900">Payer maintenant →</button>
     </div>
   </div>
 </div>
@@ -4952,8 +4997,8 @@ hr,.divider{border-color:#765b14!important}
     <div id="foreignPaymentActions" class="hidden" style="margin:12px 0"></div>
 
     <p class="small" style="margin-top:10px;text-align:center">Après le paiement, prenez une capture d’écran claire (montant + statut réussi) puis continuez.</p>
-    <button class="primary" type="button" style="margin-top:12px;width:100%" onclick="showDepositStep('depositProofModal')">J’ai terminé le paiement → Preuve</button>
-    <button class="secondary" type="button" style="margin-top:8px;width:100%" onclick="closeDepositFlow()">Plus tard</button>
+    <button class="primary" type="button" style="margin-top:14px;width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900" onclick="showDepositStep('depositProofModal')">✅ J’ai terminé → Joindre la preuve</button>
+    <button class="secondary" type="button" style="margin-top:10px;width:100%;min-height:48px;border-radius:14px" onclick="closeDepositFlow()">Plus tard</button>
   </div>
 </div>
 
@@ -4969,8 +5014,8 @@ hr,.divider{border-color:#765b14!important}
       <p class="small" id="depositProofFileName" style="margin-top:8px"></p>
     </div>
     <div class="actions">
-      <button class="secondary" type="button" onclick="showDepositStep('depositPaymentModal')">Retour</button>
-      <button class="primary" type="button" id="depositSendBtn" onclick="submitDepositProof()">Envoyer</button>
+      <button class="secondary" type="button" onclick="showDepositStep('depositPaymentModal')" style="flex:1;min-height:50px;border-radius:14px">Retour</button>
+      <button class="primary" type="button" id="depositSendBtn" onclick="submitDepositProof()" style="flex:1.4;min-height:54px;font-size:16px;border-radius:14px;font-weight:900">📤 Envoyer à l’admin</button>
     </div>
     <p id="depositSendStatus" class="small" style="margin-top:10px;min-height:18px"></p>
   </div>
@@ -5414,10 +5459,13 @@ function updateDepositCountryPayment() {
   const country = document.getElementById("depositCountry")?.value || current?.country || "CI";
   pendingDeposit.country = country;
   const info = document.getElementById("foreignPayInfo");
-  if (info) info.classList.toggle("hidden", country === "CI");
-  const methodLabel = document.querySelector('label[for="depositMethod"]');
+  // Afficher le numéro de réception pour TOUS les pays (confiance)
+  if (info) info.classList.remove("hidden");
   const methodSelect = document.getElementById("depositMethod");
-  if (methodSelect) methodSelect.disabled = country === "CI";
+  if (methodSelect) methodSelect.disabled = false;
+  // Mettre à jour le texte du destinataire selon le moyen
+  const method = methodSelect?.value || pendingDeposit.method || "Wave";
+  pendingDeposit.method = method;
 }
 document.getElementById("depositCountry").addEventListener("change", updateDepositCountryPayment);
 document.getElementById("depositMethod").addEventListener("change", function() {
@@ -5438,7 +5486,7 @@ function copyForeignPayNumber() {
 }
 function nextDepositAmount() {
   const phone = document.getElementById("depositPhone").value.trim();
-  if (phone.replace(/\D/g, "").length < 8) { toast("Veuillez saisir un numéro de téléphone valide."); return; }
+  if (phone.replace(/\D/g, "").length < 7) { toast("Veuillez saisir un numéro de téléphone valide (7 chiffres minimum)."); return; }
   pendingDeposit.country = document.getElementById("depositCountry").value || "CI";
   pendingDeposit.phone = phone;
   pendingDeposit.method = document.getElementById("depositMethod").value;
