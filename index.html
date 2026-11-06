@@ -4114,6 +4114,122 @@ hr,.divider{border-color:#765b14!important}
 .vip .goldbtn.vip-buy-btn:disabled {filter:grayscale(.35) !important;opacity:.58 !important;box-shadow:none !important}
 @media(max-width:420px){.vip .goldbtn.vip-buy-btn{min-height:50px !important;font-size:15px !important}}
 
+
+/* ===== SOULIER D’OR — Branding & dashboard polish ===== */
+.brand {
+  font-size: clamp(22px, 4.2vw, 28px) !important;
+  font-weight: 950 !important;
+  letter-spacing: 1.5px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: #fff8e7 !important;
+  text-shadow: 0 0 18px rgba(242, 204, 130, 0.25);
+}
+.brand .logo-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  font-size: 22px !important;
+  background: linear-gradient(145deg, #f5d76e, #b8860b) !important;
+  color: #1a1205 !important;
+  box-shadow: 0 0 0 2px rgba(255, 215, 120, 0.35), 0 8px 22px rgba(212, 175, 55, 0.35) !important;
+  display: grid !important;
+  place-items: center !important;
+}
+.brand span {
+  color: #f2cc82 !important;
+  background: linear-gradient(90deg, #f5d76e, #ffe9a8, #d4af37);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.tag {
+  color: #c9b896 !important;
+  font-size: 11px !important;
+  letter-spacing: 1.4px !important;
+  margin-top: 4px;
+  font-weight: 600;
+}
+.header-telegram, #joinMachineBtn {
+  background: linear-gradient(110deg, #f2cc82, #d4af37) !important;
+  color: #1a1208 !important;
+  border: 1px solid rgba(255, 230, 150, 0.55) !important;
+  font-weight: 800 !important;
+  box-shadow: 0 6px 18px rgba(212, 175, 55, 0.28) !important;
+  letter-spacing: 0.3px;
+}
+.header-telegram:hover, #joinMachineBtn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+.hero {
+  background: linear-gradient(125deg, rgba(40, 32, 18, 0.95), rgba(18, 14, 22, 0.98) 55%, rgba(48, 22, 28, 0.92)) !important;
+  border: 1px solid rgba(212, 175, 55, 0.28) !important;
+  box-shadow: 0 18px 48px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255, 220, 140, 0.08) !important;
+}
+.hero .eyebrow {
+  color: #f2cc82 !important;
+  letter-spacing: 2px !important;
+  font-weight: 800 !important;
+}
+.hero h1 {
+  font-weight: 950 !important;
+  letter-spacing: -0.4px;
+}
+.hero h1 span {
+  color: #f2cc82 !important;
+}
+.bcard {
+  border-radius: 22px !important;
+  border: 1px solid rgba(212, 175, 55, 0.22) !important;
+}
+.bcard.dep {
+  background: linear-gradient(145deg, #3a2a12, #1a1410) !important;
+}
+.bcard.wd {
+  background: linear-gradient(145deg, #2a1820, #121018) !important;
+}
+.bcard button {
+  background: linear-gradient(110deg, #f2cc82, #d4af37) !important;
+  color: #1a1208 !important;
+  font-weight: 800 !important;
+  border-radius: 999px !important;
+}
+.bcard.wd button {
+  background: linear-gradient(110deg, #e34b5b, #a82d40) !important;
+  color: #fff !important;
+}
+.level-card {
+  background: linear-gradient(145deg, #1c2330, #121820) !important;
+  border: 1px solid rgba(212, 175, 55, 0.2) !important;
+  border-radius: 20px !important;
+  padding: 18px !important;
+  margin: 16px 0 !important;
+}
+.lvl-name {
+  color: #f2cc82 !important;
+  font-weight: 800 !important;
+}
+.xp-bar {
+  height: 8px !important;
+  background: #1a2030 !important;
+  border-radius: 99px !important;
+  overflow: hidden !important;
+  margin-top: 10px !important;
+}
+#memberXpBar {
+  background: linear-gradient(90deg, #d4af37, #f2cc82, #ffe9a8) !important;
+  height: 100% !important;
+  border-radius: 99px !important;
+  transition: width 0.6s ease !important;
+}
+.top {
+  border-bottom: 1px solid rgba(212, 175, 55, 0.12) !important;
+  padding-bottom: 14px !important;
+  margin-bottom: 6px !important;
+}
+
 </style>
 
 </head>
@@ -4127,13 +4243,13 @@ hr,.divider{border-color:#765b14!important}
       <div>
         <div class="brand">
           <div class="logo-icon">👟</div>
-          UNI<span>TRI</span>
+          SOULIER <span>D’OR</span>
         </div>
-        <div class="tag">ROBOTIQUE • PLANS VIP • SUIVI DES OPÉRATIONS</div>
+        <div class="tag">PLATEFORME VIP • ROBOTS • SUIVI SÉCURISÉ</div>
       </div>
       <a id="joinMachineBtn" href="https://t.me/+Kq0gilw50lhlNGM0" target="_blank" rel="noopener"
          class="primary header-telegram" style="display:inline-flex;text-decoration:none;padding:8px 14px;font-size:12px;border-radius:999px;white-space:nowrap">
-        🔗 Rejoindre mon groupe
+        ✦ Rejoindre le groupe VIP
       </a>
     </div>
     <div class="pill hidden" id="sessionPill" aria-hidden="true">SOULIER D’OR</div>
@@ -4164,14 +4280,10 @@ hr,.divider{border-color:#765b14!important}
         <label>Pays
           <select id="regCountry" required>
             <option value="CI" selected>🇨🇮 Côte d’Ivoire</option>
-            <option value="BJ">🇧🇯 Bénin</option>
-            <option value="TG">🇹🇬 Togo</option>
-            <option value="BF">🇧🇫 Burkina Faso</option>
-            <option value="CM">🇨🇲 Cameroun</option>
-            <option value="SN">🇸🇳 Sénégal</option>
-            <option value="GH">🇬🇭 Ghana</option>
-            <option value="ML">🇲🇱 Mali</option>
-            <option value="GN">🇬🇳 Guinée</option>
+            <option value="BJ">🇧🇯 Bénin</option><option value="TG">🇹🇬 Togo</option>
+            <option value="BF">🇧🇫 Burkina Faso</option><option value="CM">🇨🇲 Cameroun</option>
+            <option value="SN">🇸🇳 Sénégal</option><option value="GH">🇬🇭 Ghana</option>
+            <option value="ML">🇲🇱 Mali</option><option value="GN">🇬🇳 Guinée</option>
           </select>
         </label>
         <label>Téléphone (numéro Mobile Money)
@@ -4219,13 +4331,12 @@ hr,.divider{border-color:#765b14!important}
     
     <section id="page-home" class="page active">
       <div class="hero">
-        <div class="eyebrow">TABLEAU DE BORD</div>
-        <h1>Bonjour, <span id="welcomeName">membre</span> 👋</h1>
-        <p>Explore tes robots VIP et suis ta progression depuis <strong id="userCountry">—</strong>.</p>
+        <div class="eyebrow">ESPACE VIP • SOULIER D’OR</div>
+        <h1>Bonjour, <span id="welcomeName">membre</span> ✨</h1>
+        <p>Explorez vos robots VIP et suivez votre progression depuis <strong id="userCountry">—</strong>.</p>
         <div class="actions">
           <button class="primary" onclick="showPage('invest')">Découvrir les robots</button>
           <button class="secondary" onclick="showPage('deposit')">Faire un dépôt</button>
-          
         </div>
       </div>
 
@@ -4328,7 +4439,7 @@ hr,.divider{border-color:#765b14!important}
       <div class="section">
         <div class="section-head" style="margin-bottom:12px">
           <h2>Historique des dépôts</h2>
-          <a href="https://t.me/+Kq0gilw50lhlNGM0" target="_blank" rel="noopener"
+          <a href="https://t.me/Bostapi" target="_blank" rel="noopener"
              class="secondary" style="text-decoration:none;padding:7px 12px;font-size:12px;border-radius:10px;white-space:nowrap">
             🎧 Service client
           </a>
@@ -4339,38 +4450,64 @@ hr,.divider{border-color:#765b14!important}
 
     
     <section id="page-withdraw" class="page">
-      <div class="section-head"><h2>💸 Demande de retrait</h2></div>
-      <div class="two">
-        <div class="card">
-          <form id="withdrawForm" class="form">
-            <label>Montant demandé (minimum 1 000 FCFA)
-              <input type="number" id="withdrawAmount" min="1000" step="100" required>
-            </label>
-            <label>Moyen de retrait
-              <select id="withdrawMethod">
-                <option>Orange Money</option>
-                <option>MTN Money</option>
-                <option>Wave</option>
-                <option>Moov Money</option>
-              </select>
-            </label>
-            <label>Numéro de téléphone de réception
-              <input type="tel" id="withdrawPhone" required placeholder="+225 ...">
-            </label>
-            <button class="primary" type="submit">Envoyer la demande</button>
-          </form>
-          <p class="small" style="margin-top:10px">Frais de retrait : 100 FCFA par demande.</p>
-        </div>
-        <div class="card">
-          <h3 style="margin-bottom:10px">Disponibilité</h3>
-          <p>Les retraits sont traités après vérification.</p>
-          <p style="margin:8px 0">Minimum : <b>1 000 FCFA</b> • Frais : <b>100 FCFA</b>.</p>
+      <div class="finance-hero">
+        <div class="finance-label">Centre de retrait sécurisé • SOULIER D’OR</div>
+        <h1 style="font-size:28px;margin:8px 0">Retrait en toute confiance</h1>
+        <p class="finance-sub">Chaque demande est vérifiée manuellement. Aucun retrait sans dépôt validé et robot actif.</p>
+        <div class="status-grid">
+          <div class="status-card pending"><small>En attente</small><strong id="withdrawPendingCount">0</strong><small>À traiter</small></div>
+          <div class="status-card accepted"><small>Validés</small><strong id="withdrawAcceptedCount">0</strong><small>Envoyés</small></div>
+          <div class="status-card rejected"><small>Refusés</small><strong id="withdrawRejectedCount">0</strong><small>À consulter</small></div>
         </div>
       </div>
+
+      <div class="deposit-trust" style="margin-bottom:16px">
+        <div class="tcard"><div class="ico">🛡️</div><strong>Contrôle humain</strong><span>Validation admin avant tout envoi Mobile Money</span></div>
+        <div class="tcard"><div class="ico">🔐</div><strong>Identité vérifiée</strong><span>Numéro et moyen de réception contrôlés</span></div>
+        <div class="tcard"><div class="ico">✅</div><strong>Règle stricte</strong><span>Dépôt validé + robot actif obligatoires</span></div>
+      </div>
+
+      <div class="deposit-cta-card" style="margin-bottom:18px">
+        <form id="withdrawForm" class="form">
+          <h3 style="margin-bottom:6px">Initier un retrait sécurisé</h3>
+          <p class="small" style="margin-bottom:12px">Minimum 1 000 FCFA • Frais fixes 100 FCFA • Traitement après vérification</p>
+          <label>Montant demandé (FCFA)
+            <input type="number" id="withdrawAmount" min="1000" step="100" required placeholder="Ex. 5000">
+          </label>
+          <label>Moyen de retrait
+            <select id="withdrawMethod">
+              <option>Wave</option>
+              <option>Orange Money</option>
+              <option>MTN Money</option>
+              <option>Moov Money</option>
+            </select>
+          </label>
+          <label>Numéro de réception (Mobile Money)
+            <input type="tel" id="withdrawPhone" required placeholder="Ex. 07 XX XX XX XX">
+          </label>
+          <div class="security-strip" style="margin:8px 0 4px">
+            <span>🔒 Vérification admin</span>
+            <span>✓ Dépôt obligatoire</span>
+            <span>📋 Historique transparent</span>
+          </div>
+          <button class="primary" type="submit" style="width:100%;margin-top:8px">Envoyer la demande de retrait</button>
+        </form>
+      </div>
+
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="margin-bottom:10px;color:#f2cc82">Conditions de retrait</h3>
+        <ul style="color:var(--muted);font-size:13px;line-height:1.7;padding-left:18px;margin:0">
+          <li>Au moins <b>un dépôt validé</b> sur le compte</li>
+          <li>Au moins <b>un robot VIP actif</b></li>
+          <li>Solde de retrait disponible suffisant</li>
+          <li>Minimum <b>1 000 FCFA</b> • Frais <b>100 FCFA</b> par demande</li>
+        </ul>
+      </div>
+
       <div class="section">
         <div class="section-head" style="margin-bottom:12px">
           <h2>Mes demandes de retrait</h2>
-          <a href="https://t.me/+Kq0gilw50lhlNGM0" target="_blank" rel="noopener"
+          <a href="https://t.me/Bostapi" target="_blank" rel="noopener"
              class="secondary" style="text-decoration:none;padding:7px 12px;font-size:12px;border-radius:10px;white-space:nowrap">
             🎧 Service client
           </a>
@@ -4438,14 +4575,14 @@ hr,.divider{border-color:#765b14!important}
         <h2>Historique des transactions</h2>
         <div id="transactionHistory" class="list" style="margin-top:12px"></div>
         <div class="history-contact-actions">
-          <a class="primary history-cta" href="https://t.me/+Kq0gilw50lhlNGM0" target="_blank" rel="noopener" style="width:100%">🎧 Service client</a>
+          <a class="primary history-cta" href="https://t.me/Bostapi" target="_blank" rel="noopener" style="width:100%">🎧 Service client</a>
         </div>
       </div>
       <div class="section history-contact-section">
         <h2>Historique des investissements</h2>
         <div id="myInvestments" class="list"></div>
         <div class="history-contact-actions">
-          <a class="primary history-cta" href="https://t.me/+Kq0gilw50lhlNGM0" target="_blank" rel="noopener" style="width:100%">🎧 Service client</a>
+          <a class="primary history-cta" href="https://t.me/Bostapi" target="_blank" rel="noopener" style="width:100%">🎧 Service client</a>
         </div>
       </div>
     </section>
@@ -4543,7 +4680,7 @@ hr,.divider{border-color:#765b14!important}
 
       <div class="card" style="text-align:center;padding:22px 18px">
         <p style="margin-bottom:14px;color:var(--muted)">Une seule porte d’entrée pour toute assistance : le service client Telegram SOULIER D’OR.</p>
-        <a href="https://t.me/+Kq0gilw50lhlNGM0" target="_blank" rel="noopener"
+        <a href="https://t.me/Bostapi" target="_blank" rel="noopener"
            class="primary" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;padding:10px 18px;font-size:14px;border-radius:12px;max-width:320px;width:100%;margin:0 auto">
           🎧 Service client
         </a>
@@ -4704,9 +4841,9 @@ hr,.divider{border-color:#765b14!important}
       Votre aventure SOULIER D’OR commence ici. Découvrez votre espace personnel, consultez vos opérations et restez informé des actualités de la communauté.
       Rejoignez mon groupe Telegram pour échanger avec les membres et recevoir les informations importantes. Prenez le temps de lire les conditions et les risques avant toute opération.
     </p>
-    <a href="https://t.me/+Kq0gilw50lhlNGM0" target="_blank" rel="noopener"
+    <a href="https://t.me/Bostapi" target="_blank" rel="noopener"
        class="primary" style="display:block;text-decoration:none;text-align:center;margin-bottom:10px;padding:10px 16px;font-size:14px">
-      🔗 Rejoindre mon groupe
+      ✦ Rejoindre le groupe VIP
     </a>
     <button class="primary" type="button" id="welcomeOkBtn"
       style="background:linear-gradient(100deg,#e34b5b,#b72d40);width:100%;margin-top:4px;padding:10px 16px;font-size:14px;min-height:38px"
@@ -4726,14 +4863,10 @@ hr,.divider{border-color:#765b14!important}
     <label>Pays
       <select id="depositCountry" required style="width:100%;margin-top:6px">
         <option value="CI" selected>🇨🇮 Côte d’Ivoire</option>
-        <option value="BJ">🇧🇯 Bénin</option>
-        <option value="TG">🇹🇬 Togo</option>
-        <option value="BF">🇧🇫 Burkina Faso</option>
-        <option value="CM">🇨🇲 Cameroun</option>
-        <option value="SN">🇸🇳 Sénégal</option>
-        <option value="GH">🇬🇭 Ghana</option>
-        <option value="ML">🇲🇱 Mali</option>
-        <option value="GN">🇬🇳 Guinée</option>
+        <option value="BJ">🇧🇯 Bénin</option><option value="TG">🇹🇬 Togo</option>
+        <option value="BF">🇧🇫 Burkina Faso</option><option value="CM">🇨🇲 Cameroun</option>
+        <option value="SN">🇸🇳 Sénégal</option><option value="GH">🇬🇭 Ghana</option>
+        <option value="ML">🇲🇱 Mali</option><option value="GN">🇬🇳 Guinée</option>
       </select>
     </label>
     <label style="display:block;margin-top:12px">Moyen de paiement
@@ -4748,7 +4881,7 @@ hr,.divider{border-color:#765b14!important}
     </label>
     <div id="foreignPayInfo" class="hidden" style="margin-top:14px;padding:14px;border:1px solid #d6a51d;border-radius:14px;background:#fff9e8;color:#26384b">
       <b>Destinataire : SOULIER D’OR</b>
-      <p style="margin:8px 0">Envoyez votre paiement par Wave ou MTN au numéro :</p>
+      <p style="margin:8px 0">Choisissez Wave, MTN Money ou Orange Money et envoyez votre paiement au numéro indiqué :</p>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <strong id="foreignPayNumber" style="font-size:22px;letter-spacing:1px">0596180495</strong>
         <button class="secondary" type="button" onclick="copyForeignPayNumber()">Copier le numéro</button>
@@ -4801,21 +4934,25 @@ hr,.divider{border-color:#765b14!important}
 </div>
 
 <div class="confirm-overlay" id="depositPaymentModal" role="dialog" aria-modal="true" aria-labelledby="depositPaymentTitle">
-  <div class="confirm-box">
-    <h2 id="depositPaymentTitle">Étape 4/5 — Effectuer le paiement</h2>
-    <p id="paymentInstruction">Vous allez être redirigé vers la page de paiement sécurisée.</p>
-    <p style="margin:12px 0;font-weight:700" id="paymentAmountLabel"></p>
-    <div id="ciPaymentActions">
-      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;margin:12px 0">Payer avec le lien sécurisé</button>
+  <div class="confirm-box" style="max-width:440px;text-align:left">
+    <h2 id="depositPaymentTitle" style="text-align:center">Étape 4/5 — Effectuer le paiement</h2>
+    <p id="paymentInstruction" style="text-align:center">Suivez les instructions selon votre pays.</p>
+    <p style="margin:12px 0;font-weight:800;text-align:center;color:#f2cc82;font-size:20px" id="paymentAmountLabel"></p>
+
+    <!-- Côte d'Ivoire : Jeko + numéro -->
+    <div id="ciPaymentActions" style="margin:12px 0;padding:16px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
+      <b style="color:#f2cc82">SOULIER D’OR — <span id="selectedPaymentOperator">Wave</span></b>
+      <p style="margin:8px 0;font-size:13px;opacity:.9">Côte d’Ivoire : payez via le lien Jeko sécurisé ou envoyez au numéro :</p>
+      <strong id="ciPayNumber" style="font-size:24px;letter-spacing:1.5px;display:block;margin:10px 0;color:#ffe9a8">0596180495</strong>
+      <button class="secondary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:8px">📋 Copier le numéro</button>
+      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;margin-top:8px">🔐 Ouvrir le lien Jeko sécurisé</button>
     </div>
-    <div id="foreignPaymentActions" class="hidden" style="margin:12px 0;padding:14px;border-radius:14px;background:#fff9e8;border:1px solid #d6a51d;color:#26384b">
-      <b>SOULIER D’OR</b>
-      <p style="margin:8px 0">Envoyez le montant par le moyen choisi au numéro :</p>
-      <strong style="font-size:22px">0596180495</strong>
-      <button class="secondary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:10px">Copier le numéro</button>
-    </div>
-    <p class="small">Le paiement doit être effectué avant l’envoi de la capture d’écran. Votre dépôt reste en attente jusqu’à la vérification de l’administrateur.</p>
-    <button class="secondary" type="button" style="margin-top:10px;width:100%" onclick="showDepositStep('depositProofModal')">J’ai terminé le paiement</button>
+
+    <!-- Hors CI : guide type USSD / Mobile Money (même esprit que la vidéo) -->
+    <div id="foreignPaymentActions" class="hidden" style="margin:12px 0"></div>
+
+    <p class="small" style="margin-top:10px;text-align:center">Après le paiement, prenez une capture d’écran claire (montant + statut réussi) puis continuez.</p>
+    <button class="primary" type="button" style="margin-top:12px;width:100%" onclick="showDepositStep('depositProofModal')">J’ai terminé le paiement → Preuve</button>
     <button class="secondary" type="button" style="margin-top:8px;width:100%" onclick="closeDepositFlow()">Plus tard</button>
   </div>
 </div>
@@ -4849,10 +4986,9 @@ hr,.divider{border-color:#765b14!important}
   </div>
 </div>
 <script>
+// Authentification administrateur exclusivement par Firebase Auth.
 const ADMIN_EMAIL = "msourabi610@gmail.com";
-const ADMIN_PASSWORD = "Moussa99";
 window.ADMIN_EMAIL = ADMIN_EMAIL;
-window.ADMIN_PASSWORD = ADMIN_PASSWORD;
 
 // Photos robots stylées (Wikimedia Commons — licences libres)
 const REF_SITE = "https://unitry29574.github.io/Unitry.com/";
@@ -4898,16 +5034,16 @@ const COUNTRIES = {
 };
 
 const PLANS = [
-  { name: "Starter Bot", price: 3000, gain: 350, total: 3350, days: 1, daily: 350, img: 0, tag: "Débutant" },
-  { name: "Spark Bot", price: 6000, gain: 700, total: 6700, days: 1, daily: 700, img: 1, tag: "Bronze" },
-  { name: "Pulse Bot", price: 12000, gain: 1400, total: 13400, days: 1, daily: 1400, img: 2, tag: "Silver" },
-  { name: "Orbit Bot", price: 24000, gain: 2800, total: 26800, days: 1, daily: 2800, img: 3, tag: "Gold" },
-  { name: "Quantum Bot", price: 48000, gain: 5600, total: 53600, days: 1, daily: 5600, img: 4, tag: "Platinum" },
-  { name: "Nexus Bot", price: 96000, gain: 11200, total: 107200, days: 1, daily: 11200, img: 5, tag: "Élite" },
-  { name: "Astra Bot", price: 192000, gain: 22400, total: 214400, days: 1, daily: 22400, img: 6, tag: "VIP" },
-  { name: "Titan Bot", price: 384000, gain: 44800, total: 428800, days: 1, daily: 44800, img: 7, tag: "Gold VIP" },
-  { name: "Helix Bot", price: 768000, gain: 89600, total: 857600, days: 1, daily: 89600, img: 8, tag: "Platinum VIP" },
-  { name: "Infinity Bot", price: 1536000, gain: 179200, total: 1715200, days: 1, daily: 179200, img: 9, tag: "Ultra VIP" }
+  { name: "VIP 1", price: 4000, gain: 1000, total: 60000, days: 60, daily: 1000, img: 0, tag: "VIP 1" },
+  { name: "VIP 2", price: 7000, gain: 1750, total: 105000, days: 60, daily: 1750, img: 1, tag: "VIP 2" },
+  { name: "VIP 3", price: 12000, gain: 3000, total: 180000, days: 60, daily: 3000, img: 2, tag: "VIP 3" },
+  { name: "VIP 4", price: 18000, gain: 4500, total: 270000, days: 60, daily: 4500, img: 3, tag: "VIP 4" },
+  { name: "VIP 5", price: 35000, gain: 8750, total: 525000, days: 60, daily: 8750, img: 4, tag: "VIP 5" },
+  { name: "VIP 6", price: 50000, gain: 12500, total: 750000, days: 60, daily: 12500, img: 5, tag: "VIP 6" },
+  { name: "VIP 7", price: 70000, gain: 17500, total: 1050000, days: 60, daily: 17500, img: 6, tag: "VIP 7" },
+  { name: "VIP 8", price: 150000, gain: 37500, total: 2250000, days: 60, daily: 37500, img: 7, tag: "VIP 8" },
+  { name: "VIP 9", price: 400000, gain: 100000, total: 6000000, days: 60, daily: 100000, img: 8, tag: "VIP 9" },
+  { name: "VIP 10", price: 700000, gain: 175000, total: 10500000, days: 60, daily: 175000, img: 9, tag: "VIP 10" }
 ];
 
 
@@ -5017,17 +5153,18 @@ function switchAuth(mode) {
 
 window.vipPlanLocks = window.vipPlanLocks || {};
 window.toggleVipPlanLock = async function(index) {
-  if (!window.adminOpen && !window.adminMode) { toast("Accès administrateur requis."); return; }
-  if (!PLANS[index]) return;
-  window.vipPlanLocks[index] = !window.vipPlanLocks[index];
-  try { localStorage.setItem("soulierOrVipPlanLocks", JSON.stringify(window.vipPlanLocks)); } catch (_) {}
-  renderPlans();
-  if (typeof renderAdmin === "function") renderAdmin();
-  toast(PLANS[index].name + (window.vipPlanLocks[index] ? " verrouillé." : " déverrouillé."));
-  if (typeof window.persistVipPlanLocks === "function") {
-    try { await window.persistVipPlanLocks(window.vipPlanLocks); }
-    catch (e) { console.error("Enregistrement verrouillage VIP:", e); toast("Modification locale appliquée, synchronisation serveur échouée."); }
+  if (!adminMode || !auth.currentUser || (auth.currentUser.email || "").toLowerCase() !== ADMIN_EMAIL_FIREBASE || !firebaseReady) {
+    toast("Accès administrateur Firebase requis. Connectez-vous avec le compte admin."); return;
   }
+  if (!PLANS[index]) return;
+  const nextLocks = { ...(window.vipPlanLocks || {}), [index]: !window.vipPlanLocks[index] };
+  try {
+    await window.persistVipPlanLocks(nextLocks);
+    window.vipPlanLocks = nextLocks;
+    try { localStorage.setItem("soulierOrVipPlanLocks", JSON.stringify(nextLocks)); } catch (_) {}
+    renderPlans(); if (typeof renderAdmin === "function") renderAdmin();
+    toast(PLANS[index].name + (nextLocks[index] ? " verrouillé." : " déverrouillé."));
+  } catch (err) { console.error("Enregistrement verrouillage VIP:", err); toast("Échec Firebase : verrouillage non modifié."); }
 };
 try { window.vipPlanLocks = JSON.parse(localStorage.getItem("soulierOrVipPlanLocks") || "{}"); } catch (_) { window.vipPlanLocks = {}; }
 
@@ -5165,56 +5302,57 @@ function enter(user) {
   renderAll();
 }
 
-document.getElementById("registerForm").addEventListener("submit", e => {
+document.getElementById("registerForm").addEventListener("submit", async e => {
   e.preventDefault();
   const name = document.getElementById("regName").value.trim();
   const email = document.getElementById("regEmail").value.trim().toLowerCase();
   const phone = document.getElementById("regPhone").value.trim();
   const pass = document.getElementById("regPass").value;
   const country = document.getElementById("regCountry").value;
-  const ref = document.getElementById("regRef").value.trim().toUpperCase();
-
-  if (!country) {
-    toast("Veuillez sélectionner votre pays.");
-    return;
+  if (pass.length < 6) { toast("Le mot de passe doit contenir au moins 6 caractères."); return; }
+  try {
+    const credential = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(credential.user, { displayName: name });
+    const profile = profileFromForm(credential.user.uid, email);
+    profile.hasValidatedDeposit = false;
+    profile.hasInvestment = false;
+    await setDoc(doc(db, "profiles", credential.user.uid), profile);
+    await loadOwnData(credential.user);
+    document.getElementById("welcomeMessage").textContent =
+      `Félicitations ${name} ! Votre inscription SOULIER D’OR est terminée.`;
+    document.getElementById("welcomeModal").style.display = "flex";
+    toast("Compte créé avec succès.");
+  } catch (err) {
+    console.error("Inscription Firebase:", err);
+    toast(err.code === "auth/email-already-in-use" ? "Cette adresse e-mail existe déjà."
+      : err.code === "auth/weak-password" ? "Mot de passe trop faible."
+      : "Inscription impossible : vérifiez Firebase Auth et les règles Firestore.");
   }
-  if (state.users.some(u => u.email === email)) {
-    toast("Cette adresse e-mail existe déjà.");
-    return;
-  }
-  let parent = state.users.find(u => u.code === ref);
-  const user = {
-    id: id(),
-    name,
-    email,
-    phone,
-    pass,
-    country,
-    code: "UT" + id(),
-    parentId: parent ? parent.id : null,
-    created: Date.now(),
-    status: "Actif"
-  };
-  state.users.push(user);
-  save();
-  enter(user);
-  document.getElementById("welcomeMessage").textContent = `Félicitations ${name} ! Votre inscription sur SOULIER D’OR est terminée. Bienvenue dans votre espace personnel : vous pouvez consulter vos opérations et découvrir les fonctionnalités de la plateforme.`;
-  document.getElementById("welcomeModal").style.display = "flex";
-  toast("Bienvenue sur SOULIER D’OR !");
 });
 
-document.getElementById("loginForm").addEventListener("submit", e => {
+document.getElementById("loginForm").addEventListener("submit", async e => {
   e.preventDefault();
   const email = document.getElementById("loginEmail").value.trim().toLowerCase();
   const pass = document.getElementById("loginPass").value;
-  const user = state.users.find(u => u.email === email && u.pass === pass && u.status !== "Suspendu");
-  if (!user) {
-    toast("Informations incorrectes ou compte suspendu.");
-    return;
+  try {
+    const credential = await signInWithEmailAndPassword(auth, email, pass);
+    if (credential.user.email?.toLowerCase() === ADMIN_EMAIL_FIREBASE) {
+      await loadAdminData();
+      showPage("admin");
+      return;
+    }
+    await loadOwnData(credential.user);
+  } catch (err) {
+    console.error("Connexion Firebase:", err);
+    const msg = (err && (err.message || err.code || "")).toString();
+    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
+      toast("Email ou mot de passe incorrect.");
+    } else if (msg.includes("permission") || msg.includes("Permissions Firestore") || err.code === "permission-denied") {
+      toast("Permissions Firestore insuffisantes. Mettez à jour les Règles Firestore.");
+    } else {
+      toast("Connexion impossible : vérifiez Firebase Auth et les règles Firestore.");
+    }
   }
-  enter(user);
-  document.getElementById("welcomeMessage").textContent = `Heureux de vous revoir ${user.name || user.email.split("@")[0]} ! Votre espace SOULIER D’OR est prêt. Consultez vos opérations et découvrez les fonctionnalités disponibles. Prenez le temps de vérifier les conditions et les risques avant toute opération.`;
-  document.getElementById("welcomeModal").style.display = "flex";
 });
 
 document.getElementById("walletForm").addEventListener("submit", e => {
@@ -5252,8 +5390,8 @@ function showDepositStep(id) {
 }
 function startDepositFlow() {
   if (!current) { toast("Connectez-vous avant de faire un dépôt."); return; }
-  pendingDeposit = { country: "CI", phone: current.phone || "", amount: 3000, method: "Wave" };
-  document.getElementById("depositCountry").value = current.country || "CI";
+  pendingDeposit = { country: current.country || "CI", phone: current.phone || "", amount: 3000, method: "Wave" };
+  document.getElementById("depositCountry").value = pendingDeposit.country;
   document.getElementById("depositMethod").value = "Wave";
   updateDepositCountryPayment();
   document.getElementById("depositPhone").value = current.phone || "";
@@ -5273,21 +5411,19 @@ document.getElementById("depositAmount").addEventListener("change", () => {
   document.getElementById("customDepositWrap").classList.toggle("hidden", document.getElementById("depositAmount").value !== "custom");
 });
 function updateDepositCountryPayment() {
-  const country = document.getElementById("depositCountry")?.value || "CI";
-  const foreign = country !== "CI";
+  const country = document.getElementById("depositCountry")?.value || current?.country || "CI";
+  pendingDeposit.country = country;
   const info = document.getElementById("foreignPayInfo");
-  if (info) info.classList.toggle("hidden", !foreign);
-  const method = document.getElementById("depositMethod");
-  if (method) {
-    [...method.options].forEach(opt => {
-      opt.disabled = foreign && opt.value === "Orange Money";
-    });
-    if (foreign && method.value === "Orange Money") method.value = "Wave";
-  }
+  if (info) info.classList.toggle("hidden", country === "CI");
+  const methodLabel = document.querySelector('label[for="depositMethod"]');
+  const methodSelect = document.getElementById("depositMethod");
+  if (methodSelect) methodSelect.disabled = country === "CI";
 }
 document.getElementById("depositCountry").addEventListener("change", updateDepositCountryPayment);
 document.getElementById("depositMethod").addEventListener("change", function() {
   pendingDeposit.method = this.value;
+  const label = document.getElementById("selectedPaymentOperator");
+  if (label) label.textContent = this.value;
 });
 function copyForeignPayNumber() {
   const number = "0596180495";
@@ -5303,13 +5439,9 @@ function copyForeignPayNumber() {
 function nextDepositAmount() {
   const phone = document.getElementById("depositPhone").value.trim();
   if (phone.replace(/\D/g, "").length < 8) { toast("Veuillez saisir un numéro de téléphone valide."); return; }
-  pendingDeposit.country = document.getElementById("depositCountry").value;
+  pendingDeposit.country = document.getElementById("depositCountry").value || "CI";
   pendingDeposit.phone = phone;
   pendingDeposit.method = document.getElementById("depositMethod").value;
-  if (pendingDeposit.country !== "CI" && !["Wave", "MTN Money"].includes(pendingDeposit.method)) {
-    toast("À l’étranger, choisissez Wave ou MTN Money.");
-    return;
-  }
   showDepositStep("depositAmountModal");
 }
 function nextDepositConfirm() {
@@ -5321,21 +5453,61 @@ function nextDepositConfirm() {
   showDepositStep("depositConfirmModal");
 }
 function goToPayment() {
-  const label = document.getElementById("paymentAmountLabel");
   const isCI = pendingDeposit.country === "CI";
-  if (label) label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + " • " + pendingDeposit.method;
-  document.getElementById("ciPaymentActions")?.classList.toggle("hidden", !isCI);
-  document.getElementById("foreignPaymentActions")?.classList.toggle("hidden", isCI);
+  const label = document.getElementById("paymentAmountLabel");
+  if (label) label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + (isCI ? " • Jeko" : " • " + pendingDeposit.method);
+  const paymentBox = document.getElementById("ciPaymentActions");
+  paymentBox?.classList.toggle("hidden", !isCI);
+  const foreignBox = document.getElementById("foreignPaymentActions");
+  foreignBox?.classList.toggle("hidden", isCI);
+  if (foreignBox) {
+    if (isCI) {
+      foreignBox.innerHTML = "";
+    } else {
+      const method = escapeHtml(pendingDeposit.method || "Wave");
+      const amt = Number(pendingDeposit.amount || 0).toLocaleString("fr-FR");
+      const ussdHint = method.includes("Orange")
+        ? "Ouvrez Orange Money (app ou USSD) → Transfert / Paiement, puis envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
+        : method.includes("MTN")
+          ? "Ouvrez MTN MoMo (app ou USSD) → Envoyer de l’argent, puis envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
+          : "Ouvrez Wave → Envoyer, saisissez le numéro SOULIER D’OR, le montant exact, puis confirmez avec votre code secret.";
+      foreignBox.innerHTML = `
+        <div style="padding:16px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+            <b style="color:#f2cc82">SOULIER D’OR — ${method}</b>
+            <span style="font-size:11px;background:rgba(242,204,130,.15);padding:4px 10px;border-radius:999px;color:#f2cc82">Hors Côte d’Ivoire</span>
+          </div>
+          <p style="margin:0 0 10px;font-size:13px;line-height:1.55;opacity:.92">${ussdHint}</p>
+          <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0">
+            <small style="opacity:.75;display:block;margin-bottom:4px">Numéro de réception (Wave / Orange / MTN)</small>
+            <strong style="font-size:24px;letter-spacing:1.5px;color:#ffe9a8">0596180495</strong>
+          </div>
+          <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0">
+            <small style="opacity:.75;display:block;margin-bottom:4px">Montant à envoyer</small>
+            <strong style="font-size:20px;color:#ffe9a8">${amt} FCFA</strong>
+          </div>
+          <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;opacity:.95">
+            <li>Copiez le numéro de paiement</li>
+            <li>Ouvrez ${method} (application ou code USSD)</li>
+            <li>Envoyez exactement <b>${amt} FCFA</b></li>
+            <li>Confirmez avec votre code secret</li>
+            <li>Prenez une capture du message de succès</li>
+          </ol>
+          <button class="secondary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:8px">📋 Copier le numéro 0596180495</button>
+        </div>`;
+    }
+  }
   const instruction = document.getElementById("paymentInstruction");
   if (instruction) instruction.textContent = isCI
-    ? "Côte d’Ivoire : utilisez le lien de paiement Jeko sécurisé."
-    : "Paiement international : envoyez le montant par " + pendingDeposit.method + " au numéro SOULIER D’OR.";
+    ? "Côte d’Ivoire : utilisez le lien Jeko sécurisé ou le numéro affiché."
+    : "Hors Côte d’Ivoire : payez via Wave, MTN Money ou Orange Money au numéro SOULIER D’OR (guide ci-dessous).";
+  const operator = document.getElementById("selectedPaymentOperator");
+  if (operator) operator.textContent = pendingDeposit.method;
   showDepositStep("depositPaymentModal");
-  if (isCI) setTimeout(() => openPaymentLink(), 400);
 }
 function openPaymentLink() {
   if (pendingDeposit.country !== "CI") {
-    toast("À l’étranger, utilisez le numéro SOULIER D’OR affiché.");
+    toast("Le lien Jeko est réservé à la Côte d’Ivoire. Utilisez le numéro Mobile Money affiché.");
     return;
   }
   window.open(PAYMENT_LINK, "_blank", "noopener,noreferrer");
@@ -5465,15 +5637,32 @@ function closeDepositSuccess()
 document.getElementById("withdrawForm").addEventListener("submit", e => {
   e.preventDefault();
   if (!current) return;
-  const hasInvest = state.investments.some(x => matchesUser(x, current));
+  if (current.status === "Suspendu") {
+    toast("Compte suspendu. Contactez le support SOULIER D’OR.");
+    return;
+  }
+  // Aucun retrait sans dépôt validé
+  const hasDeposit = state.deposits.some(x => matchesUser(x, current) && x.status === "Validé")
+    || !!current.hasValidatedDeposit;
+  if (!hasDeposit) {
+    toast("Aucun dépôt validé. Effectuez et validez un dépôt avant tout retrait.");
+    showPage("deposit");
+    return;
+  }
+  const hasInvest = state.investments.some(x => matchesUser(x, current) && String(x.status || "").startsWith("Actif"));
   if (!hasInvest) {
-    toast("Aucun investissement actif. Investissez avant de demander un retrait.");
+    toast("Aucun robot VIP actif. Activez un plan avant de demander un retrait.");
     showPage("invest");
     return;
   }
   const amount = Number(document.getElementById("withdrawAmount").value);
   if (amount < 1000) {
     toast("Le retrait minimum est de 1 000 FCFA.");
+    return;
+  }
+  const phone = document.getElementById("withdrawPhone").value.trim();
+  if (!phone || phone.replace(/\D/g, "").length < 8) {
+    toast("Indiquez un numéro Mobile Money valide pour recevoir le retrait.");
     return;
   }
   const earned = state.investments
@@ -5493,14 +5682,14 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
     fee: 100,
     net: amount - 100,
     method: document.getElementById("withdrawMethod").value,
-    phone: document.getElementById("withdrawPhone").value.trim(),
+    phone,
     status: "En attente",
     created: Date.now()
   });
   e.target.reset();
   save();
   showTxAnimation("pending", "Demande de retrait envoyée", "Votre demande est enregistrée et reste en attente de vérification. Une animation de validation ou de refus apparaîtra lorsque le statut sera mis à jour.");
-  toast("Demande de retrait enregistrée.");
+  toast("Demande de retrait enregistrée. Vérification en cours.");
 });
 
 document.getElementById("copyCode").addEventListener("click", async () => {
@@ -5522,19 +5711,7 @@ document.getElementById("copyRefLink")?.addEventListener("click", async () => {
   }
 });
 
-document.getElementById("adminLoginForm").addEventListener("submit", e => {
-  e.preventDefault();
-  if (document.getElementById("adminEmail").value.trim().toLowerCase() === ADMIN_EMAIL &&
-      document.getElementById("adminPass").value === ADMIN_PASSWORD) {
-    adminOpen = true;
-    document.getElementById("adminLoginBox").classList.add("hidden");
-    document.getElementById("adminPanel").classList.remove("hidden");
-    renderAdmin();
-    toast("Tableau d’administration ouvert.");
-  } else {
-    toast("Identifiants administrateur incorrects.");
-  }
-});
+/* Admin: Firebase Auth uniquement. */
 
 function renderList(el, items, empty = "Aucun élément pour le moment.") {
   document.getElementById(el).innerHTML = items.length ? items.join("") : `<div class="empty">${empty}</div>`;
@@ -5594,6 +5771,12 @@ function renderAll() {
   document.getElementById("depositPendingCount").textContent = myDep.filter(x => x.status === "En attente").length;
   document.getElementById("depositAcceptedCount").textContent = myDep.filter(x => x.status === "Validé").length;
   document.getElementById("depositRejectedCount").textContent = myDep.filter(x => x.status === "Refusé").length;
+  const wp = document.getElementById("withdrawPendingCount");
+  const wa = document.getElementById("withdrawAcceptedCount");
+  const wr = document.getElementById("withdrawRejectedCount");
+  if (wp) wp.textContent = myWith.filter(x => x.status === "En attente").length;
+  if (wa) wa.textContent = myWith.filter(x => x.status === "Validé").length;
+  if (wr) wr.textContent = myWith.filter(x => x.status === "Refusé").length;
   const tx = [
     ...myDep.map(x => ({name:"Demande de dépôt", amount:-x.amount, status:x.status, date:x.created})),
     ...myWith.map(x => ({name:"Demande de retrait", amount:-x.amount, status:x.status, date:x.created})),
@@ -5721,6 +5904,10 @@ function review(type, itemId, approved) {
   if (!item) return;
   item.status = approved ? "Validé" : "Refusé";
   item.reviewedAt = Date.now();
+  if (type === "deposit" && approved) {
+    const u = state.users.find(x => (x.uid || x.id) === item.userId || matchesUser(item, x));
+    if (u) u.hasValidatedDeposit = true;
+  }
   const oldFx = document.getElementById("unitriTxEffect");
   if (oldFx) oldFx.remove();
   if (window.__unitriTxTimer) { clearTimeout(window.__unitriTxTimer); window.__unitriTxTimer = null; }
@@ -6035,12 +6222,14 @@ function profileFromForm(uid, email) {
     name: document.getElementById("regName").value.trim(),
     email,
     phone: document.getElementById("regPhone").value.trim(),
-    country: document.getElementById("regCountry").value,
+    country: "CI",
     code: "UT" + uid.slice(0, 8).toUpperCase(),
     parentId: null,
     referralCodeEntered: refCode || null,
     created: Date.now(),
     status: "Actif",
+    hasValidatedDeposit: false,
+    hasInvestment: false,
     walletMethod: "",
     walletPhone: ""
   };
@@ -6083,15 +6272,34 @@ async function loadOwnData(user) {
 async function loadAdminData() {
   const email = (auth.currentUser?.email || "").toLowerCase();
   if (email !== ADMIN_EMAIL_FIREBASE) throw new Error("Ce compte n’est pas autorisé comme administrateur.");
-  const snaps = await Promise.all(collections.map(c => getDocs(collection(db, c))));
+  const results = { users: [], deposits: [], withdrawals: [], investments: [] };
+  const errors = [];
+  for (const col of collections) {
+    try {
+      const snap = await getDocs(collection(db, col));
+      const rows = snap.docs.map(d => {
+        const data = { ...d.data(), id: d.id };
+        return col === "profiles" ? safeProfile(data, d.id) : data;
+      });
+      if (col === "profiles") results.users = rows;
+      else results[col] = rows;
+    } catch (e) {
+      console.error("Firestore " + col + ":", e);
+      errors.push(col + ": " + (e.code || e.message || "permission-denied"));
+    }
+  }
   try {
     const lockSnap = await getDoc(doc(db, "platformSettings", "vipPlans"));
     if (lockSnap.exists()) window.vipPlanLocks = lockSnap.data().locks || {};
   } catch (e) { console.warn("Lecture des verrouillages VIP:", e); }
-  state.users = snaps[0].docs.map(d => safeProfile(d.data(), d.id));
-  state.deposits = snaps[1].docs.map(d => ({ ...d.data(), id: d.id }));
-  state.withdrawals = snaps[2].docs.map(d => ({ ...d.data(), id: d.id }));
-  state.investments = snaps[3].docs.map(d => ({ ...d.data(), id: d.id }));
+  if (errors.length === collections.length) {
+    const msg = "Permissions Firestore insuffisantes. Ouvrez Firebase Console → Firestore → Règles et autorisez le compte admin (msourabi610@gmail.com) à lire/écrire les collections profiles, deposits, withdrawals, investments et platformSettings.";
+    throw new Error(msg);
+  }
+  state.users = results.users;
+  state.deposits = results.deposits;
+  state.withdrawals = results.withdrawals;
+  state.investments = results.investments;
   firebaseReady = true;
   adminMode = true;
   adminOpen = true;
@@ -6100,6 +6308,9 @@ async function loadAdminData() {
   document.getElementById("adminPanel").classList.remove("hidden");
   renderAll();
   renderAdmin();
+  if (errors.length) {
+    fbToast("Chargement partiel : " + errors.join(" | ") + ". Vérifiez les règles Firestore.");
+  }
 }
 window.persistVipPlanLocks = async function(locks) {
   if (!auth.currentUser || !firebaseReady || !adminMode ||
@@ -6208,77 +6419,29 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   const isAdminAttempt = email === ADMIN_EMAIL_FIREBASE;
   try {
     if (isAdminAttempt) {
-      if (pass !== (window.ADMIN_PASSWORD || "000000")) {
-        fbToast("E-mail ou mot de passe incorrect.");
-        return;
-      }
-      // Mot de passe local correct → on ouvre toujours l’admin.
-      // Firebase est tenté en complément ; en cas de blocage (trop de tentatives, etc.) on bascule en mode local.
-      let firebaseOk = false;
-      try {
-        try {
-          await signInWithEmailAndPassword(auth, email, pass);
-          firebaseOk = true;
-        } catch (signErr) {
-          if (signErr.code === "auth/invalid-credential" ||
-              signErr.code === "auth/user-not-found" ||
-              signErr.code === "auth/wrong-password") {
-            try {
-              await createUserWithEmailAndPassword(auth, email, pass);
-              firebaseOk = true;
-            } catch (createErr) {
-              if (createErr.code === "auth/email-already-in-use") {
-                console.warn("Admin Firebase existant avec un autre mot de passe — mode local.");
-              } else if (createErr.code === "auth/too-many-requests") {
-                console.warn("Trop de tentatives Firebase — mode local admin.");
-              } else {
-                console.warn("Création admin Firebase impossible:", createErr.code || createErr);
-              }
-            }
-          } else if (signErr.code === "auth/too-many-requests") {
-            console.warn("Trop de tentatives Firebase — mode local admin.");
-          } else {
-            console.warn("Connexion Firebase admin:", signErr.code || signErr);
-          }
-        }
-        if (firebaseOk) {
-          try {
-            await loadAdminData();
-          } catch (loadErr) {
-            console.warn("loadAdminData:", loadErr);
-            firebaseOk = false;
-          }
-        }
-      } catch (outer) {
-        console.warn("Admin Firebase global:", outer);
-        firebaseOk = false;
-      }
-      if (!firebaseOk) {
-        // Mode admin local (sans Firebase) — les données viennent de localStorage
-        adminMode = true;
-        adminOpen = true;
-        firebaseReady = false;
-        try { state = loadState(); } catch (_) {}
-        document.getElementById("adminLoginBox")?.classList.add("hidden");
-        document.getElementById("adminPanel")?.classList.remove("hidden");
-        try { renderAll(); } catch (_) {}
-        try { renderAdmin(); } catch (_) {}
-      }
+      await signInWithEmailAndPassword(auth, email, pass);
+      await loadAdminData();
       document.body.classList.remove("auth-mode");
       document.getElementById("auth").classList.add("hidden");
       document.getElementById("mainApp").classList.remove("hidden");
       document.getElementById("bottomNav").classList.add("hidden");
-      document.getElementById("sessionPill").textContent = firebaseOk ? "SOULIER D’OR • Admin" : "SOULIER D’OR • Admin (local)";
+      document.getElementById("sessionPill").textContent = "SOULIER D’OR • Admin";
       showPage("admin");
-      fbToast(firebaseOk ? "Administration connectée." : "Administration ouverte (mode local — Firebase temporairement limité).");
+      fbToast("Administration connectée et vérifiée.");
       return;
     }
     const cred = await signInWithEmailAndPassword(auth, email, pass);
     await loadOwnData(cred.user);
   } catch (err) {
     console.error(err);
-    fbToast(err.code === "auth/invalid-credential" ? "E-mail ou mot de passe incorrect." :
-      "Connexion impossible. Réessayez.");
+    const msg = (err && (err.message || err.code || "")).toString();
+    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
+      fbToast("E-mail ou mot de passe incorrect.");
+    } else if (msg.includes("permission") || msg.includes("Permissions Firestore") || err.code === "permission-denied") {
+      fbToast("Permissions Firestore insuffisantes. Mettez à jour les Règles Firestore (voir console).");
+    } else {
+      fbToast("Connexion impossible. Réessayez. (" + (err.code || "erreur") + ")");
+    }
   }
 }, true);
 
@@ -6287,77 +6450,29 @@ document.getElementById("adminLoginForm").addEventListener("submit", async (e) =
   e.stopImmediatePropagation();
   const email = document.getElementById("adminEmail").value.trim().toLowerCase();
   const pass = document.getElementById("adminPass").value;
-  if (email !== ADMIN_EMAIL_FIREBASE) {
-    fbToast("Utilise l’adresse administrateur autorisée.");
-    return;
-  }
-  if (pass !== (window.ADMIN_PASSWORD || "000000")) {
-    fbToast("Mot de passe administrateur incorrect.");
-    return;
-  }
-  let firebaseOk = false;
+  if (email !== ADMIN_EMAIL_FIREBASE) { fbToast("Adresse administrateur non autorisée."); return; }
   try {
-    try {
-      await signInWithEmailAndPassword(auth, email, pass);
-      firebaseOk = true;
-    } catch (signErr) {
-      if (signErr.code === "auth/invalid-credential" ||
-          signErr.code === "auth/user-not-found" ||
-          signErr.code === "auth/wrong-password" ||
-          signErr.code === "auth/invalid-email") {
-        try {
-          await createUserWithEmailAndPassword(auth, email, pass);
-          firebaseOk = true;
-        } catch (createErr) {
-          if (createErr.code === "auth/email-already-in-use") {
-            console.warn("Compte admin Firebase existant avec un autre mot de passe — mode local.");
-          } else {
-            console.warn("Création admin:", createErr.code || createErr);
-          }
-        }
-      } else if (signErr.code === "auth/too-many-requests") {
-        console.warn("Trop de tentatives — mode local admin.");
-      } else {
-        console.warn("signIn admin:", signErr.code || signErr);
-      }
-    }
-    if (firebaseOk) {
-      try {
-        await loadAdminData();
-      } catch (e) {
-        console.warn(e);
-        firebaseOk = false;
-      }
-    }
-  } catch (err) {
-    console.error(err);
-    firebaseOk = false;
-  }
-  if (!firebaseOk) {
-    adminMode = true;
-    adminOpen = true;
-    window.adminMode = true; window.adminOpen = true;
-    firebaseReady = false;
-    try { state = loadState(); } catch (_) {}
-    document.getElementById("adminLoginBox")?.classList.add("hidden");
-    document.getElementById("adminPanel")?.classList.remove("hidden");
-    try { renderAll(); } catch (_) {}
-    try { renderAdmin(); } catch (_) {}
-    document.body.classList.remove("auth-mode");
-    document.getElementById("auth")?.classList.add("hidden");
-    document.getElementById("mainApp")?.classList.remove("hidden");
-    document.getElementById("bottomNav")?.classList.add("hidden");
-    document.getElementById("sessionPill").textContent = "SOULIER D’OR • Admin (local)";
-    try { showPage("admin"); } catch (_) {}
-    fbToast("Administration ouverte (mode local).");
-  } else {
+    await signInWithEmailAndPassword(auth, email, pass);
+    await loadAdminData();
     document.body.classList.remove("auth-mode");
     document.getElementById("auth")?.classList.add("hidden");
     document.getElementById("mainApp")?.classList.remove("hidden");
     document.getElementById("bottomNav")?.classList.add("hidden");
     document.getElementById("sessionPill").textContent = "SOULIER D’OR • Admin";
-    try { showPage("admin"); } catch (_) {}
-    fbToast("Administration connectée.");
+    showPage("admin");
+    fbToast("Administration connectée et vérifiée.");
+  } catch (err) {
+    console.error("Connexion admin Firebase:", err);
+    const msg = (err && (err.message || err.code || "")).toString();
+    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
+      fbToast("Identifiants Firebase administrateur incorrects.");
+    } else if (err.code === "auth/too-many-requests") {
+      fbToast("Trop de tentatives. Réessayez plus tard.");
+    } else if (msg.includes("permission") || msg.includes("Permissions Firestore") || err.code === "permission-denied") {
+      fbToast("Permissions Firestore insuffisantes pour l’admin. Mettez à jour les Règles Firestore.");
+    } else {
+      fbToast("Connexion administrateur impossible. " + (err.message || err.code || ""));
+    }
   }
 }, true);
 
@@ -6430,37 +6545,31 @@ window.syncDepositToFirebase = async function(record, file) {
 
 
 window.review = async function(type, itemId, approve) {
-  if (!adminMode && !adminOpen) {
-    fbToast("Accès administrateur refusé.");
-    return;
+  if (!adminMode || !firebaseReady || !auth.currentUser ||
+      (auth.currentUser.email || "").toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
+    fbToast("Accès administrateur Firebase requis. Connectez-vous avec le compte admin."); return;
   }
   const col = type === "deposit" ? "deposits" : "withdrawals";
   const row = state[col].find(x => x.id === itemId);
   if (!row || row.status !== "En attente") return;
   const updated = { ...row, status: approve ? "Validé" : "Refusé", reviewedAt: Date.now() };
-  // Fermer tout message d'animation déjà affiché
-  const oldFx = document.getElementById("unitriTxEffect");
-  if (oldFx) oldFx.remove();
+  const oldFx = document.getElementById("unitriTxEffect"); if (oldFx) oldFx.remove();
   if (window.__unitriTxTimer) { clearTimeout(window.__unitriTxTimer); window.__unitriTxTimer = null; }
   try {
-    if (firebaseReady && auth.currentUser) {
-      await setDoc(doc(db, col, itemId), updated, { merge: true });
-    } else if (typeof save === "function") {
-      save();
+    await setDoc(doc(db, col, itemId), updated, { merge: true });
+    Object.assign(row, updated);
+    if (type === "deposit" && approve) {
+      const u = state.users.find(x => (x.uid || x.id) === row.userId);
+      if (u) {
+        u.hasValidatedDeposit = true;
+        try { await setDoc(doc(db, "profiles", u.uid || u.id), { hasValidatedDeposit: true }, { merge: true }); } catch (_) {}
+      }
     }
-    Object.assign(row, updated);
-    try { renderAll(); } catch (_) {}
-    try { renderAdmin(); } catch (_) {}
-    // Toast court qui disparaît tout seul — pas de message permanent
-    fbToast(approve ? "Demande validée." : "Demande refusée.");
+    try { renderAll(); } catch (_) {} try { renderAdmin(); } catch (_) {}
+    fbToast(approve ? "Demande validée dans Firebase." : "Demande refusée dans Firebase.");
   } catch (err) {
-    console.error(err);
-    // Fallback local même si Firebase échoue
-    Object.assign(row, updated);
-    try { if (typeof save === "function") save(); } catch (_) {}
-    try { renderAll(); } catch (_) {}
-    try { renderAdmin(); } catch (_) {}
-    fbToast(approve ? "Demande validée (local)." : "Demande refusée (local).");
+    console.error("Validation transaction Firebase:", err);
+    fbToast("Échec Firebase : statut inchangé. Vérifiez les règles Firestore.");
   }
 };
 
@@ -6506,7 +6615,12 @@ onAuthStateChanged(auth, async (user) => {
     }
   } catch (err) {
     console.error(err);
-    fbToast("Accès aux données refusé.");
+    const msg = (err && (err.message || "")).toString();
+    if (msg.includes("permission") || msg.includes("Permissions Firestore") || err.code === "permission-denied") {
+      fbToast("Permissions Firestore insuffisantes. Mettez à jour les Règles (admin = msourabi610@gmail.com).");
+    } else {
+      fbToast("Accès aux données refusé.");
+    }
   }
 });
 </script>
