@@ -4271,6 +4271,34 @@ hr,.divider{border-color:#765b14!important}
   margin-bottom:4px;
 }
 
+
+.dep-amt-btn{
+  background:linear-gradient(145deg,#1a1520,#121018);
+  border:1.5px solid rgba(242,204,130,.28);
+  color:#f7f0dc;
+  border-radius:16px;
+  padding:14px 10px;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s ease;
+  min-height:64px;
+  line-height:1.35;
+}
+.dep-amt-btn b{
+  display:block;
+  font-size:17px;
+  color:#ffe9a8;
+  margin-top:4px;
+  font-weight:900;
+}
+.dep-amt-btn.selected,
+.dep-amt-btn:active{
+  border-color:#f2cc82;
+  background:linear-gradient(145deg,#3a2e14,#241c10);
+  box-shadow:0 0 0 2px rgba(242,204,130,.35),0 8px 24px rgba(0,0,0,.35);
+  transform:scale(1.02);
+}
 </style>
 
 </head>
@@ -4414,7 +4442,7 @@ hr,.divider{border-color:#765b14!important}
       <div class="section">
         <div class="section-head">
           <h2>Plans VIP populaires</h2>
-          <button class="secondary" onclick="showPage('invest')">Voir les 18 plans</button>
+          <button class="secondary" onclick="showPage('invest')">Voir les plans VIP</button>
         </div>
         <div id="featured" class="grid"></div>
       </div>
@@ -4657,7 +4685,7 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <div class="faq-item" data-cat="depot">
           <button type="button" class="faq-q">Quel est le montant minimum de dépôt ?</button>
-          <div class="faq-a">Le dépôt minimum est de 3 000 FCFA. Vous pouvez choisir parmi les montants prédéfinis (3 000, 5 000, 10 000…) ou saisir un montant personnalisé supérieur ou égal à 3 000 FCFA.</div>
+          <div class="faq-a">Le dépôt minimum est de 4 000 FCFA. Vous pouvez choisir parmi les montants prédéfinis (3 000, 5 000, 10 000…) ou saisir un montant personnalisé supérieur ou égal à 3 000 FCFA.</div>
         </div>
         <div class="faq-item" data-cat="depot">
           <button type="button" class="faq-q">Combien de temps pour valider un dépôt ?</button>
@@ -4689,7 +4717,7 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <div class="faq-item" data-cat="parrain">
           <button type="button" class="faq-q">Comment fonctionne le parrainage ?</button>
-          <div class="faq-a">Chaque membre dispose d’un code unique et d’un lien personnel (https://unitry29574.github.io/Unitry.com/?ref=VOTRE_CODE). Quand un filleul ouvre ce lien, le formulaire d’inscription affiche automatiquement votre code et votre numéro de téléphone (parrain). Commissions : 10 % niveau 1, 5 % niveau 2, 2 % niveau 3.</div>
+          <div class="faq-a">Chaque membre dispose d’un code unique et d’un lien personnel (https://unitry29574.github.io/Souliers-d-or/?ref=VOTRE_CODE). Quand un filleul ouvre ce lien, le formulaire d’inscription affiche automatiquement votre code et votre numéro de téléphone (parrain). Commissions : 10 % niveau 1, 5 % niveau 2, 2 % niveau 3.</div>
         </div>
         <div class="faq-item" data-cat="parrain">
           <button type="button" class="faq-q">Où voir mes filleuls et mon code ?</button>
@@ -4899,7 +4927,7 @@ hr,.divider{border-color:#765b14!important}
 <div class="confirm-overlay" id="depositPhoneModal" role="dialog" aria-modal="true" aria-labelledby="depositPhoneTitle">
   <div class="confirm-box" style="max-width:440px;border:1px solid rgba(242,204,130,.35);box-shadow:0 20px 60px rgba(0,0,0,.5)">
     <div style="text-align:center;margin-bottom:6px">
-      <span style="display:inline-block;background:rgba(242,204,130,.12);color:#f2cc82;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:6px 12px;border-radius:999px">ÉTAPE 1 / 5</span>
+      <span style="display:inline-block;background:rgba(242,204,130,.12);color:#f2cc82;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:6px 12px;border-radius:999px">ÉTAPE 2 / 5</span>
     </div>
     <h2 id="depositPhoneTitle" style="text-align:center;margin:10px 0 6px">Numéro Mobile Money</h2>
     <p style="margin-bottom:14px;color:var(--muted);text-align:center;font-size:13px">Saisissez le numéro exact qui effectuera le paiement. Il doit correspondre à la preuve envoyée.</p>
@@ -4926,42 +4954,40 @@ hr,.divider{border-color:#765b14!important}
     <label style="display:block;margin-bottom:12px">Votre numéro de téléphone
       <input type="tel" id="depositPhone" required placeholder="Ex. 07 XX XX XX XX" style="width:100%;margin-top:6px;min-height:48px;font-size:16px;border-radius:14px">
     </label>
-    <div id="foreignPayInfo" style="margin-top:8px;padding:16px;border:1px solid rgba(212,175,55,.4);border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);color:#f7f0dc">
-      <b style="color:#f2cc82">Destinataire : SOULIER D’OR</b>
-      <p style="margin:8px 0;font-size:13px;opacity:.9">Envoyez votre paiement par Wave, Orange Money ou MTN Money au numéro :</p>
-      <strong id="foreignPayNumber" style="font-size:26px;letter-spacing:1.5px;display:block;margin:10px 0;color:#ffe9a8">0596180495</strong>
-      <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;min-height:48px;font-size:15px;border-radius:14px">📋 Copier le numéro</button>
-      <p class="small" style="margin-top:10px;opacity:.8">Après le paiement, joignez la capture d’écran de la transaction.</p>
-    </div>
-    <div class="actions" style="margin-top:18px;display:flex;gap:10px">
-      <button class="secondary" type="button" onclick="closeDepositFlow()" style="flex:1;min-height:50px;font-size:15px;border-radius:14px">Annuler</button>
-      <button class="primary" type="button" onclick="nextDepositAmount()" style="flex:1.4;min-height:50px;font-size:16px;border-radius:14px;font-weight:900">Continuer →</button>
+        <p id="foreignPayInfo" class="small" style="margin-top:8px;text-align:center;color:var(--muted)">Le numéro de paiement s’affichera à l’étape « Payer maintenant » selon le moyen choisi.</p>
+<div class="actions" style="margin-top:18px;display:flex;gap:10px">
+      <button class="secondary" type="button" onclick="showDepositStep('depositAmountModal')" style="flex:1;min-height:50px;font-size:15px;border-radius:14px">Retour</button>
+      <button class="primary" type="button" onclick="nextDepositConfirm()" style="flex:1.4;min-height:50px;font-size:16px;border-radius:14px;font-weight:900">Continuer →</button>
     </div>
   </div>
 </div>
 
 <div class="confirm-overlay" id="depositAmountModal" role="dialog" aria-modal="true" aria-labelledby="depositAmountTitle">
-  <div class="confirm-box">
-    <h2 id="depositAmountTitle">Étape 2/5 — Montant à déposer</h2>
-    <p style="margin-bottom:12px;color:var(--muted)">Choisissez le montant à déposer.</p>
-    <label>Montant
-      <select id="depositAmount" required style="width:100%;margin-top:6px">
-        <option value="3000">3 000 FCFA</option>
-        <option value="5000">5 000 FCFA</option>
-        <option value="10000">10 000 FCFA</option>
-        <option value="15000">15 000 FCFA</option>
-        <option value="25000">25 000 FCFA</option>
-        <option value="50000">50 000 FCFA</option>
-        <option value="100000">100 000 FCFA</option>
-        <option value="custom">Autre montant…</option>
-      </select>
-    </label>
-    <label id="customDepositWrap" class="hidden" style="display:block;margin-top:12px">Montant personnalisé (FCFA)
-      <input type="number" id="customDepositAmount" min="3000" step="500" placeholder="Minimum 3 000" style="width:100%;margin-top:6px">
+  <div class="confirm-box" style="max-width:440px;border:1px solid rgba(242,204,130,.35)">
+    <div style="text-align:center;margin-bottom:6px">
+      <span style="display:inline-block;background:rgba(242,204,130,.12);color:#f2cc82;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:6px 12px;border-radius:999px">ÉTAPE 1 / 5</span>
+    </div>
+    <h2 id="depositAmountTitle" style="text-align:center;margin:10px 0 6px">Choisissez le montant</h2>
+    <p style="margin-bottom:14px;color:var(--muted);text-align:center;font-size:13px">Montants alignés sur les plans VIP. Touchez le montant que vous souhaitez déposer.</p>
+    <input type="hidden" id="depositAmount" value="4000">
+    <div id="depositAmountGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 14px">
+      <button type="button" class="dep-amt-btn selected" data-amt="4000" onclick="selectDepositAmount(4000,this)">VIP 1<br><b>4 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="7000" onclick="selectDepositAmount(7000,this)">VIP 2<br><b>7 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="12000" onclick="selectDepositAmount(12000,this)">VIP 3<br><b>12 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="18000" onclick="selectDepositAmount(18000,this)">VIP 4<br><b>18 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="35000" onclick="selectDepositAmount(35000,this)">VIP 5<br><b>35 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="50000" onclick="selectDepositAmount(50000,this)">VIP 6<br><b>50 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="70000" onclick="selectDepositAmount(70000,this)">VIP 7<br><b>70 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="150000" onclick="selectDepositAmount(150000,this)">VIP 8<br><b>150 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="400000" onclick="selectDepositAmount(400000,this)">VIP 9<br><b>400 000</b></button>
+      <button type="button" class="dep-amt-btn" data-amt="700000" onclick="selectDepositAmount(700000,this)">VIP 10<br><b>700 000</b></button>
+    </div>
+    <label id="customDepositWrap" style="display:block;margin-top:4px">Autre montant (FCFA)
+      <input type="number" id="customDepositAmount" min="4000" step="500" placeholder="Minimum 4 000" style="width:100%;margin-top:6px;min-height:48px;border-radius:14px" oninput="selectCustomDepositAmount()">
     </label>
     <div class="actions" style="margin-top:18px;display:flex;gap:10px">
-      <button class="secondary" type="button" onclick="showDepositStep('depositPhoneModal')" style="flex:1;min-height:50px;font-size:15px;border-radius:14px">Retour</button>
-      <button class="primary" type="button" onclick="nextDepositConfirm()" style="flex:1.4;min-height:50px;font-size:16px;border-radius:14px;font-weight:900">Continuer →</button>
+      <button class="secondary" type="button" onclick="closeDepositFlow()" style="flex:1;min-height:50px;font-size:15px;border-radius:14px">Annuler</button>
+      <button class="primary" type="button" onclick="nextDepositPhone()" style="flex:1.4;min-height:50px;font-size:16px;border-radius:14px;font-weight:900">Continuer →</button>
     </div>
   </div>
 </div>
@@ -4972,7 +4998,7 @@ hr,.divider{border-color:#765b14!important}
     <p>Vérifiez vos informations :</p>
     <div id="depositSummary" style="text-align:left;line-height:1.9;margin:14px 0"></div>
     <div class="actions">
-      <button class="secondary" type="button" onclick="showDepositStep('depositAmountModal')" style="flex:1;min-height:50px;border-radius:14px">Modifier</button>
+      <button class="secondary" type="button" onclick="showDepositStep('depositPhoneModal')" style="flex:1;min-height:50px;border-radius:14px">Modifier</button>
       <button class="primary" type="button" onclick="goToPayment()" style="flex:1.4;min-height:50px;font-size:16px;border-radius:14px;font-weight:900">Payer maintenant →</button>
     </div>
   </div>
@@ -4985,12 +5011,11 @@ hr,.divider{border-color:#765b14!important}
     <p style="margin:12px 0;font-weight:800;text-align:center;color:#f2cc82;font-size:20px" id="paymentAmountLabel"></p>
 
     <!-- Côte d'Ivoire : Jeko + numéro -->
-    <div id="ciPaymentActions" style="margin:12px 0;padding:16px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
-      <b style="color:#f2cc82">SOULIER D’OR — <span id="selectedPaymentOperator">Wave</span></b>
-      <p style="margin:8px 0;font-size:13px;opacity:.9">Côte d’Ivoire : payez via le lien Jeko sécurisé ou envoyez au numéro :</p>
-      <strong id="ciPayNumber" style="font-size:24px;letter-spacing:1.5px;display:block;margin:10px 0;color:#ffe9a8">0596180495</strong>
-      <button class="secondary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:8px">📋 Copier le numéro</button>
-      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;margin-top:8px">🔐 Ouvrir le lien Jeko sécurisé</button>
+    <div id="ciPaymentActions" style="margin:12px 0;padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
+      <b style="color:#f2cc82">SOULIER D’OR — Côte d’Ivoire</b>
+      <p style="margin:10px 0 14px;font-size:14px;opacity:.92;line-height:1.5">Payez uniquement via le lien Jeko sécurisé. Aucun numéro à copier pour la Côte d’Ivoire.</p>
+      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900">🔐 Ouvrir le lien Jeko sécurisé</button>
+      <p class="small" style="margin-top:12px;opacity:.8;text-align:center">Après paiement, prenez une capture (montant + statut réussi).</p>
     </div>
 
     <!-- Hors CI : guide type USSD / Mobile Money (même esprit que la vidéo) -->
@@ -5005,10 +5030,12 @@ hr,.divider{border-color:#765b14!important}
 <div class="confirm-overlay" id="depositProofModal" role="dialog" aria-modal="true" aria-labelledby="depositProofTitle">
   <div class="confirm-box">
     <h2 id="depositProofTitle">Étape 5/5 — Joindre la preuve</h2>
-    <p>Envoyez la capture d’écran de votre paiement réussi.</p>
-    <label style="display:block;margin:14px 0">Capture d’écran
-      <input type="file" id="depositProofFile" accept="image/*" capture="environment" required style="display:block;width:100%;margin-top:8px" onchange="previewDepositProof(this)">
-    </label>
+    <p style="text-align:center;color:var(--muted);font-size:13px">Sélectionnez une photo depuis votre galerie (capture du paiement réussi).</p>
+    <input type="file" id="depositProofFile" accept="image/jpeg,image/png,image/webp,image/jpg,.jpg,.jpeg,.png,.webp" required style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;z-index:-1" onchange="previewDepositProof(this)">
+    <button type="button" class="primary" onclick="document.getElementById('depositProofFile').click()" style="width:100%;min-height:56px;margin:16px 0 8px;font-size:16px;border-radius:14px;font-weight:900">
+      🖼️ Choisir une photo dans la galerie
+    </button>
+    <p class="small" style="text-align:center;opacity:.75;margin-bottom:8px">Galerie uniquement — pas de caméra</p>
     <div id="depositProofPreviewWrap" class="hidden" style="margin:12px 0;text-align:center">
       <img id="depositProofPreview" alt="Aperçu de la preuve" style="max-width:100%;max-height:220px;border-radius:12px;border:1px solid var(--line);object-fit:contain;background:#0d121a">
       <p class="small" id="depositProofFileName" style="margin-top:8px"></p>
@@ -5036,7 +5063,7 @@ const ADMIN_EMAIL = "msourabi610@gmail.com";
 window.ADMIN_EMAIL = ADMIN_EMAIL;
 
 // Photos robots stylées (Wikimedia Commons — licences libres)
-const REF_SITE = "https://unitry29574.github.io/Unitry.com/";
+const REF_SITE = "https://unitry29574.github.io/Souliers-d-or/";
 const PREMIUM_ROBOT_IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 const ROBOT_IMGS = [
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
@@ -5435,21 +5462,22 @@ function showDepositStep(id) {
 }
 function startDepositFlow() {
   if (!current) { toast("Connectez-vous avant de faire un dépôt."); return; }
-  pendingDeposit = { country: current.country || "CI", phone: current.phone || "", amount: 3000, method: "Wave" };
+  pendingDeposit = { country: current.country || "CI", phone: current.phone || "", amount: 4000, method: "Wave" };
   document.getElementById("depositCountry").value = pendingDeposit.country;
   document.getElementById("depositMethod").value = "Wave";
   updateDepositCountryPayment();
   document.getElementById("depositPhone").value = current.phone || "";
-  document.getElementById("depositAmount").value = "3000";
+  document.getElementById("depositAmount").value = "4000";
   document.getElementById("customDepositAmount").value = "";
   document.getElementById("depositProofFile").value = "";
-  document.getElementById("customDepositWrap").classList.add("hidden");
+  // highlight default VIP 1
+  document.querySelectorAll(".dep-amt-btn").forEach(b => b.classList.toggle("selected", b.getAttribute("data-amt") === "4000"));
   const prevWrap = document.getElementById("depositProofPreviewWrap");
   if (prevWrap) prevWrap.classList.add("hidden");
   const prevImg = document.getElementById("depositProofPreview");
   if (prevImg) prevImg.removeAttribute("src");
   setDepositSending(false);
-  showDepositStep("depositPhoneModal");
+  showDepositStep("depositAmountModal"); // d'abord les montants VIP
 }
 function closeDepositFlow() { showDepositStep(null); }
 document.getElementById("depositAmount").addEventListener("change", () => {
@@ -5458,14 +5486,17 @@ document.getElementById("depositAmount").addEventListener("change", () => {
 function updateDepositCountryPayment() {
   const country = document.getElementById("depositCountry")?.value || current?.country || "CI";
   pendingDeposit.country = country;
-  const info = document.getElementById("foreignPayInfo");
-  // Afficher le numéro de réception pour TOUS les pays (confiance)
-  if (info) info.classList.remove("hidden");
   const methodSelect = document.getElementById("depositMethod");
   if (methodSelect) methodSelect.disabled = false;
-  // Mettre à jour le texte du destinataire selon le moyen
   const method = methodSelect?.value || pendingDeposit.method || "Wave";
   pendingDeposit.method = method;
+  // Tip step 1
+  const tip = document.getElementById("foreignPayInfo");
+  if (tip) {
+    tip.textContent = country === "CI"
+      ? "Côte d’Ivoire : le lien Jeko s’affichera à l’étape « Payer maintenant »."
+      : "Le numéro de paiement s’affichera à l’étape « Payer maintenant » selon le moyen choisi.";
+  }
 }
 document.getElementById("depositCountry").addEventListener("change", updateDepositCountryPayment);
 document.getElementById("depositMethod").addEventListener("change", function() {
@@ -5473,84 +5504,137 @@ document.getElementById("depositMethod").addEventListener("change", function() {
   const label = document.getElementById("selectedPaymentOperator");
   if (label) label.textContent = this.value;
 });
+function getPayNumberForMethod(method) {
+  const m = (method || "").toLowerCase();
+  if (m.includes("orange")) return "0749045488";
+  // Wave et MTN : même numéro
+  return "0596180495";
+}
 function copyForeignPayNumber() {
-  const number = "0596180495";
+  const number = getPayNumberForMethod(pendingDeposit?.method || document.getElementById("depositMethod")?.value);
   if (navigator.clipboard?.writeText) {
     navigator.clipboard.writeText(number).then(
-      () => toast("Numéro SOULIER D’OR copié."),
+      () => toast("Numéro SOULIER D’OR copié : " + number),
       () => toast("Copiez le numéro : " + number)
     );
   } else {
     toast("Copiez le numéro : " + number);
   }
+} else {
+    toast("Copiez le numéro : " + number);
+  }
 }
+
+function selectDepositAmount(amt, btn) {
+  pendingDeposit.amount = Number(amt);
+  document.getElementById("depositAmount").value = String(amt);
+  document.getElementById("customDepositAmount").value = "";
+  document.querySelectorAll(".dep-amt-btn").forEach(b => b.classList.remove("selected"));
+  if (btn) btn.classList.add("selected");
+}
+function selectCustomDepositAmount() {
+  const v = Number(document.getElementById("customDepositAmount").value);
+  if (v >= 4000) {
+    pendingDeposit.amount = v;
+    document.getElementById("depositAmount").value = "custom";
+    document.querySelectorAll(".dep-amt-btn").forEach(b => b.classList.remove("selected"));
+  }
+}
+function nextDepositPhone() {
+  const custom = document.getElementById("customDepositAmount").value;
+  let amount = Number(document.getElementById("depositAmount").value);
+  if (custom && Number(custom) >= 4000) amount = Number(custom);
+  if (document.getElementById("depositAmount").value === "custom") amount = Number(custom);
+  if (!Number.isInteger(amount) || amount < 4000) {
+    // allow if selected from grid
+    amount = Number(pendingDeposit.amount || 0);
+  }
+  if (!Number.isInteger(amount) || amount < 4000) {
+    toast("Choisissez un montant (minimum 4 000 FCFA).");
+    return;
+  }
+  pendingDeposit.amount = amount;
+  showDepositStep("depositPhoneModal");
+}
+
 function nextDepositAmount() {
+  // compat: redirige vers choix montant
+  showDepositStep("depositAmountModal");
+}
+function nextDepositConfirm() {
   const phone = document.getElementById("depositPhone").value.trim();
   if (phone.replace(/\D/g, "").length < 7) { toast("Veuillez saisir un numéro de téléphone valide (7 chiffres minimum)."); return; }
   pendingDeposit.country = document.getElementById("depositCountry").value || "CI";
   pendingDeposit.phone = phone;
-  pendingDeposit.method = document.getElementById("depositMethod").value;
-  showDepositStep("depositAmountModal");
-}
-function nextDepositConfirm() {
-  const selected = document.getElementById("depositAmount").value;
-  const amount = selected === "custom" ? Number(document.getElementById("customDepositAmount").value) : Number(selected);
-  if (!Number.isInteger(amount) || amount < 3000) { toast("Le dépôt minimum est de 3 000 FCFA."); return; }
+  pendingDeposit.method = document.getElementById("depositMethod").value || "Wave";
+  let amount = Number(pendingDeposit.amount || 0);
+  const custom = Number(document.getElementById("customDepositAmount")?.value || 0);
+  if (custom >= 4000) amount = custom;
+  if (!Number.isInteger(amount) || amount < 4000) {
+    toast("Choisissez un montant (minimum 4 000 FCFA).");
+    showDepositStep("depositAmountModal");
+    return;
+  }
   pendingDeposit.amount = amount;
   document.getElementById("depositSummary").innerHTML = `<b>Pays :</b> ${escapeHtml(COUNTRIES[pendingDeposit.country] || pendingDeposit.country)}<br><b>Moyen :</b> ${escapeHtml(pendingDeposit.method)}<br><b>Téléphone :</b> ${escapeHtml(pendingDeposit.phone)}<br><b>Montant :</b> ${money(amount)}`;
   showDepositStep("depositConfirmModal");
 }
 function goToPayment() {
   const isCI = pendingDeposit.country === "CI";
+  const method = pendingDeposit.method || "Wave";
+  const payNumber = getPayNumberForMethod(method);
   const label = document.getElementById("paymentAmountLabel");
-  if (label) label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + (isCI ? " • Jeko" : " • " + pendingDeposit.method);
+  if (label) label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + (isCI ? " • Jeko" : " • " + method);
+
   const paymentBox = document.getElementById("ciPaymentActions");
   paymentBox?.classList.toggle("hidden", !isCI);
   const foreignBox = document.getElementById("foreignPaymentActions");
   foreignBox?.classList.toggle("hidden", isCI);
+
   if (foreignBox) {
     if (isCI) {
       foreignBox.innerHTML = "";
     } else {
-      const method = escapeHtml(pendingDeposit.method || "Wave");
+      const methodEsc = escapeHtml(method);
       const amt = Number(pendingDeposit.amount || 0).toLocaleString("fr-FR");
-      const ussdHint = method.includes("Orange")
-        ? "Ouvrez Orange Money (app ou USSD) → Transfert / Paiement, puis envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
-        : method.includes("MTN")
-          ? "Ouvrez MTN MoMo (app ou USSD) → Envoyer de l’argent, puis envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
-          : "Ouvrez Wave → Envoyer, saisissez le numéro SOULIER D’OR, le montant exact, puis confirmez avec votre code secret.";
+      const ussdHint = method.toLowerCase().includes("orange")
+        ? "Ouvrez Orange Money (app ou USSD) → Transfert / Paiement, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
+        : method.toLowerCase().includes("mtn")
+        ? "Ouvrez MTN Money (app ou USSD) → Transfert, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
+        : "Ouvrez Wave → Envoyer de l’argent, envoyez le montant exact au numéro ci-dessous et confirmez.";
       foreignBox.innerHTML = `
-        <div style="padding:16px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
+        <div style="padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <b style="color:#f2cc82">SOULIER D’OR — ${method}</b>
+            <b style="color:#f2cc82">SOULIER D’OR — ${methodEsc}</b>
             <span style="font-size:11px;background:rgba(242,204,130,.15);padding:4px 10px;border-radius:999px;color:#f2cc82">Hors Côte d’Ivoire</span>
           </div>
           <p style="margin:0 0 10px;font-size:13px;line-height:1.55;opacity:.92">${ussdHint}</p>
-          <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0">
-            <small style="opacity:.75;display:block;margin-bottom:4px">Numéro de réception (Wave / Orange / MTN)</small>
-            <strong style="font-size:24px;letter-spacing:1.5px;color:#ffe9a8">0596180495</strong>
+          <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;margin:10px 0;text-align:center">
+            <small style="opacity:.75;display:block;margin-bottom:6px">Numéro de réception ${methodEsc}</small>
+            <strong style="font-size:26px;letter-spacing:1.5px;color:#ffe9a8">${payNumber}</strong>
           </div>
-          <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0">
+          <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0;text-align:center">
             <small style="opacity:.75;display:block;margin-bottom:4px">Montant à envoyer</small>
             <strong style="font-size:20px;color:#ffe9a8">${amt} FCFA</strong>
           </div>
           <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;opacity:.95">
             <li>Copiez le numéro de paiement</li>
-            <li>Ouvrez ${method} (application ou code USSD)</li>
+            <li>Ouvrez ${methodEsc} (application ou code USSD)</li>
             <li>Envoyez exactement <b>${amt} FCFA</b></li>
             <li>Confirmez avec votre code secret</li>
             <li>Prenez une capture du message de succès</li>
           </ol>
-          <button class="secondary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:8px">📋 Copier le numéro 0596180495</button>
+          <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 Copier le numéro ${payNumber}</button>
         </div>`;
     }
   }
+
   const instruction = document.getElementById("paymentInstruction");
   if (instruction) instruction.textContent = isCI
-    ? "Côte d’Ivoire : utilisez le lien Jeko sécurisé ou le numéro affiché."
-    : "Hors Côte d’Ivoire : payez via Wave, MTN Money ou Orange Money au numéro SOULIER D’OR (guide ci-dessous).";
+    ? "Côte d’Ivoire : utilisez uniquement le lien Jeko sécurisé."
+    : "Hors Côte d’Ivoire : envoyez le paiement au numéro affiché selon le moyen choisi.";
   const operator = document.getElementById("selectedPaymentOperator");
-  if (operator) operator.textContent = pendingDeposit.method;
+  if (operator) operator.textContent = method;
   showDepositStep("depositPaymentModal");
 }
 function openPaymentLink() {
@@ -5801,7 +5885,7 @@ function renderAll() {
   document.getElementById("myCode").textContent = current.code;
   const refLinkEl = document.getElementById("myRefLink");
   if (refLinkEl) {
-    const base = (typeof REF_SITE !== "undefined" ? REF_SITE : "https://unitry29574.github.io/Unitry.com/").replace(/\/?$/, "/");
+    const base = (typeof REF_SITE !== "undefined" ? REF_SITE : "https://unitry29574.github.io/Souliers-d-or/").replace(/\/?$/, "/");
     const code = current.code || "";
     const tel = (current.phone || "").replace(/\s+/g, "");
     let link = base + "?ref=" + encodeURIComponent(code);
