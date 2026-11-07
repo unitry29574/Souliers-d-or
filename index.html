@@ -4351,7 +4351,7 @@ hr,.divider{border-color:#765b14!important}
             <option value="CI" selected>🇨🇮 Côte d’Ivoire</option>
             <option value="BJ">🇧🇯 Bénin</option><option value="TG">🇹🇬 Togo</option>
             <option value="BF">🇧🇫 Burkina Faso</option><option value="CM">🇨🇲 Cameroun</option>
-            <option value="SN">🇸🇳 Sénégal</option><option value="GH">🇬🇭 Ghana</option>
+            <option value="SN">🇸🇳 Sénégal</option>
             <option value="ML">🇲🇱 Mali</option><option value="GN">🇬🇳 Guinée</option>
           </select>
         </label>
@@ -4370,7 +4370,7 @@ hr,.divider{border-color:#765b14!important}
         <div id="sponsorBox" class="notice hidden" style="margin-top:4px;margin-bottom:4px">
           <div style="font-size:12px;letter-spacing:.4px;opacity:.9;margin-bottom:4px">PARRAIN</div>
           <div style="font-weight:800;font-size:16px">N° parent : <span id="sponsorPhoneDisplay">—</span></div>
-          <div class="small" style="margin-top:6px">Commissions déjà en place : <b>10 %</b> · <b>5 %</b> · <b>2 %</b></div>
+          <div class="small" style="margin-top:6px">Commissions déjà en place : <b>20 %</b> · <b>3 %</b> · <b>1 %</b></div>
         </div>
         <button class="primary" type="submit">Créer mon compte</button>
       </form>
@@ -4498,6 +4498,9 @@ hr,.divider{border-color:#765b14!important}
             <div class="step"><b>5</b>Preuve</div>
           </div>
           <button class="primary" type="button" onclick="startDepositFlow()" style="max-width:100%;margin:12px auto 0;display:block;width:100%;min-height:56px;font-size:17px;border-radius:16px;font-weight:900;letter-spacing:.3px">🔐 Commencer un dépôt sécurisé</button>
+          <div class="notice" style="margin-top:14px;border-color:#a82d40;background:linear-gradient(135deg,#3a1518,#1a0c10);color:#ffc9c9;font-weight:800;text-align:center">
+            ⚠️ Tout faux dépôt est un bannissement du compte !!
+          </div>
           <div class="security-strip">
             <span>🔐 Données protégées</span>
             <span>✓ Vérification humaine</span>
@@ -4539,9 +4542,9 @@ hr,.divider{border-color:#765b14!important}
       <div class="deposit-cta-card" style="margin-bottom:18px">
         <form id="withdrawForm" class="form">
           <h3 style="margin-bottom:6px">Initier un retrait sécurisé</h3>
-          <p class="small" style="margin-bottom:12px">Minimum 1 000 FCFA • Frais fixes 100 FCFA • Traitement après vérification</p>
+          <p class="small" style="margin-bottom:12px">Minimum 1 500 FCFA • Frais 20 % • Traitement après vérification</p>
           <label>Montant demandé (FCFA)
-            <input type="number" id="withdrawAmount" min="1000" step="100" required placeholder="Ex. 5000">
+            <input type="number" id="withdrawAmount" min="1500" step="100" required placeholder="Ex. 5000">
           </label>
           <label>Moyen de retrait
             <select id="withdrawMethod">
@@ -4568,7 +4571,7 @@ hr,.divider{border-color:#765b14!important}
           <li>Au moins <b>un dépôt validé</b> sur le compte</li>
           <li>Au moins <b>un robot VIP actif</b></li>
           <li>Solde de retrait disponible suffisant</li>
-          <li>Minimum <b>1 000 FCFA</b> • Frais <b>100 FCFA</b> par demande</li>
+          <li>Minimum <b>1 500 FCFA</b> • Frais <b>20 %</b> du montant demandé</li>
         </ul>
       </div>
 
@@ -4596,7 +4599,7 @@ hr,.divider{border-color:#765b14!important}
           <input id="myRefLink" readonly style="flex:1;min-width:180px;background:#0f0707;border:1px solid var(--line);color:var(--text);padding:10px 12px;border-radius:10px;font-size:12px">
           <button class="primary" type="button" id="copyRefLink" style="padding:8px 14px;min-height:36px;font-size:12px">Copier le lien</button>
         </div>
-        <p class="small" style="margin-top:14px">Commissions de parrainage : <b>10 %</b> (niveau 1) · <b>5 %</b> (niveau 2) · <b>2 %</b> (niveau 3).</p>
+        <p class="small" style="margin-top:14px">Commissions de parrainage : <b>20 %</b> (niveau 1) · <b>3 %</b> (niveau 2) · <b>1 %</b> (niveau 3).</p>
       </div>
       <div class="section">
         <h2>Mes filleuls</h2>
@@ -4697,11 +4700,11 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <div class="faq-item" data-cat="retrait">
           <button type="button" class="faq-q">Quel est le minimum de retrait et les frais ?</button>
-          <div class="faq-a">Le retrait minimum est de 1 000 FCFA. Des frais fixes de 100 FCFA sont appliqués par demande. Vous devez avoir au moins un robot VIP actif pour pouvoir demander un retrait.</div>
+          <div class="faq-a">Le retrait minimum est de 1 500 FCFA. Des frais de 20 % sont appliqués sur le montant demandé. Vous devez avoir au moins un robot VIP actif pour pouvoir demander un retrait.</div>
         </div>
         <div class="faq-item" data-cat="retrait">
           <button type="button" class="faq-q">Quand mon retrait sera-t-il versé ?</button>
-          <div class="faq-a">Après validation par l’administrateur, le montant net (montant demandé moins 100 FCFA) est envoyé sur le numéro Mobile Money indiqué. Les délais dépendent du réseau et de la charge de traitement.</div>
+          <div class="faq-a">Après validation par l’administrateur, le montant net (montant demandé moins 20 % de frais) est envoyé sur le numéro Mobile Money indiqué. Les délais dépendent du réseau et de la charge de traitement.</div>
         </div>
         <div class="faq-item" data-cat="robot">
           <button type="button" class="faq-q">Comment fonctionnent les robots VIP ?</button>
@@ -4717,7 +4720,7 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <div class="faq-item" data-cat="parrain">
           <button type="button" class="faq-q">Comment fonctionne le parrainage ?</button>
-          <div class="faq-a">Chaque membre dispose d’un code unique et d’un lien personnel (https://unitry29574.github.io/Souliers-d-or/?ref=VOTRE_CODE). Quand un filleul ouvre ce lien, le formulaire d’inscription affiche automatiquement votre code et votre numéro de téléphone (parrain). Commissions : 10 % niveau 1, 5 % niveau 2, 2 % niveau 3.</div>
+          <div class="faq-a">Chaque membre dispose d’un code unique et d’un lien personnel (https://unitry29574.github.io/Souliers-d-or/?ref=VOTRE_CODE). Quand un filleul ouvre ce lien, le formulaire d’inscription affiche automatiquement votre code et votre numéro de téléphone (parrain). Commissions : 20 % niveau 1, 3 % niveau 2, 1 % niveau 3.</div>
         </div>
         <div class="faq-item" data-cat="parrain">
           <button type="button" class="faq-q">Où voir mes filleuls et mon code ?</button>
@@ -4817,8 +4820,8 @@ hr,.divider{border-color:#765b14!important}
           <h3 style="color:var(--text);margin-bottom:12px">Règles des plans VIP SOULIER D’OR</h3>
           <p><b>Activation.</b> Un plan ne peut être activé que si le solde de dépôt validé disponible est supérieur ou égal au prix du plan. Le solde disponible = somme des dépôts « Validé » − somme des prix des investissements déjà enregistrés.</p>
           <p><b>Gains.</b> Les gains affichés (journalier / total) sont ceux du catalogue VIP au moment de l’activation. Ils alimentent le calcul du solde de retrait selon la formule en vigueur dans l’application (gain journalier × durée du plan, sous réserve des règles de validation des retraits).</p>
-          <p><b>Retrait des gains.</b> Un retrait peut être refusé si le solde disponible est insuffisant, si aucun investissement n’est actif, ou si les informations Mobile Money sont incorrectes. Les frais de 100 FCFA sont déduits du montant demandé.</p>
-          <p><b>Preuves de paiement.</b> Toute preuve falsifiée, incomplète ou ne correspondant pas au montant déclaré peut entraîner le refus du dépôt et, en cas de récidive, la suspension du compte.</p>
+          <p><b>Retrait des gains.</b> Un retrait peut être refusé si le solde disponible est insuffisant, si aucun investissement n’est actif, ou si les informations Mobile Money sont incorrectes. Les frais de 20 % sont déduits du montant demandé (minimum de retrait : 1 500 FCFA).</p>
+          <p><b>Preuves de paiement.</b> Toute preuve falsifiée, incomplète ou ne correspondant pas au montant déclaré entraîne le refus du dépôt. <b>Tout faux dépôt est un bannissement du compte.</b></p>
           <p><b>Multi-comptes.</b> La création de comptes multiples dans le but de contourner les règles (bonus, parrainage, limites) est interdite et peut entraîner la suspension de l’ensemble des comptes liés.</p>
           <p><b>Évolution du catalogue.</b> SOULIER D’OR peut ajouter, retirer ou modifier des plans VIP. Les plans déjà activés conservent les paramètres enregistrés au moment de l’activation.</p>
         </div>
@@ -4939,7 +4942,6 @@ hr,.divider{border-color:#765b14!important}
         <option value="BF">🇧🇫 Burkina Faso</option>
         <option value="CM">🇨🇲 Cameroun</option>
         <option value="SN">🇸🇳 Sénégal</option>
-        <option value="GH">🇬🇭 Ghana</option>
         <option value="ML">🇲🇱 Mali</option>
         <option value="GN">🇬🇳 Guinée</option>
       </select>
@@ -5031,6 +5033,7 @@ hr,.divider{border-color:#765b14!important}
   <div class="confirm-box">
     <h2 id="depositProofTitle">Étape 5/5 — Joindre la preuve</h2>
     <p style="text-align:center;color:var(--muted);font-size:13px">Sélectionnez une photo depuis votre galerie (capture du paiement réussi).</p>
+    <p class="notice" style="margin:10px 0;border-color:#a82d40;background:linear-gradient(135deg,#3a1518,#1a0c10);color:#ffc9c9;font-weight:800;text-align:center;font-size:13px">⚠️ Tout faux dépôt est un bannissement du compte !!</p>
     <input type="file" id="depositProofFile" accept="image/jpeg,image/png,image/webp,image/jpg,.jpg,.jpeg,.png,.webp" required style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;z-index:-1" onchange="previewDepositProof(this)">
     <button type="button" class="primary" onclick="document.getElementById('depositProofFile').click()" style="width:100%;min-height:56px;margin:16px 0 8px;font-size:16px;border-radius:14px;font-weight:900">
       🖼️ Choisir une photo dans la galerie
@@ -5100,7 +5103,6 @@ const COUNTRIES = {
   BF: "🇧🇫 Burkina Faso",
   CM: "🇨🇲 Cameroun",
   SN: "🇸🇳 Sénégal",
-  GH: "🇬🇭 Ghana",
   ML: "🇲🇱 Mali",
   GN: "🇬🇳 Guinée"
 };
@@ -5785,8 +5787,8 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
     return;
   }
   const amount = Number(document.getElementById("withdrawAmount").value);
-  if (amount < 1000) {
-    toast("Le retrait minimum est de 1 000 FCFA.");
+  if (amount < 1500) {
+    toast("Le retrait minimum est de 1 500 FCFA.");
     return;
   }
   const phone = document.getElementById("withdrawPhone").value.trim();
@@ -5804,12 +5806,14 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
     toast("Solde disponible insuffisant.");
     return;
   }
+  const fee = Math.round(amount * 0.20);
+  const net = amount - fee;
   state.withdrawals.push({
     id: id(),
     userId: uidOf(current),
     amount,
-    fee: 100,
-    net: amount - 100,
+    fee,
+    net,
     method: document.getElementById("withdrawMethod").value,
     phone,
     status: "En attente",
