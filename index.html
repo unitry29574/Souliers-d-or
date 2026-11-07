@@ -4308,6 +4308,26 @@ hr,.divider{border-color:#765b14!important}
   box-shadow:0 0 0 2px rgba(242,204,130,.35),0 8px 24px rgba(0,0,0,.35);
   transform:scale(1.02);
 }
+
+/* Force white readable text on deposit/withdraw finance pages */
+#page-deposit .finance-sub,
+#page-deposit .finance-label,
+#page-deposit .status-card small,
+#page-deposit .tcard span,
+#page-deposit .tcard strong,
+#page-deposit #depositStartForm h3,
+#page-deposit #depositStartForm p,
+#page-deposit .section-head h2,
+#page-deposit .step,
+#page-withdraw .finance-sub,
+#page-withdraw .finance-label,
+#page-withdraw .status-card small {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+#page-deposit .status-card.pending strong { color: #ffd166 !important; }
+#page-deposit .status-card.accepted strong { color: #2ecc71 !important; }
+#page-deposit .status-card.rejected strong { color: #ff8797 !important; }
 </style>
 
 </head>
@@ -4486,25 +4506,25 @@ hr,.divider{border-color:#765b14!important}
     
     <section id="page-deposit" class="page">
       <div class="finance-hero">
-        <div class="finance-label">Centre financier • SOULIER D’OR</div>
-        <h1 style="font-size:30px;margin:8px 0">Mes dépôts</h1>
-        <p class="finance-sub">Un suivi clair, de l’envoi de la demande à la décision finale.</p>
+        <div class="finance-label" style="color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:1px">Centre financier • SOULIER D’OR</div>
+        <h1 style="font-size:30px;margin:8px 0;color:#fff;text-transform:uppercase">Mes dépôts</h1>
+        <p class="finance-sub" style="color:#fff;font-weight:700">Un suivi clair, de l’envoi de la demande à la décision finale.</p>
         <div class="status-grid">
-          <div class="status-card pending"><small>En attente</small><strong id="depositPendingCount">0</strong><small>À vérifier</small></div>
-          <div class="status-card accepted"><small>Acceptés</small><strong id="depositAcceptedCount">0</strong><small>Confirmés</small></div>
-          <div class="status-card rejected"><small>Refusés</small><strong id="depositRejectedCount">0</strong><small>À consulter</small></div>
+          <div class="status-card pending"><small style="color:#fff;font-weight:800;text-transform:uppercase">En attente</small><strong id="depositPendingCount" style="color:#ffd166">0</strong><small style="color:#fff;font-weight:700">À vérifier</small></div>
+          <div class="status-card accepted"><small style="color:#fff;font-weight:800;text-transform:uppercase">Acceptés</small><strong id="depositAcceptedCount" style="color:#2ecc71">0</strong><small style="color:#fff;font-weight:700">Confirmés</small></div>
+          <div class="status-card rejected"><small style="color:#fff;font-weight:800;text-transform:uppercase">Refusés</small><strong id="depositRejectedCount" style="color:#ff8797">0</strong><small style="color:#fff;font-weight:700">À consulter</small></div>
         </div>
       </div>
       <div class="section-head"><h2>💳 Centre de dépôt sécurisé</h2></div>
       <div class="deposit-trust">
-        <div class="tcard"><div class="ico">🔒</div><strong>Paiement vérifié</strong><span>Votre demande est contrôlée avant tout crédit</span></div>
-        <div class="tcard"><div class="ico">✅</div><strong>Validation manuelle</strong><span>Chaque dépôt est vérifié par l’équipe SOULIER D’OR</span></div>
-        <div class="tcard"><div class="ico">⏱️</div><strong>Suivi en temps réel</strong><span>Statut visible : En attente · Validé · Refusé</span></div>
+        <div class="tcard"><div class="ico">🔒</div><strong style="color:#fff;text-transform:uppercase">Paiement vérifié</strong><span style="color:#fff;font-weight:700">Votre demande est contrôlée avant tout crédit</span></div>
+        <div class="tcard"><div class="ico">✅</div><strong style="color:#fff;text-transform:uppercase">Validation manuelle</strong><span style="color:#fff;font-weight:700">Chaque dépôt est vérifié par l’équipe SOULIER D’OR</span></div>
+        <div class="tcard"><div class="ico">⏱️</div><strong style="color:#fff;text-transform:uppercase">Suivi en temps réel</strong><span style="color:#fff;font-weight:700">Statut visible : En attente · Validé · Refusé</span></div>
       </div>
       <div class="deposit-cta-card" style="margin-bottom:18px">
         <div class="form" id="depositStartForm">
-          <h3>Initier un dépôt</h3>
-          <p>Processus clair en 5 étapes. Préparez votre numéro Mobile Money et une capture d’écran du paiement.</p>
+          <h3 style="color:#fff;text-transform:uppercase">Initier un dépôt</h3>
+          <p style="color:#fff;font-weight:700">Processus clair en 5 étapes. Préparez votre numéro Mobile Money et une capture d’écran du paiement.</p>
           <div class="deposit-steps">
             <div class="step"><b>1</b>Numéro</div>
             <div class="step"><b>2</b>Montant</div>
@@ -5041,31 +5061,31 @@ hr,.divider{border-color:#765b14!important}
 
 <div class="confirm-overlay" id="depositPaymentModal" role="dialog" aria-modal="true" aria-labelledby="depositPaymentTitle">
   <div class="confirm-box" style="max-width:440px;text-align:left">
-    <h2 id="depositPaymentTitle" style="text-align:center;color:#fff;text-transform:uppercase">Étape 4/5 — Effectuer le paiement</h2>
-    <p id="paymentInstruction" style="text-align:center;color:#fff;font-weight:800;text-transform:uppercase">Suivez les instructions selon votre pays.</p>
+    <h2 id="depositPaymentTitle" style="text-align:center">Étape 4/5 — Effectuer le paiement</h2>
+    <p id="paymentInstruction" style="text-align:center">Suivez les instructions selon votre pays.</p>
     <p style="margin:12px 0;font-weight:800;text-align:center;color:#f2cc82;font-size:20px" id="paymentAmountLabel"></p>
 
     <!-- Côte d'Ivoire : Jeko + numéro -->
     <div id="ciPaymentActions" style="margin:12px 0;padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
-      <b style="color:#fff;text-transform:uppercase;letter-spacing:.5px">SOULIER D’OR — Côte d’Ivoire • Wave</b>
-      <p style="margin:10px 0 14px;font-size:14px;color:#fff;font-weight:700;line-height:1.5">WAVE : payez via le lien Jeko. Pour Orange ou MTN, un numéro Mobile Money s’affiche à la place.</p>
-      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900;text-transform:uppercase">🔐 Ouvrir le lien Jeko sécurisé</button>
-      <p class="small" style="margin-top:12px;color:#fff;font-weight:700;text-align:center;text-transform:uppercase">Après paiement, revenez ici. Le bouton « J’ai payé » s’affichera.</p>
+      <b style="color:#f2cc82">SOULIER D’OR — Côte d’Ivoire</b>
+      <p style="margin:10px 0 14px;font-size:14px;opacity:.92;line-height:1.5">Payez uniquement via le lien Jeko sécurisé. Aucun numéro à copier pour la Côte d’Ivoire.</p>
+      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900">🔐 Ouvrir le lien Jeko sécurisé</button>
+      <p class="small" style="margin-top:12px;opacity:.8;text-align:center">Après paiement, prenez une capture (montant + statut réussi).</p>
     </div>
 
     <!-- Hors CI : guide type USSD / Mobile Money (même esprit que la vidéo) -->
     <div id="foreignPaymentActions" class="hidden" style="margin:12px 0"></div>
 
-    <p id="depositFinishedHint" class="small" style="margin-top:12px;text-align:center;color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:.3px">1) Payez — 2) Revenez sur cette page — 3) Le bouton « J’ai payé » apparaît</p>
-    <button class="primary" type="button" id="depositFinishedBtn" style="display:none;margin-top:14px;width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900;text-transform:uppercase" onclick="showDepositStep('depositProofModal')">✅ J’AI PAYÉ → JOINDRE LA PREUVE</button>
+    <p class="small" style="margin-top:10px;text-align:center">Après le paiement, prenez une capture d’écran claire (montant + statut réussi) puis continuez.</p>
+    <button class="primary" type="button" style="margin-top:14px;width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900" onclick="showDepositStep('depositProofModal')">✅ J’ai terminé → Joindre la preuve</button>
     <button class="secondary" type="button" style="margin-top:10px;width:100%;min-height:48px;border-radius:14px" onclick="closeDepositFlow()">Plus tard</button>
   </div>
 </div>
 
 <div class="confirm-overlay" id="depositProofModal" role="dialog" aria-modal="true" aria-labelledby="depositProofTitle">
   <div class="confirm-box">
-    <h2 id="depositProofTitle" style="color:#fff;text-transform:uppercase">Étape 5/5 — Joindre la preuve</h2>
-    <p style="text-align:center;color:#fff;font-weight:700;font-size:14px;text-transform:uppercase">Sélectionnez une photo depuis votre galerie (capture du paiement réussi).</p>
+    <h2 id="depositProofTitle">Étape 5/5 — Joindre la preuve</h2>
+    <p style="text-align:center;color:var(--muted);font-size:13px">Sélectionnez une photo depuis votre galerie (capture du paiement réussi).</p>
     <p class="notice" style="margin:10px 0;border-color:#a82d40;background:linear-gradient(135deg,#3a1518,#1a0c10);color:#ffc9c9;font-weight:800;text-align:center;font-size:13px">⚠️ Tout faux dépôt est un bannissement du compte !!</p>
     <input type="file" id="depositProofFile" accept="image/jpeg,image/png,image/webp,image/jpg,.jpg,.jpeg,.png,.webp" required style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;z-index:-1" onchange="previewDepositProof(this)">
     <button type="button" class="primary" onclick="document.getElementById('depositProofFile').click()" style="width:100%;min-height:56px;margin:16px 0 8px;font-size:16px;border-radius:14px;font-weight:900">
@@ -5174,7 +5194,6 @@ const ROBOT_DESCRIPTIONS = {
 };
 
 const KEY = "unitri_state_v2";
-const PENDING_TX_KEY = "unitri_pending_tx_v1";
 let state = loadState(), current = null, adminOpen = false;
 
 function loadState() {
@@ -5184,56 +5203,9 @@ function loadState() {
     return { users: [], deposits: [], withdrawals: [], investments: [] };
   }
 }
-function saveLocalState() {
-  try {
-    // Ne pas stocker les preuves base64 volumineuses dans localStorage
-    const slim = {
-      users: state.users || [],
-      deposits: (state.deposits || []).map(d => {
-        const x = { ...d };
-        if (x.proof && String(x.proof).startsWith("data:")) delete x.proof;
-        return x;
-      }),
-      withdrawals: state.withdrawals || [],
-      investments: state.investments || []
-    };
-    localStorage.setItem(KEY, JSON.stringify(slim));
-  } catch (e) {
-    console.warn("saveLocalState", e);
-  }
-}
 function save() {
-  saveLocalState();
-  try { renderAll(); } catch (_) {}
-}
-function savePendingTx(type, record) {
-  try {
-    const all = JSON.parse(localStorage.getItem(PENDING_TX_KEY) || "{}");
-    const uid = String(record.userId || "");
-    if (!uid) return;
-    if (!all[uid]) all[uid] = { deposits: [], withdrawals: [] };
-    const list = all[uid][type] || [];
-    const filtered = list.filter(x => x.id !== record.id);
-    const copy = { ...record };
-    if (copy.proof && String(copy.proof).startsWith("data:")) delete copy.proof;
-    filtered.push(copy);
-    all[uid][type] = filtered.slice(-80);
-    localStorage.setItem(PENDING_TX_KEY, JSON.stringify(all));
-  } catch (e) { console.warn("savePendingTx", e); }
-}
-function loadPendingTx(type, uid) {
-  try {
-    const all = JSON.parse(localStorage.getItem(PENDING_TX_KEY) || "{}");
-    return (all[String(uid)] && all[String(uid)][type]) || [];
-  } catch (_) { return []; }
-}
-function mergeTxLists(serverList, localList) {
-  const byId = new Map();
-  (serverList || []).forEach(d => { if (d && d.id) byId.set(d.id, d); });
-  (localList || []).forEach(d => {
-    if (d && d.id && !byId.has(d.id)) byId.set(d.id, d);
-  });
-  return Array.from(byId.values()).sort((a, b) => (b.created || 0) - (a.created || 0));
+  localStorage.setItem(KEY, JSON.stringify(state));
+  renderAll();
 }
 function money(n) {
   return Math.round(n).toLocaleString("fr-FR") + " FCFA";
@@ -5388,10 +5360,11 @@ function renderPlans() {
 function invest(i) {
   if (!current) return;
   const p = PLANS[i];
+  if (!p) { toast("Plan introuvable."); return; }
   if (window.vipPlanLocks?.[i]) { toast("Ce plan VIP est temporairement verrouillé par l’administrateur."); return; }
   const myDep = state.deposits.filter(x => matchesUser(x, current) && x.status === "Validé");
   const depOk = myDep.reduce((s, x) => s + x.amount, 0);
-  const spent = state.investments.filter(x => matchesUser(x, current)).reduce((s, x) => s + x.price, 0);
+  const spent = state.investments.filter(x => matchesUser(x, current)).reduce((s, x) => s + Number(x.price || 0), 0);
   const available = Math.max(0, depOk - spent);
   if (depOk <= 0) {
     toast("Faites d’abord un dépôt validé avant d’investir.");
@@ -5403,24 +5376,81 @@ function invest(i) {
     showPage("deposit");
     return;
   }
-  if (!confirm(`Activer ${p.name} pour ${money(p.price)} ?`)) return;
+  if (!confirm("Activer " + p.name + " pour " + money(p.price) + " ?")) return;
+
   (async () => {
+    const inv = {
+      id: "inv_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+      userId: uidOf(current),
+      plan: p.name,
+      planIndex: i,
+      price: p.price,
+      daily: p.daily,
+      days: p.days,
+      gain: p.gain,
+      total: p.total,
+      status: "Actif",
+      created: Date.now(),
+      email: (current.email || "").toLowerCase()
+    };
+
+    // 1) Essai Cloud Function si disponible
+    let fromServer = null;
     try {
-      const result = await createInvestmentCallable({ planIndex: i });
-      const created = result.data && result.data.investment;
-      if (created) state.investments.push(created);
-      if (typeof renderAll === "function") renderAll();
-      try {
-        const activeCard = document.querySelectorAll("#vipGrid .vip")[i];
-        if (activeCard) { activeCard.classList.remove("vip-activated"); void activeCard.offsetWidth; activeCard.classList.add("vip-activated"); }
-      } catch (_) {}
-      showTxAnimation("success", "Investissement activé !", "Votre robot " + p.name + " est maintenant activé. Consultez votre historique pour suivre son statut.");
-      toast("Robot " + p.name + " activé.");
-      setTimeout(() => window.refreshMissionProgress && window.refreshMissionProgress(), 1200);
+      const callable = window.createInvestmentCallable;
+      if (typeof callable === "function") {
+        const result = await callable({ planIndex: i });
+        fromServer = result && result.data && result.data.investment;
+      }
     } catch (err) {
-      console.error("Création investissement:", err);
-      toast(err?.message || "Impossible d’activer cet investissement. Vérifiez votre dépôt validé.");
+      console.warn("Cloud Function investissement indisponible, fallback local:", err && (err.message || err));
     }
+
+    if (fromServer) {
+      if (!fromServer.id) fromServer.id = inv.id;
+      if (fromServer.daily == null) fromServer.daily = p.daily;
+      if (fromServer.days == null) fromServer.days = p.days;
+      if (fromServer.price == null) fromServer.price = p.price;
+      if (!fromServer.plan) fromServer.plan = p.name;
+      if (!fromServer.status) fromServer.status = "Actif";
+      if (!fromServer.userId) fromServer.userId = uidOf(current);
+      if (!fromServer.created) fromServer.created = Date.now();
+      inv.id = fromServer.id;
+      Object.assign(inv, fromServer);
+    }
+
+    // 2) Toujours enregistrer localement (pour historique + solde)
+    const exists = state.investments.some(x => x.id === inv.id);
+    if (!exists) state.investments.push(inv);
+    try { if (typeof savePendingTx === "function") savePendingTx("investments", inv); } catch (_) {}
+    try { if (typeof saveLocalState === "function") saveLocalState(); } catch (_) {}
+    try { if (typeof save === "function") save(); } catch (_) {}
+
+    // 3) Sync Firestore directe (si connecté)
+    try {
+      if (typeof window.syncInvestmentToFirebase === "function") {
+        window.syncInvestmentToFirebase(inv);
+      }
+    } catch (_) {}
+
+    if (typeof renderAll === "function") renderAll();
+    try {
+      const activeCard = document.querySelectorAll("#vipGrid .vip")[i];
+      if (activeCard) {
+        activeCard.classList.remove("vip-activated");
+        void activeCard.offsetWidth;
+        activeCard.classList.add("vip-activated");
+      }
+    } catch (_) {}
+
+    const gains = money(p.daily * p.days);
+    showTxAnimation(
+      "success",
+      "Félicitations !",
+      "Votre investissement " + p.name + " a bien été accepté. Les gains (" + gains + ") sont crédités sur votre solde de retrait."
+    );
+    toast("Félicitations ! Investissement " + p.name + " accepté.");
+    setTimeout(() => window.refreshMissionProgress && window.refreshMissionProgress(), 1200);
   })();
 }
 
@@ -5594,10 +5624,6 @@ function getPayNumberForMethod(method) {
   // Wave et MTN : même numéro
   return "0596180495";
 }
-function isJekoPayment(country, method) {
-  return String(country || "").toUpperCase() === "CI" && String(method || "").toLowerCase().includes("wave");
-}
-
 function copyForeignPayNumber() {
   const number = getPayNumberForMethod(pendingDeposit?.method || document.getElementById("depositMethod")?.value);
   if (navigator.clipboard?.writeText) {
@@ -5668,123 +5694,67 @@ function goToPayment() {
   const isCI = pendingDeposit.country === "CI";
   const method = pendingDeposit.method || "Wave";
   const payNumber = getPayNumberForMethod(method);
-  const useJeko = typeof isJekoPayment === "function" ? isJekoPayment(pendingDeposit.country, method) : (isCI && String(method).toLowerCase().includes("wave"));
   const label = document.getElementById("paymentAmountLabel");
-  if (label) {
-    label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + (useJeko ? " • JEKO (WAVE)" : " • " + method.toUpperCase());
-    label.style.color = "#fff";
-    label.style.fontWeight = "900";
-  }
+  if (label) label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + (isCI ? " • Jeko" : " • " + method);
 
   const paymentBox = document.getElementById("ciPaymentActions");
+  paymentBox?.classList.toggle("hidden", !isCI);
   const foreignBox = document.getElementById("foreignPaymentActions");
+  foreignBox?.classList.toggle("hidden", isCI);
 
-  if (useJeko) {
-    paymentBox?.classList.remove("hidden");
-    foreignBox?.classList.add("hidden");
-    if (foreignBox) foreignBox.innerHTML = "";
-  } else {
-    paymentBox?.classList.add("hidden");
-    foreignBox?.classList.remove("hidden");
-    if (foreignBox) {
+  if (foreignBox) {
+    if (isCI) {
+      foreignBox.innerHTML = "";
+    } else {
       const methodEsc = escapeHtml(method);
       const amt = Number(pendingDeposit.amount || 0).toLocaleString("fr-FR");
-      const countryLabel = isCI ? "CÔTE D’IVOIRE" : "HORS CÔTE D’IVOIRE";
       const ussdHint = method.toLowerCase().includes("orange")
-        ? "Ouvrez Orange Money → Transfert, envoyez le montant exact au numéro ci-dessous."
+        ? "Ouvrez Orange Money (app ou USSD) → Transfert / Paiement, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
         : method.toLowerCase().includes("mtn")
-        ? "Ouvrez MTN Money → Transfert, envoyez le montant exact au numéro ci-dessous."
-        : "Ouvrez Wave → Envoyer de l’argent au numéro ci-dessous.";
+        ? "Ouvrez MTN Money (app ou USSD) → Transfert, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
+        : "Ouvrez Wave → Envoyer de l’argent, envoyez le montant exact au numéro ci-dessous et confirmez.";
       foreignBox.innerHTML = `
-        <div style="padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#fff">
+        <div style="padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <b style="color:#fff;text-transform:uppercase">SOULIER D’OR — ${methodEsc}</b>
-            <span style="font-size:11px;background:rgba(242,204,130,.2);padding:4px 10px;border-radius:999px;color:#fff;font-weight:800">${countryLabel}</span>
+            <b style="color:#f2cc82">SOULIER D’OR — ${methodEsc}</b>
+            <span style="font-size:11px;background:rgba(242,204,130,.15);padding:4px 10px;border-radius:999px;color:#f2cc82">Hors Côte d’Ivoire</span>
           </div>
-          <p style="margin:0 0 10px;font-size:14px;line-height:1.55;color:#fff;font-weight:700">${ussdHint}</p>
+          <p style="margin:0 0 10px;font-size:13px;line-height:1.55;opacity:.92">${ussdHint}</p>
           <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;margin:10px 0;text-align:center">
-            <small style="display:block;margin-bottom:6px;color:#fff;text-transform:uppercase;font-weight:800">Numéro de réception</small>
-            <strong style="font-size:28px;letter-spacing:1.5px;color:#fff">${payNumber}</strong>
+            <small style="opacity:.75;display:block;margin-bottom:6px">Numéro de réception ${methodEsc}</small>
+            <strong style="font-size:26px;letter-spacing:1.5px;color:#ffe9a8">${payNumber}</strong>
           </div>
           <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0;text-align:center">
-            <small style="display:block;margin-bottom:4px;color:#fff;text-transform:uppercase;font-weight:800">Montant à envoyer</small>
-            <strong style="font-size:22px;color:#fff">${amt} FCFA</strong>
+            <small style="opacity:.75;display:block;margin-bottom:4px">Montant à envoyer</small>
+            <strong style="font-size:20px;color:#ffe9a8">${amt} FCFA</strong>
           </div>
-          <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;color:#fff;font-weight:700">
-            <li>Copiez le numéro</li>
-            <li>Ouvrez ${methodEsc}</li>
+          <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;opacity:.95">
+            <li>Copiez le numéro de paiement</li>
+            <li>Ouvrez ${methodEsc} (application ou code USSD)</li>
             <li>Envoyez exactement <b>${amt} FCFA</b></li>
-            <li>Prenez une capture du succès</li>
-            <li>Revenez ici : le bouton « J’ai payé » apparaît</li>
+            <li>Confirmez avec votre code secret</li>
+            <li>Prenez une capture du message de succès</li>
           </ol>
-          <button class="primary" type="button" onclick="copyForeignPayNumber(); window.__awaitingPaymentReturn=true; const h=document.getElementById('depositFinishedHint'); if(h){h.textContent='REVenez APRÈS PAIEMENT — LE BOUTON APPARAÎTRA';}" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800;text-transform:uppercase">📋 COPIER LE NUMÉRO ${payNumber}</button>
+          <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 Copier le numéro ${payNumber}</button>
         </div>`;
     }
   }
 
   const instruction = document.getElementById("paymentInstruction");
-  if (instruction) {
-    instruction.style.color = "#fff";
-    instruction.style.fontWeight = "800";
-    instruction.style.textTransform = "uppercase";
-    if (useJeko) instruction.textContent = "Côte d’Ivoire • Wave : payez via le lien Jeko, puis revenez ici.";
-    else if (isCI) instruction.textContent = "Côte d’Ivoire • " + method + " : envoyez au numéro affiché, puis revenez ici.";
-    else instruction.textContent = "Envoyez le paiement au numéro affiché, puis revenez ici.";
-  }
-
-  // Cacher le bouton jusqu'au retour après paiement
-  const finBtn = document.getElementById("depositFinishedBtn");
-  const hint = document.getElementById("depositFinishedHint");
-  window.__awaitingPaymentReturn = false;
-  if (finBtn) finBtn.style.display = "none";
-  if (hint) {
-    hint.style.display = "block";
-    hint.style.color = "#fff";
-    hint.style.fontWeight = "800";
-    hint.style.textTransform = "uppercase";
-    hint.textContent = useJeko
-      ? "1) Ouvrez le lien Jeko  2) Payez  3) Revenez ici → bouton « J’ai payé »"
-      : "1) Copiez le numéro  2) Payez  3) Revenez ici → bouton « J’ai payé »";
-  }
+  if (instruction) instruction.textContent = isCI
+    ? "Côte d’Ivoire : utilisez uniquement le lien Jeko sécurisé."
+    : "Hors Côte d’Ivoire : envoyez le paiement au numéro affiché selon le moyen choisi.";
+  const operator = document.getElementById("selectedPaymentOperator");
+  if (operator) operator.textContent = method;
   showDepositStep("depositPaymentModal");
 }
 function openPaymentLink() {
-  const method = pendingDeposit?.method || "Wave";
-  const country = pendingDeposit?.country || "CI";
-  if (typeof isJekoPayment === "function" && !isJekoPayment(country, method)) {
-    toast("Le lien Jeko est réservé au paiement Wave en Côte d’Ivoire.");
+  if (pendingDeposit.country !== "CI") {
+    toast("Le lien Jeko est réservé à la Côte d’Ivoire. Utilisez le numéro Mobile Money affiché.");
     return;
   }
-  window.__awaitingPaymentReturn = true;
   window.open(PAYMENT_LINK, "_blank", "noopener,noreferrer");
-  const hint = document.getElementById("depositFinishedHint");
-  if (hint) {
-    hint.textContent = "PAYEZ MAINTENANT, PUIS REVenez SUR CETTE PAGE — LE BOUTON APPARAÎTRA";
-    hint.style.color = "#f2cc82";
-  }
-  try { toast("Lien ouvert. Payez, puis revenez sur SOULIER D’OR."); } catch(_){}
 }
-function revealPaidButton() {
-  const finBtn = document.getElementById("depositFinishedBtn");
-  const hint = document.getElementById("depositFinishedHint");
-  if (finBtn) {
-    finBtn.style.display = "block";
-    finBtn.style.animation = "riseIn .4s ease";
-  }
-  if (hint) {
-    hint.textContent = "PAIEMENT EFFECTUÉ ? JOIGNEZ MAINTENANT VOTRE PREUVE";
-    hint.style.color = "#2ecc71";
-  }
-  window.__awaitingPaymentReturn = false;
-}
-document.addEventListener("visibilitychange", function() {
-  if (document.visibilityState === "visible" && window.__awaitingPaymentReturn) {
-    revealPaidButton();
-  }
-});
-window.addEventListener("focus", function() {
-  if (window.__awaitingPaymentReturn) revealPaidButton();
-});
 function showDepositPayment() { goToPayment(); }
 function previewDepositProof(input) {
   const file = input.files && input.files[0];
@@ -5868,8 +5838,6 @@ function submitDepositProof() {
     try {
       baseRecord.proof = reader.result;
       state.deposits.push(baseRecord);
-      try { savePendingTx("deposits", baseRecord); } catch(_){}
-      try { saveLocalState(); } catch(_){}
       try { save(); } catch(_){}
     } catch (e) {
       console.error(e);
@@ -5883,8 +5851,6 @@ function submitDepositProof() {
   reader.onerror = function() {
     try {
       state.deposits.push(baseRecord);
-      try { savePendingTx("deposits", baseRecord); } catch(_){}
-      try { saveLocalState(); } catch(_){}
       try { save(); } catch(_){}
     } catch(_){}
     clearTimeout(safety);
@@ -5898,8 +5864,6 @@ function submitDepositProof() {
   } catch (e) {
     try {
       state.deposits.push(baseRecord);
-      try { savePendingTx("deposits", baseRecord); } catch(_){}
-      try { saveLocalState(); } catch(_){}
       try { save(); } catch(_){}
     } catch(_){}
     clearTimeout(safety);
@@ -5956,7 +5920,7 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
   }
   const fee = Math.round(amount * 0.20);
   const net = amount - fee;
-  const wdRecord = {
+  state.withdrawals.push({
     id: id(),
     userId: uidOf(current),
     amount,
@@ -5965,17 +5929,10 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
     method: document.getElementById("withdrawMethod").value,
     phone,
     status: "En attente",
-    created: Date.now(),
-    email: (current.email || "").toLowerCase()
-  };
-  state.withdrawals.push(wdRecord);
-  try { savePendingTx("withdrawals", wdRecord); } catch(_){}
-  try { saveLocalState(); } catch(_){}
+    created: Date.now()
+  });
   e.target.reset();
   save();
-  if (typeof window.syncWithdrawalToFirebase === "function") {
-    try { window.syncWithdrawalToFirebase(wdRecord); } catch(_){}
-  }
   showTxAnimation("pending", "Demande de retrait envoyée", "Votre demande est enregistrée et reste en attente de vérification. Une animation de validation ou de refus apparaîtra lorsque le statut sera mis à jour.");
   toast("Demande de retrait enregistrée. Vérification en cours.");
 });
@@ -6071,15 +6028,15 @@ function renderAll() {
     ...myWith.map(x => ({name:"Demande de retrait", amount:-x.amount, status:x.status, date:x.created})),
     ...myInv.map(x => ({name:"Plan " + x.plan, amount:-x.price, status:x.status, date:x.created}))
   ].sort((a,b) => b.date-a.date);
-  renderList("transactionHistory", tx.map(x => `<div class="transaction-row"><div><div class="tx-name" style="color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:.3px">${escapeHtml(x.name)}</div><div class="tx-date" style="color:#fff;font-weight:700">${new Date(x.date).toLocaleDateString("fr-FR")} • <span style="color:#f2cc82;text-transform:uppercase;font-weight:900">${escapeHtml(x.status)}</span></div></div><div class="tx-negative" style="color:#ff8b97;font-weight:900">${money(x.amount)}</div></div>`), "Aucune transaction pour le moment.");
+  renderList("transactionHistory", tx.map(x => `<div class="transaction-row"><div><div class="tx-name">${escapeHtml(x.name)}</div><div class="tx-date">${new Date(x.date).toLocaleDateString("fr-FR")} • ${escapeHtml(x.status)}</div></div><div class="tx-negative">${money(x.amount)}</div></div>`), "Aucune transaction pour le moment.");
 
   renderList("myDeposits", myDep.map(x => `
     <div class="item">
       <div>
-        <b style="color:#fff;text-transform:uppercase">${money(x.amount)} • ${escapeHtml(x.method || "")}</b>
-        <div class="small" style="color:#fff;font-weight:700">RÉF. ${escapeHtml(x.ref || "—")} • ${new Date(x.created).toLocaleString("fr-FR")}</div>
+        <b>${money(x.amount)} • ${x.method}</b>
+        <div class="small">Réf. ${escapeHtml(x.ref)} • ${new Date(x.created).toLocaleString("fr-FR")}</div>
       </div>
-      <span class="badge" style="background:#5a4825;color:#fff;text-transform:uppercase;font-weight:900">${x.status}</span>
+      <span class="badge">${x.status}</span>
     </div>
   `));
 
@@ -6490,6 +6447,33 @@ const db = getFirestore(fbApp);
 const storage = getStorage(fbApp);
 const functions = getFunctions(fbApp, "europe-west1");
 const createInvestmentCallable = httpsCallable(functions, "createInvestment");
+window.createInvestmentCallable = createInvestmentCallable;
+window.syncInvestmentToFirebase = async function(record) {
+  try {
+    if (!auth.currentUser || adminMode) return;
+    const payload = {
+      id: record.id,
+      userId: auth.currentUser.uid,
+      plan: record.plan || "",
+      planIndex: record.planIndex,
+      price: Number(record.price) || 0,
+      daily: Number(record.daily) || 0,
+      days: Number(record.days) || 0,
+      gain: Number(record.gain) || 0,
+      total: Number(record.total) || 0,
+      status: record.status || "Actif",
+      created: record.created || Date.now(),
+      createdAt: serverTimestamp(),
+      email: (auth.currentUser.email || record.email || "").toLowerCase()
+    };
+    await setDoc(doc(db, "investments", record.id), payload, { merge: true });
+    const local = state.investments.find(x => x.id === record.id);
+    if (local) local._synced = true;
+    console.log("Investissement synchronisé Firebase:", record.id);
+  } catch (e) {
+    console.warn("syncInvestmentToFirebase:", e && (e.code || e.message || e));
+  }
+};
 window.firebaseAdminLogout = async function() {
   try { await signOut(auth); } catch (_) {}
   adminMode = false; firebaseReady = false; current = null;
@@ -6550,38 +6534,9 @@ async function loadOwnData(user) {
     state.users = [safeProfile(profileSnap.data(), uid)];
   }
   for (const col of ["deposits", "withdrawals", "investments"]) {
-    try {
-      const snap = await getDocs(query(collection(db, col), where("userId", "==", uid)));
-      state[col] = snap.docs.map(d => ({ ...d.data(), id: d.id }));
-    } catch (e) {
-      console.warn("loadOwnData " + col + ":", e);
-      state[col] = state[col] || [];
-    }
+    const snap = await getDocs(query(collection(db, col), where("userId", "==", uid)));
+    state[col] = snap.docs.map(d => ({ ...d.data(), id: d.id }));
   }
-  // Fusion locale : empêche la disparition de l'historique si Firestore a échoué
-  try {
-    state.deposits = mergeTxLists(state.deposits, loadPendingTx("deposits", uid));
-    state.withdrawals = mergeTxLists(state.withdrawals, loadPendingTx("withdrawals", uid));
-    // Aussi fusionner depuis localStorage global KEY
-    try {
-      const localFull = JSON.parse(localStorage.getItem(KEY) || "{}");
-      if (localFull.deposits) state.deposits = mergeTxLists(state.deposits, localFull.deposits.filter(d => String(d.userId) === String(uid)));
-      if (localFull.withdrawals) state.withdrawals = mergeTxLists(state.withdrawals, localFull.withdrawals.filter(d => String(d.userId) === String(uid)));
-      if (localFull.investments) state.investments = mergeTxLists(state.investments, localFull.investments.filter(d => String(d.userId) === String(uid)));
-    } catch (_) {}
-    saveLocalState();
-    // Retente d'envoyer les dépôts/retraits encore en attente vers Firebase
-    for (const d of state.deposits) {
-      if (d.status === "En attente" && !d._synced && typeof window.syncDepositToFirebase === "function") {
-        try { window.syncDepositToFirebase(d, null); } catch (_) {}
-      }
-    }
-    for (const w of state.withdrawals) {
-      if (w.status === "En attente" && !w._synced && typeof window.syncWithdrawalToFirebase === "function") {
-        try { window.syncWithdrawalToFirebase(w); } catch (_) {}
-      }
-    }
-  } catch (e) { console.warn("merge local tx:", e); }
   current = state.users[0];
   firebaseReady = true;
   document.getElementById("sessionPill").textContent = "SOULIER D’OR";
@@ -6684,8 +6639,6 @@ async function persistCurrentState() {
   }
 }
 window.save = function() {
-  // TOUJOURS sauvegarder en local (sinon l'historique disparaît à la reconnexion)
-  try { saveLocalState(); } catch (_) {}
   if (typeof window.renderPlans === "function") window.renderPlans();
   if (current && typeof window.renderAll === "function") window.renderAll();
   if (adminOpen && typeof window.renderAdmin === "function") window.renderAdmin();
@@ -6858,45 +6811,6 @@ document.getElementById("logoutBtn").addEventListener("click", async (e) => {
 
 // Ne plus bloquer l’UI : la preuve est déjà enregistrée localement.
 // On tente seulement une synchro Firebase en arrière-plan.
-
-window.syncWithdrawalToFirebase = async function(record) {
-  try {
-    if (!auth.currentUser || adminMode) return;
-    const payload = {
-      id: record.id,
-      userId: auth.currentUser.uid,
-      amount: Number(record.amount) || 0,
-      fee: Number(record.fee) || 0,
-      net: Number(record.net) || 0,
-      method: record.method || "",
-      phone: record.phone || "",
-      status: "En attente",
-      created: record.created || Date.now(),
-      createdAt: serverTimestamp(),
-      email: (auth.currentUser.email || record.email || "").toLowerCase()
-    };
-    let lastErr = null;
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      try {
-        await setDoc(doc(db, "withdrawals", record.id), payload, { merge: true });
-        const local = state.withdrawals.find(w => w.id === record.id);
-        if (local) local._synced = true;
-        try { savePendingTx("withdrawals", { ...payload, _synced: true }); } catch(_){}
-        console.log("Retrait synchronisé:", record.id);
-        lastErr = null;
-        break;
-      } catch (e) {
-        lastErr = e;
-        console.error("Firestore retrait", attempt, e && (e.code || e.message));
-        await new Promise(r => setTimeout(r, 700 * attempt));
-      }
-    }
-    if (lastErr && typeof toast === "function") {
-      toast("Retrait sauvé sur l’appareil. Règles Firestore à vérifier (withdrawals).");
-    }
-  } catch (e) { console.warn("syncWithdrawalToFirebase", e); }
-};
-
 window.syncDepositToFirebase = async function(record, file) {
   try {
     if (!auth.currentUser || !firebaseReady || adminMode) return;
