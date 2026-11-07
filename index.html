@@ -4308,26 +4308,6 @@ hr,.divider{border-color:#765b14!important}
   box-shadow:0 0 0 2px rgba(242,204,130,.35),0 8px 24px rgba(0,0,0,.35);
   transform:scale(1.02);
 }
-
-/* Force white readable text on deposit/withdraw finance pages */
-#page-deposit .finance-sub,
-#page-deposit .finance-label,
-#page-deposit .status-card small,
-#page-deposit .tcard span,
-#page-deposit .tcard strong,
-#page-deposit #depositStartForm h3,
-#page-deposit #depositStartForm p,
-#page-deposit .section-head h2,
-#page-deposit .step,
-#page-withdraw .finance-sub,
-#page-withdraw .finance-label,
-#page-withdraw .status-card small {
-  color: #ffffff !important;
-  font-weight: 700 !important;
-}
-#page-deposit .status-card.pending strong { color: #ffd166 !important; }
-#page-deposit .status-card.accepted strong { color: #2ecc71 !important; }
-#page-deposit .status-card.rejected strong { color: #ff8797 !important; }
 </style>
 
 </head>
@@ -4505,41 +4485,61 @@ hr,.divider{border-color:#765b14!important}
 
     
     <section id="page-deposit" class="page">
-      <div class="finance-hero">
-        <div class="finance-label" style="color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:1px">Centre financier • SOULIER D’OR</div>
-        <h1 style="font-size:30px;margin:8px 0;color:#fff;text-transform:uppercase">Mes dépôts</h1>
-        <p class="finance-sub" style="color:#fff;font-weight:700">Un suivi clair, de l’envoi de la demande à la décision finale.</p>
-        <div class="status-grid">
-          <div class="status-card pending"><small style="color:#fff;font-weight:800;text-transform:uppercase">En attente</small><strong id="depositPendingCount" style="color:#ffd166">0</strong><small style="color:#fff;font-weight:700">À vérifier</small></div>
-          <div class="status-card accepted"><small style="color:#fff;font-weight:800;text-transform:uppercase">Acceptés</small><strong id="depositAcceptedCount" style="color:#2ecc71">0</strong><small style="color:#fff;font-weight:700">Confirmés</small></div>
-          <div class="status-card rejected"><small style="color:#fff;font-weight:800;text-transform:uppercase">Refusés</small><strong id="depositRejectedCount" style="color:#ff8797">0</strong><small style="color:#fff;font-weight:700">À consulter</small></div>
+      <div class="finance-hero" style="position:relative;overflow:hidden;border:1px solid rgba(242,204,130,.35);box-shadow:0 0 40px rgba(227,75,91,.15), inset 0 1px 0 rgba(255,255,255,.06)">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(242,204,130,.12),transparent 50%),radial-gradient(ellipse at 90% 80%,rgba(227,75,91,.1),transparent 45%);pointer-events:none"></div>
+        <div class="finance-label" style="color:#f2cc82;font-weight:900;letter-spacing:2px;text-transform:uppercase;font-size:11px">🔒 Vault sécurisé · SOULIER D’OR</div>
+        <h1 style="font-size:28px;margin:10px 0 6px;color:#fff;font-weight:950;letter-spacing:-.5px">Centre de dépôt</h1>
+        <p class="finance-sub" style="color:#e8edf5;font-weight:600;line-height:1.55">Infrastructure chiffrée · validation humaine · traçabilité complète de chaque franc.</p>
+        <div class="status-grid" style="margin-top:18px">
+          <div class="status-card pending" style="background:linear-gradient(160deg,#1a1520,#121018);border:1px solid rgba(255,209,102,.25)"><small style="color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:.5px">En attente</small><strong id="depositPendingCount" style="color:#ffd166">0</strong><small style="color:#c5cedc;font-weight:600">File sécurisée</small></div>
+          <div class="status-card accepted" style="background:linear-gradient(160deg,#0f1a16,#0c1412);border:1px solid rgba(46,204,113,.25)"><small style="color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Acceptés</small><strong id="depositAcceptedCount" style="color:#2ecc71">0</strong><small style="color:#c5cedc;font-weight:600">Crédités</small></div>
+          <div class="status-card rejected" style="background:linear-gradient(160deg,#1a1214,#140e10);border:1px solid rgba(255,135,151,.2)"><small style="color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Refusés</small><strong id="depositRejectedCount" style="color:#ff8797">0</strong><small style="color:#c5cedc;font-weight:600">À revoir</small></div>
         </div>
       </div>
-      <div class="section-head"><h2>💳 Centre de dépôt sécurisé</h2></div>
-      <div class="deposit-trust">
-        <div class="tcard"><div class="ico">🔒</div><strong style="color:#fff;text-transform:uppercase">Paiement vérifié</strong><span style="color:#fff;font-weight:700">Votre demande est contrôlée avant tout crédit</span></div>
-        <div class="tcard"><div class="ico">✅</div><strong style="color:#fff;text-transform:uppercase">Validation manuelle</strong><span style="color:#fff;font-weight:700">Chaque dépôt est vérifié par l’équipe SOULIER D’OR</span></div>
-        <div class="tcard"><div class="ico">⏱️</div><strong style="color:#fff;text-transform:uppercase">Suivi en temps réel</strong><span style="color:#fff;font-weight:700">Statut visible : En attente · Validé · Refusé</span></div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0">
+        <div style="background:linear-gradient(165deg,#1b2330,#121820);border:1px solid #3d4a5e;border-radius:16px;padding:14px 10px;text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">🛡️</div>
+          <div style="color:#fff;font-weight:900;font-size:12px;text-transform:uppercase">Anti-fraude</div>
+          <div style="color:#b4bdca;font-size:11px;margin-top:4px;line-height:1.4">Contrôle manuel de chaque preuve</div>
+        </div>
+        <div style="background:linear-gradient(165deg,#1b2330,#121820);border:1px solid #3d4a5e;border-radius:16px;padding:14px 10px;text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">🔐</div>
+          <div style="color:#fff;font-weight:900;font-size:12px;text-transform:uppercase">Chiffrement</div>
+          <div style="color:#b4bdca;font-size:11px;margin-top:4px;line-height:1.4">Canal sécurisé bout en bout</div>
+        </div>
+        <div style="background:linear-gradient(165deg,#1b2330,#121820);border:1px solid #3d4a5e;border-radius:16px;padding:14px 10px;text-align:center">
+          <div style="font-size:22px;margin-bottom:6px">📡</div>
+          <div style="color:#fff;font-weight:900;font-size:12px;text-transform:uppercase">Temps réel</div>
+          <div style="color:#b4bdca;font-size:11px;margin-top:4px;line-height:1.4">Statut live de votre demande</div>
+        </div>
       </div>
-      <div class="deposit-cta-card" style="margin-bottom:18px">
+
+      <div class="deposit-cta-card" style="margin-bottom:18px;background:linear-gradient(155deg,#1e2736 0%,#121820 60%,#1a1520 100%);border:1px solid rgba(242,204,130,.28);border-radius:22px;padding:22px 18px;box-shadow:0 12px 36px rgba(0,0,0,.25)">
         <div class="form" id="depositStartForm">
-          <h3 style="color:#fff;text-transform:uppercase">Initier un dépôt</h3>
-          <p style="color:#fff;font-weight:700">Processus clair en 5 étapes. Préparez votre numéro Mobile Money et une capture d’écran du paiement.</p>
-          <div class="deposit-steps">
-            <div class="step"><b>1</b>Numéro</div>
-            <div class="step"><b>2</b>Montant</div>
-            <div class="step"><b>3</b>Confirmer</div>
-            <div class="step"><b>4</b>Payer</div>
-            <div class="step"><b>5</b>Preuve</div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#e34b5b,#b72d40);display:grid;place-items:center;font-size:18px;box-shadow:0 6px 16px rgba(227,75,91,.35)">💎</div>
+            <div>
+              <h3 style="margin:0;color:#fff;font-weight:950;text-transform:uppercase;letter-spacing:.3px;font-size:17px">Dépôt intelligent</h3>
+              <p style="margin:2px 0 0;color:#f2cc82;font-size:11px;font-weight:800;text-transform:uppercase">Parcours guidé · 5 étapes</p>
+            </div>
           </div>
-          <button class="primary" type="button" onclick="startDepositFlow()" style="max-width:100%;margin:12px auto 0;display:block;width:100%;min-height:56px;font-size:17px;border-radius:16px;font-weight:900;letter-spacing:.3px">🔐 Commencer un dépôt sécurisé</button>
-          <div class="notice" style="margin-top:14px;border-color:#a82d40;background:linear-gradient(135deg,#3a1518,#1a0c10);color:#ffc9c9;font-weight:800;text-align:center">
-            ⚠️ Tout faux dépôt est un bannissement du compte !!
+          <p style="color:#e8edf5;font-weight:600;font-size:14px;line-height:1.55;margin:12px 0 14px">Choisissez un montant VIP, payez via Mobile Money ou Jeko, joignez la preuve. Validation par l’équipe SOULIER D’OR.</p>
+          <div class="deposit-steps" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px">
+            <div class="step" style="background:#0d121a;border:1px solid #3a4658;border-radius:12px;padding:10px 4px;text-align:center;color:#fff;font-size:10px;font-weight:800"><b style="display:block;color:#f2cc82;font-size:14px;margin-bottom:2px">1</b>Montant</div>
+            <div class="step" style="background:#0d121a;border:1px solid #3a4658;border-radius:12px;padding:10px 4px;text-align:center;color:#fff;font-size:10px;font-weight:800"><b style="display:block;color:#f2cc82;font-size:14px;margin-bottom:2px">2</b>Contact</div>
+            <div class="step" style="background:#0d121a;border:1px solid #3a4658;border-radius:12px;padding:10px 4px;text-align:center;color:#fff;font-size:10px;font-weight:800"><b style="display:block;color:#f2cc82;font-size:14px;margin-bottom:2px">3</b>Confirmer</div>
+            <div class="step" style="background:#0d121a;border:1px solid #3a4658;border-radius:12px;padding:10px 4px;text-align:center;color:#fff;font-size:10px;font-weight:800"><b style="display:block;color:#f2cc82;font-size:14px;margin-bottom:2px">4</b>Payer</div>
+            <div class="step" style="background:#0d121a;border:1px solid #3a4658;border-radius:12px;padding:10px 4px;text-align:center;color:#fff;font-size:10px;font-weight:800"><b style="display:block;color:#f2cc82;font-size:14px;margin-bottom:2px">5</b>Preuve</div>
           </div>
-          <div class="security-strip">
-            <span>🔐 Données protégées</span>
-            <span>✓ Vérification humaine</span>
-            <span>📋 Historique transparent</span>
+          <button class="primary" type="button" onclick="startDepositFlow()" style="max-width:100%;margin:0 auto;display:block;width:100%;min-height:56px;font-size:16px;border-radius:16px;font-weight:950;letter-spacing:.4px;text-transform:uppercase;box-shadow:0 8px 24px rgba(227,75,91,.35)">🔐 Lancer un dépôt sécurisé</button>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px">
+            <span style="font-size:11px;color:#fff;background:rgba(255,255,255,.06);border:1px solid #3a4658;padding:6px 10px;border-radius:999px;font-weight:700">🔐 SSL / données protégées</span>
+            <span style="font-size:11px;color:#fff;background:rgba(255,255,255,.06);border:1px solid #3a4658;padding:6px 10px;border-radius:999px;font-weight:700">✓ Vérification humaine</span>
+            <span style="font-size:11px;color:#fff;background:rgba(255,255,255,.06);border:1px solid #3a4658;padding:6px 10px;border-radius:999px;font-weight:700">📋 Historique transparent</span>
+          </div>
+          <div class="notice" style="margin-top:14px;border-color:#a82d40;background:linear-gradient(135deg,#3a1518,#1a0c10);color:#ffc9c9;font-weight:800;text-align:center;border-radius:14px">
+            ⚠️ Tout faux dépôt = bannissement définitif du compte
           </div>
         </div>
       </div>
@@ -4916,18 +4916,19 @@ hr,.divider{border-color:#765b14!important}
     <button type="button" class="mission-close" onclick="closeMissions()" aria-label="Fermer">×</button>
     <div class="mission-kicker">SOULIER D’OR • RÉCOMPENSES</div>
     <h2 id="missionTitle">🎯 Mes missions</h2>
+    <p style="color:#f2cc82;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:-6px 0 14px">Première mission · chaque mission accomplie : gain ×2 et objectif ×2</p>
     <div class="mission-card">
-      <div class="mission-card-top"><span class="mission-number">MISSION 01</span><span id="missionStatus" class="mission-status">EN COURS</span></div>
-      <h3>Inviter 5 personnes qui investissent</h3>
-      <p>Invitez 5 nouveaux membres avec votre lien personnel. Une personne est comptée uniquement après avoir effectué au moins un investissement actif sur la plateforme.</p>
-      <div class="mission-reward">🏅 Récompense : <strong>10 000 FCFA</strong></div>
+      <div class="mission-card-top"><span class="mission-number" id="missionNumberLabel">MISSION 01</span><span id="missionStatus" class="mission-status">EN COURS</span></div>
+      <h3 id="missionTitleText">Inviter 5 personnes qui investissent</h3>
+      <p id="missionDescText">Invitez 5 nouveaux membres avec votre lien personnel. Une personne est comptée uniquement après avoir effectué au moins un investissement actif sur la plateforme.</p>
+      <div class="mission-reward">🏅 Récompense : <strong id="missionRewardLabel">1 000 FCFA</strong></div>
       <div class="mission-progress-line"><span id="missionProgressFill"></span></div>
       <div class="mission-progress-text"><strong id="missionCount">0 / 5</strong><span>filleuls ayant investi</span></div>
       <div id="missionDetails" class="mission-details">Chargement de votre progression…</div>
       <button type="button" class="mission-share" onclick="copyMissionLink()">Partager mon lien d’invitation</button>
     </div>
-    <div id="missionNextLocked" class="mission-locked">🔒 Les prochaines missions seront dévoilées après la validation de la mission 01.</div>
-    <div id="missionCompletedNote" class="mission-complete hidden">🎉 Mission terminée ! Votre récompense de 10 000 FCFA a été ajoutée à votre compte.</div>
+    <div id="missionNextLocked" class="mission-locked">🔒 La mission suivante sera dévoilée après validation de celle-ci.</div>
+    <div id="missionCompletedNote" class="mission-complete hidden">🎉 Mission terminée ! Récompense créditée sur votre solde de retrait.</div>
   </div>
 </div>
 
@@ -5194,6 +5195,7 @@ const ROBOT_DESCRIPTIONS = {
 };
 
 const KEY = "unitri_state_v2";
+const PENDING_TX_KEY = "unitri_pending_tx_v1";
 let state = loadState(), current = null, adminOpen = false;
 
 function loadState() {
@@ -5203,13 +5205,69 @@ function loadState() {
     return { users: [], deposits: [], withdrawals: [], investments: [] };
   }
 }
+function saveLocalState() {
+  try {
+    const slim = {
+      users: state.users || [],
+      deposits: (state.deposits || []).map(d => { const x = {...d}; if (x.proof && String(x.proof).startsWith("data:")) delete x.proof; return x; }),
+      withdrawals: state.withdrawals || [],
+      investments: state.investments || []
+    };
+    localStorage.setItem(KEY, JSON.stringify(slim));
+  } catch (e) { console.warn("saveLocalState", e); }
+}
 function save() {
-  localStorage.setItem(KEY, JSON.stringify(state));
-  renderAll();
+  saveLocalState();
+  try { renderAll(); } catch (_) {}
+}
+function savePendingTx(type, record) {
+  try {
+    const all = JSON.parse(localStorage.getItem(PENDING_TX_KEY) || "{}");
+    const uid = String(record.userId || "");
+    if (!uid) return;
+    if (!all[uid]) all[uid] = { deposits: [], withdrawals: [], investments: [] };
+    const list = all[uid][type] || [];
+    const copy = { ...record };
+    if (copy.proof && String(copy.proof).startsWith("data:")) delete copy.proof;
+    all[uid][type] = list.filter(x => x.id !== record.id).concat([copy]).slice(-80);
+    localStorage.setItem(PENDING_TX_KEY, JSON.stringify(all));
+  } catch (e) { console.warn("savePendingTx", e); }
+}
+function loadPendingTx(type, uid) {
+  try {
+    const all = JSON.parse(localStorage.getItem(PENDING_TX_KEY) || "{}");
+    return (all[String(uid)] && all[String(uid)][type]) || [];
+  } catch (_) { return []; }
+}
+function mergeTxLists(serverList, localList) {
+  const byId = new Map();
+  (serverList || []).forEach(d => { if (d && d.id) byId.set(d.id, d); });
+  (localList || []).forEach(d => { if (d && d.id && !byId.has(d.id)) byId.set(d.id, d); });
+  return Array.from(byId.values()).sort((a, b) => (b.created || 0) - (a.created || 0));
 }
 function money(n) {
   return Math.round(n).toLocaleString("fr-FR") + " FCFA";
 }
+/** Jours de gains crédités : 1er versement demain à 07h00, puis chaque jour à 07h00. */
+function investmentPayoutDays(inv) {
+  const maxDays = Number(inv.days || 0);
+  const created = Number(inv.created || Date.now());
+  if (!maxDays || !created) return 0;
+  const start = new Date(created);
+  // Premier crédit = lendemain à 07:00 (heure locale)
+  const first = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 1, 7, 0, 0, 0);
+  const now = new Date();
+  if (now < first) return 0;
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const days = Math.floor((now.getTime() - first.getTime()) / msPerDay) + 1;
+  return Math.max(0, Math.min(maxDays, days));
+}
+function investmentEarnedAmount(inv) {
+  return Number(inv.daily || 0) * investmentPayoutDays(inv);
+}
+function missionTarget(level) { return 5 * Math.pow(2, Math.max(0, (level || 1) - 1)); }
+function missionReward(level) { return 1000 * Math.pow(2, Math.max(0, (level || 1) - 1)); }
+
 function toast(msg) {
   const t = document.getElementById("toast");
   if (!t) return;
@@ -5363,7 +5421,7 @@ function invest(i) {
   if (!p) { toast("Plan introuvable."); return; }
   if (window.vipPlanLocks?.[i]) { toast("Ce plan VIP est temporairement verrouillé par l’administrateur."); return; }
   const myDep = state.deposits.filter(x => matchesUser(x, current) && x.status === "Validé");
-  const depOk = myDep.reduce((s, x) => s + x.amount, 0);
+  const depOk = myDep.reduce((s, x) => s + Number(x.amount || 0), 0);
   const spent = state.investments.filter(x => matchesUser(x, current)).reduce((s, x) => s + Number(x.price || 0), 0);
   const available = Math.max(0, depOk - spent);
   if (depOk <= 0) {
@@ -5376,8 +5434,6 @@ function invest(i) {
     showPage("deposit");
     return;
   }
-  if (!confirm("Activer " + p.name + " pour " + money(p.price) + " ?")) return;
-
   (async () => {
     const inv = {
       id: "inv_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
@@ -5393,62 +5449,36 @@ function invest(i) {
       created: Date.now(),
       email: (current.email || "").toLowerCase()
     };
-
-    // 1) Essai Cloud Function si disponible
-    let fromServer = null;
     try {
-      const callable = window.createInvestmentCallable;
-      if (typeof callable === "function") {
-        const result = await callable({ planIndex: i });
-        fromServer = result && result.data && result.data.investment;
+      if (typeof window.createInvestmentCallable === "function") {
+        const result = await window.createInvestmentCallable({ planIndex: i });
+        const created = result && result.data && result.data.investment;
+        if (created) {
+          Object.assign(inv, created);
+          if (!inv.id) inv.id = "inv_" + Date.now().toString(36);
+          if (inv.daily == null) inv.daily = p.daily;
+          if (inv.days == null) inv.days = p.days;
+          if (inv.price == null) inv.price = p.price;
+          if (!inv.plan) inv.plan = p.name;
+          if (!inv.status) inv.status = "Actif";
+          if (!inv.userId) inv.userId = uidOf(current);
+          if (!inv.created) inv.created = Date.now();
+        }
       }
     } catch (err) {
-      console.warn("Cloud Function investissement indisponible, fallback local:", err && (err.message || err));
+      console.warn("Cloud Function indisponible, fallback local:", err);
     }
-
-    if (fromServer) {
-      if (!fromServer.id) fromServer.id = inv.id;
-      if (fromServer.daily == null) fromServer.daily = p.daily;
-      if (fromServer.days == null) fromServer.days = p.days;
-      if (fromServer.price == null) fromServer.price = p.price;
-      if (!fromServer.plan) fromServer.plan = p.name;
-      if (!fromServer.status) fromServer.status = "Actif";
-      if (!fromServer.userId) fromServer.userId = uidOf(current);
-      if (!fromServer.created) fromServer.created = Date.now();
-      inv.id = fromServer.id;
-      Object.assign(inv, fromServer);
-    }
-
-    // 2) Toujours enregistrer localement (pour historique + solde)
-    const exists = state.investments.some(x => x.id === inv.id);
-    if (!exists) state.investments.push(inv);
-    try { if (typeof savePendingTx === "function") savePendingTx("investments", inv); } catch (_) {}
-    try { if (typeof saveLocalState === "function") saveLocalState(); } catch (_) {}
-    try { if (typeof save === "function") save(); } catch (_) {}
-
-    // 3) Sync Firestore directe (si connecté)
-    try {
-      if (typeof window.syncInvestmentToFirebase === "function") {
-        window.syncInvestmentToFirebase(inv);
-      }
-    } catch (_) {}
-
+    if (!state.investments.some(x => x.id === inv.id)) state.investments.push(inv);
+    try { savePendingTx("investments", inv); } catch (_) {}
+    try { saveLocalState(); } catch (_) {}
+    try { save(); } catch (_) {}
+    try { if (typeof window.syncInvestmentToFirebase === "function") window.syncInvestmentToFirebase(inv); } catch (_) {}
     if (typeof renderAll === "function") renderAll();
     try {
       const activeCard = document.querySelectorAll("#vipGrid .vip")[i];
-      if (activeCard) {
-        activeCard.classList.remove("vip-activated");
-        void activeCard.offsetWidth;
-        activeCard.classList.add("vip-activated");
-      }
+      if (activeCard) { activeCard.classList.remove("vip-activated"); void activeCard.offsetWidth; activeCard.classList.add("vip-activated"); }
     } catch (_) {}
-
-    const gains = money(p.daily * p.days);
-    showTxAnimation(
-      "success",
-      "Félicitations !",
-      "Votre investissement " + p.name + " a bien été accepté. Les gains (" + gains + ") sont crédités sur votre solde de retrait."
-    );
+    showTxAnimation("success", "Félicitations !", "Votre investissement " + p.name + " a bien été accepté. Les gains journaliers arriveront chaque jour à 07h00 sur le solde de retrait (premier crédit demain 07h).");
     toast("Félicitations ! Investissement " + p.name + " accepté.");
     setTimeout(() => window.refreshMissionProgress && window.refreshMissionProgress(), 1200);
   })();
@@ -5910,7 +5940,8 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
   }
   const earned = state.investments
     .filter(x => matchesUser(x, current))
-    .reduce((s, x) => s + x.daily * x.days, 0)
+    .reduce((s, x) => s + investmentEarnedAmount(x), 0)
+    + Number(current.missionRewardBalance || 0)
     - state.withdrawals
       .filter(x => matchesUser(x, current) && x.status === "Validé")
       .reduce((s, x) => s + x.amount, 0);
@@ -5986,7 +6017,7 @@ function renderAll() {
   const myWith = state.withdrawals.filter(x => matchesUser(x, current));
   const children = state.users.filter(u => u.parentId === uidOf(current));
 
-  const earned = myInv.reduce((s, x) => s + x.daily * x.days, 0)
+  const earned = myInv.reduce((s, x) => s + investmentEarnedAmount(x), 0)
     + Number(current.missionRewardBalance || 0)
     - myWith.filter(x => x.status === "Validé").reduce((s, x) => s + x.amount, 0);
 
@@ -6050,15 +6081,20 @@ function renderAll() {
     </div>
   `));
 
-  renderList("myInvestments", myInv.map(x => `
+  renderList("myInvestments", myInv.map(x => {
+    const paidDays = investmentPayoutDays(x);
+    const gained = investmentEarnedAmount(x);
+    return `
     <div class="item">
       <div>
-        <b>${escapeHtml(x.plan)}</b>
-        <div class="small">${money(x.price)} • ${x.days} jours • ${money(x.daily)}/jour</div>
+        <b style="color:#fff;text-transform:uppercase">${escapeHtml(x.plan)}</b>
+        <div class="small" style="color:#fff;font-weight:700">${money(x.price)} • ${money(x.daily)}/jour • ${paidDays}/${x.days} j crédités</div>
+        <div class="small" style="color:#f2cc82;font-weight:800">Gains reçus : ${money(gained)} · prochain crédit 07h00</div>
       </div>
-      <span class="badge">${x.status}</span>
+      <span class="badge" style="text-transform:uppercase;font-weight:900">${x.status}</span>
     </div>
-  `));
+  `;
+  }));
 
   renderList("myReferrals", children.map(u => `
     <div class="item">
@@ -6451,28 +6487,20 @@ window.createInvestmentCallable = createInvestmentCallable;
 window.syncInvestmentToFirebase = async function(record) {
   try {
     if (!auth.currentUser || adminMode) return;
-    const payload = {
+    await setDoc(doc(db, "investments", record.id), {
       id: record.id,
       userId: auth.currentUser.uid,
       plan: record.plan || "",
       planIndex: record.planIndex,
-      price: Number(record.price) || 0,
-      daily: Number(record.daily) || 0,
-      days: Number(record.days) || 0,
-      gain: Number(record.gain) || 0,
-      total: Number(record.total) || 0,
+      price: Number(record.price)||0,
+      daily: Number(record.daily)||0,
+      days: Number(record.days)||0,
       status: record.status || "Actif",
       created: record.created || Date.now(),
       createdAt: serverTimestamp(),
-      email: (auth.currentUser.email || record.email || "").toLowerCase()
-    };
-    await setDoc(doc(db, "investments", record.id), payload, { merge: true });
-    const local = state.investments.find(x => x.id === record.id);
-    if (local) local._synced = true;
-    console.log("Investissement synchronisé Firebase:", record.id);
-  } catch (e) {
-    console.warn("syncInvestmentToFirebase:", e && (e.code || e.message || e));
-  }
+      email: (auth.currentUser.email||"").toLowerCase()
+    }, { merge: true });
+  } catch(e) { console.warn("syncInvestment", e); }
 };
 window.firebaseAdminLogout = async function() {
   try { await signOut(auth); } catch (_) {}
@@ -6534,9 +6562,26 @@ async function loadOwnData(user) {
     state.users = [safeProfile(profileSnap.data(), uid)];
   }
   for (const col of ["deposits", "withdrawals", "investments"]) {
-    const snap = await getDocs(query(collection(db, col), where("userId", "==", uid)));
-    state[col] = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    try {
+      const snap = await getDocs(query(collection(db, col), where("userId", "==", uid)));
+      state[col] = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    } catch (e) {
+      console.warn("loadOwn " + col, e);
+      state[col] = state[col] || [];
+    }
   }
+  try {
+    state.deposits = mergeTxLists(state.deposits, loadPendingTx("deposits", uid));
+    state.withdrawals = mergeTxLists(state.withdrawals, loadPendingTx("withdrawals", uid));
+    state.investments = mergeTxLists(state.investments, loadPendingTx("investments", uid));
+    try {
+      const localFull = JSON.parse(localStorage.getItem(KEY) || "{}");
+      if (localFull.deposits) state.deposits = mergeTxLists(state.deposits, (localFull.deposits||[]).filter(d => String(d.userId)===String(uid)));
+      if (localFull.withdrawals) state.withdrawals = mergeTxLists(state.withdrawals, (localFull.withdrawals||[]).filter(d => String(d.userId)===String(uid)));
+      if (localFull.investments) state.investments = mergeTxLists(state.investments, (localFull.investments||[]).filter(d => String(d.userId)===String(uid)));
+    } catch(_){}
+    try { saveLocalState(); } catch(_){}
+  } catch (e) { console.warn("merge local", e); }
   current = state.users[0];
   firebaseReady = true;
   document.getElementById("sessionPill").textContent = "SOULIER D’OR";
@@ -6639,6 +6684,7 @@ async function persistCurrentState() {
   }
 }
 window.save = function() {
+  try { if (typeof saveLocalState === "function") saveLocalState(); } catch(_){}
   if (typeof window.renderPlans === "function") window.renderPlans();
   if (current && typeof window.renderAll === "function") window.renderAll();
   if (adminOpen && typeof window.renderAdmin === "function") window.renderAdmin();
@@ -6655,20 +6701,54 @@ window.refreshMissionProgress = async function() {
   const countEl = document.getElementById("missionCount");
   const fill = document.getElementById("missionProgressFill");
   const details = document.getElementById("missionDetails");
-  if (!current || !countEl || !auth.currentUser) return;
+  if (!current || !countEl) return;
   try {
-    const uid = auth.currentUser.uid;
-    const profileSnap = await getDoc(doc(db, "profiles", uid));
-    if (!profileSnap.exists()) return;
-    const serverProfile = profileSnap.data();
-    current.missionQualifiedCount = Number(serverProfile.missionQualifiedCount || 0);
-    current.mission1CompletedAt = serverProfile.mission1CompletedAt || null;
-    current.missionRewardBalance = Number(serverProfile.missionRewardBalance || 0);
-    const qualified = Math.min(current.missionQualifiedCount, 5);
-    const done = !!current.mission1CompletedAt;
-    countEl.textContent = qualified + " / 5";
-    if (fill) fill.style.width = qualified * 20 + "%";
-    if (details) details.textContent = qualified + " personne(s) invitée(s) ont un investissement actif. Les inscriptions sans investissement ne sont pas comptabilisées.";
+    // Niveau de mission (1, 2, 3...) : objectif et gain doublent à chaque niveau
+    let level = Number(current.missionLevel || 1);
+    if (level < 1) level = 1;
+    const target = missionTarget(level);
+    const reward = missionReward(level);
+
+    // Compte des filleuls avec investissement actif (local + éventuellement serveur)
+    let qualified = 0;
+    try {
+      const uid = uidOf(current);
+      const children = (state.users || []).filter(u => u.parentId === uid);
+      qualified = children.filter(u =>
+        (state.investments || []).some(inv => matchesUser(inv, u) && String(inv.status || "").startsWith("Actif"))
+      ).length;
+      // Si serveur fournit un compteur, on prend le max
+      if (auth && auth.currentUser) {
+        try {
+          const profileSnap = await getDoc(doc(db, "profiles", auth.currentUser.uid));
+          if (profileSnap.exists()) {
+            const sp = profileSnap.data();
+            if (sp.missionLevel) level = Number(sp.missionLevel) || level;
+            if (sp.missionRewardBalance != null) current.missionRewardBalance = Number(sp.missionRewardBalance || 0);
+            const sq = Number(sp.missionQualifiedCount || 0);
+            if (sq > qualified) qualified = sq;
+          }
+        } catch (_) {}
+      }
+    } catch (_) {}
+
+    current.missionLevel = level;
+    const displayCount = Math.min(qualified, target);
+    const done = qualified >= target;
+    const pct = Math.min(100, Math.round((displayCount / target) * 100));
+
+    countEl.textContent = displayCount + " / " + target;
+    if (fill) fill.style.width = pct + "%";
+    const numEl = document.getElementById("missionNumberLabel");
+    if (numEl) numEl.textContent = "MISSION " + String(level).padStart(2, "0");
+    const titleEl = document.getElementById("missionTitleText");
+    if (titleEl) titleEl.textContent = "Inviter " + target + " personnes qui investissent";
+    const descEl = document.getElementById("missionDescText");
+    if (descEl) descEl.textContent = "Invitez " + target + " nouveaux membres avec votre lien. Une personne compte seulement après un investissement actif. Chaque mission réussie double l’objectif et la récompense.";
+    const rewEl = document.getElementById("missionRewardLabel");
+    if (rewEl) rewEl.textContent = money(reward).replace(" FCFA", "") + " FCFA";
+    if (details) details.textContent = displayCount + " personne(s) avec investissement actif. Objectif : " + target + " · Récompense : " + money(reward);
+
     const status = document.getElementById("missionStatus");
     if (status) {
       status.textContent = done ? "TERMINÉE" : "EN COURS";
@@ -6677,12 +6757,35 @@ window.refreshMissionProgress = async function() {
     }
     const completedNote = document.getElementById("missionCompletedNote");
     const locked = document.getElementById("missionNextLocked");
-    if (done) {
-      if (completedNote) completedNote.classList.remove("hidden");
-      if (locked) locked.textContent = "🔓 Mission 01 validée. Les prochaines missions pourront maintenant être débloquées.";
+
+    // Auto-validation locale de la mission si objectif atteint
+    if (done && !current["mission" + level + "Done"]) {
+      current["mission" + level + "Done"] = true;
+      current.missionRewardBalance = Number(current.missionRewardBalance || 0) + reward;
+      current.missionLevel = level + 1;
+      try { saveLocalState && saveLocalState(); } catch(_){}
+      try { save && save(); } catch(_){}
+      try {
+        if (auth && auth.currentUser) {
+          await setDoc(doc(db, "profiles", auth.currentUser.uid), {
+            missionLevel: current.missionLevel,
+            missionRewardBalance: current.missionRewardBalance,
+            missionQualifiedCount: qualified
+          }, { merge: true });
+        }
+      } catch (_) {}
+      if (typeof toast === "function") toast("Mission " + level + " validée ! +" + money(reward) + " sur le solde de retrait.");
+    }
+
+    if (done || current["mission" + level + "Done"]) {
+      if (completedNote) {
+        completedNote.classList.remove("hidden");
+        completedNote.textContent = "🎉 Mission " + level + " terminée ! +" + money(reward) + " ajoutés au solde de retrait.";
+      }
+      if (locked) locked.textContent = "🔓 Prochaine mission : inviter " + missionTarget(level + 1) + " personnes pour " + money(missionReward(level + 1)) + ".";
     } else {
       if (completedNote) completedNote.classList.add("hidden");
-      if (locked) locked.textContent = "🔒 Les prochaines missions seront dévoilées après la validation de la mission 01.";
+      if (locked) locked.textContent = "🔒 La mission suivante sera dévoilée après validation de celle-ci.";
     }
     if (typeof renderAll === "function") renderAll();
   } catch (err) {
