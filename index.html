@@ -5005,6 +5005,7 @@ hr,.divider{border-color:#765b14!important}
         <option value="Wave">Wave</option>
         <option value="Orange Money">Orange Money</option>
         <option value="MTN Money">MTN Money</option>
+        <option value="Moov Money">Moov Money</option>
       </select>
     </label>
     <label style="display:block;margin-bottom:12px">Votre numéro de téléphone
@@ -5066,11 +5067,21 @@ hr,.divider{border-color:#765b14!important}
     <p id="paymentInstruction" style="text-align:center">Suivez les instructions selon votre pays.</p>
     <p style="margin:12px 0;font-weight:800;text-align:center;color:#f2cc82;font-size:20px" id="paymentAmountLabel"></p>
 
-    <!-- Côte d'Ivoire : Jeko + numéro -->
+    <!-- Côte d'Ivoire : MTN par numéro, Orange/Wave/Moov via Jeko -->
     <div id="ciPaymentActions" style="margin:12px 0;padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
       <b style="color:#f2cc82">SOULIER D’OR — Côte d’Ivoire</b>
-      <p style="margin:10px 0 14px;font-size:14px;opacity:.92;line-height:1.5">Payez uniquement via le lien Jeko sécurisé. Aucun numéro à copier pour la Côte d’Ivoire.</p>
-      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900">🔐 Ouvrir le lien Jeko sécurisé</button>
+      <div id="ciJekoAction" style="margin-top:10px">
+        <p style="margin:10px 0 14px;font-size:14px;opacity:.92;line-height:1.5">Orange Money, Wave et Moov : utilisez le lien Jeko sécurisé.</p>
+        <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900">💳 Payer maintenant — Jeko</button>
+      </div>
+      <div id="ciMtnAction" class="hidden" style="margin-top:10px">
+        <p style="margin:10px 0;font-size:14px;line-height:1.5">MTN Côte d’Ivoire : copiez le numéro de paiement ci-dessous, puis effectuez le transfert dans MTN MoMo.</p>
+        <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;margin:10px 0;text-align:center">
+          <small style="opacity:.75;display:block;margin-bottom:6px">Numéro MTN à recevoir</small>
+          <strong id="ciMtnPayNumber" style="font-size:26px;letter-spacing:1.5px;color:#ffe9a8">0596180495</strong>
+        </div>
+        <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 Copier le numéro MTN</button>
+      </div>
       <p class="small" style="margin-top:12px;opacity:.8;text-align:center">Après paiement, prenez une capture (montant + statut réussi).</p>
     </div>
 
@@ -5725,59 +5736,34 @@ function nextDepositConfirm() {
   showDepositStep("depositConfirmModal");
 }
 function goToPayment() {
-  const isCI = pendingDeposit.country === "CI";
+  const isCI = String(pendingDeposit.country || "").toUpperCase() === "CI";
   const method = pendingDeposit.method || "Wave";
+  const isMtnCI = isCI && method.toLowerCase().includes("mtn");
+  const useJekoCI = isCI && !isMtnCI;
   const payNumber = getPayNumberForMethod(method);
   const label = document.getElementById("paymentAmountLabel");
-  if (label) label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + (isCI ? " • Jeko" : " • " + method);
-
-  const paymentBox = document.getElementById("ciPaymentActions");
-  paymentBox?.classList.toggle("hidden", !isCI);
+  if (label) label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + " • " + method;
+  document.getElementById("ciPaymentActions")?.classList.toggle("hidden", !isCI);
+  document.getElementById("ciJekoAction")?.classList.toggle("hidden", !useJekoCI);
+  document.getElementById("ciMtnAction")?.classList.toggle("hidden", !isMtnCI);
   const foreignBox = document.getElementById("foreignPaymentActions");
   foreignBox?.classList.toggle("hidden", isCI);
-
   if (foreignBox) {
-    if (isCI) {
-      foreignBox.innerHTML = "";
-    } else {
-      const methodEsc = escapeHtml(method);
-      const amt = Number(pendingDeposit.amount || 0).toLocaleString("fr-FR");
-      const ussdHint = method.toLowerCase().includes("orange")
-        ? "Ouvrez Orange Money (app ou USSD) → Transfert / Paiement, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
-        : method.toLowerCase().includes("mtn")
-        ? "Ouvrez MTN Money (app ou USSD) → Transfert, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
-        : "Ouvrez Wave → Envoyer de l’argent, envoyez le montant exact au numéro ci-dessous et confirmez.";
-      foreignBox.innerHTML = `
-        <div style="padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <b style="color:#f2cc82">SOULIER D’OR — ${methodEsc}</b>
-            <span style="font-size:11px;background:rgba(242,204,130,.15);padding:4px 10px;border-radius:999px;color:#f2cc82">Hors Côte d’Ivoire</span>
-          </div>
-          <p style="margin:0 0 10px;font-size:13px;line-height:1.55;opacity:.92">${ussdHint}</p>
-          <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;margin:10px 0;text-align:center">
-            <small style="opacity:.75;display:block;margin-bottom:6px">Numéro de réception ${methodEsc}</small>
-            <strong style="font-size:26px;letter-spacing:1.5px;color:#ffe9a8">${payNumber}</strong>
-          </div>
-          <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0;text-align:center">
-            <small style="opacity:.75;display:block;margin-bottom:4px">Montant à envoyer</small>
-            <strong style="font-size:20px;color:#ffe9a8">${amt} FCFA</strong>
-          </div>
-          <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;opacity:.95">
-            <li>Copiez le numéro de paiement</li>
-            <li>Ouvrez ${methodEsc} (application ou code USSD)</li>
-            <li>Envoyez exactement <b>${amt} FCFA</b></li>
-            <li>Confirmez avec votre code secret</li>
-            <li>Prenez une capture du message de succès</li>
-          </ol>
-          <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 Copier le numéro ${payNumber}</button>
-        </div>`;
+    if (isCI) foreignBox.innerHTML = "";
+    else {
+      const methodEsc = escapeHtml(method), amt = Number(pendingDeposit.amount || 0).toLocaleString("fr-FR");
+      foreignBox.innerHTML = `<div style="padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
+        <b style="color:#f2cc82">SOULIER D’OR — ${methodEsc}</b>
+        <p style="margin:10px 0;font-size:13px;line-height:1.55">Dans votre application Mobile Money, transférez le montant exact au numéro ci-dessous.</p>
+        <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;margin:10px 0;text-align:center"><small style="opacity:.75;display:block;margin-bottom:6px">Numéro de réception</small><strong style="font-size:26px;letter-spacing:1.5px;color:#ffe9a8">${payNumber}</strong></div>
+        <strong style="display:block;text-align:center;color:#ffe9a8">${amt} FCFA</strong>
+        <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 Copier le numéro ${payNumber}</button></div>`;
     }
   }
-
   const instruction = document.getElementById("paymentInstruction");
-  if (instruction) instruction.textContent = isCI
-    ? "Côte d’Ivoire : utilisez uniquement le lien Jeko sécurisé."
-    : "Hors Côte d’Ivoire : envoyez le paiement au numéro affiché selon le moyen choisi.";
+  if (instruction) instruction.textContent = isMtnCI ? "Côte d’Ivoire — MTN : copiez le numéro puis payez dans MTN MoMo."
+    : useJekoCI ? "Côte d’Ivoire — Orange, Wave ou Moov : cliquez sur « Payer maintenant — Jeko »."
+    : "Autres pays : copiez le numéro affiché et effectuez le transfert Mobile Money.";
   const operator = document.getElementById("selectedPaymentOperator");
   if (operator) operator.textContent = method;
   showDepositStep("depositPaymentModal");
