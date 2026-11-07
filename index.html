@@ -5041,31 +5041,31 @@ hr,.divider{border-color:#765b14!important}
 
 <div class="confirm-overlay" id="depositPaymentModal" role="dialog" aria-modal="true" aria-labelledby="depositPaymentTitle">
   <div class="confirm-box" style="max-width:440px;text-align:left">
-    <h2 id="depositPaymentTitle" style="text-align:center">Étape 4/5 — Effectuer le paiement</h2>
-    <p id="paymentInstruction" style="text-align:center">Suivez les instructions selon votre pays.</p>
+    <h2 id="depositPaymentTitle" style="text-align:center;color:#fff;text-transform:uppercase">Étape 4/5 — Effectuer le paiement</h2>
+    <p id="paymentInstruction" style="text-align:center;color:#fff;font-weight:800;text-transform:uppercase">Suivez les instructions selon votre pays.</p>
     <p style="margin:12px 0;font-weight:800;text-align:center;color:#f2cc82;font-size:20px" id="paymentAmountLabel"></p>
 
     <!-- Côte d'Ivoire : Jeko + numéro -->
     <div id="ciPaymentActions" style="margin:12px 0;padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
-      <b style="color:#f2cc82;text-transform:uppercase">SOULIER D’OR — Côte d’Ivoire • Wave</b>
-      <p style="margin:10px 0 14px;font-size:14px;color:#e8edf5;font-weight:600;line-height:1.5">Wave uniquement : payez via le lien Jeko sécurisé. Pour Orange Money ou MTN Money, un numéro Mobile Money s’affiche à la place.</p>
-      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900">🔐 Ouvrir le lien Jeko sécurisé</button>
-      <p class="small" style="margin-top:12px;opacity:.8;text-align:center">Après paiement, prenez une capture (montant + statut réussi).</p>
+      <b style="color:#fff;text-transform:uppercase;letter-spacing:.5px">SOULIER D’OR — Côte d’Ivoire • Wave</b>
+      <p style="margin:10px 0 14px;font-size:14px;color:#fff;font-weight:700;line-height:1.5">WAVE : payez via le lien Jeko. Pour Orange ou MTN, un numéro Mobile Money s’affiche à la place.</p>
+      <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900;text-transform:uppercase">🔐 Ouvrir le lien Jeko sécurisé</button>
+      <p class="small" style="margin-top:12px;color:#fff;font-weight:700;text-align:center;text-transform:uppercase">Après paiement, revenez ici. Le bouton « J’ai payé » s’affichera.</p>
     </div>
 
     <!-- Hors CI : guide type USSD / Mobile Money (même esprit que la vidéo) -->
     <div id="foreignPaymentActions" class="hidden" style="margin:12px 0"></div>
 
-    <p class="small" style="margin-top:10px;text-align:center">Après le paiement, prenez une capture d’écran claire (montant + statut réussi) puis continuez.</p>
-    <button class="primary" type="button" style="margin-top:14px;width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900" onclick="showDepositStep('depositProofModal')">✅ J’ai terminé → Joindre la preuve</button>
+    <p id="depositFinishedHint" class="small" style="margin-top:12px;text-align:center;color:#fff;font-weight:800;text-transform:uppercase;letter-spacing:.3px">1) Payez — 2) Revenez sur cette page — 3) Le bouton « J’ai payé » apparaît</p>
+    <button class="primary" type="button" id="depositFinishedBtn" style="display:none;margin-top:14px;width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900;text-transform:uppercase" onclick="showDepositStep('depositProofModal')">✅ J’AI PAYÉ → JOINDRE LA PREUVE</button>
     <button class="secondary" type="button" style="margin-top:10px;width:100%;min-height:48px;border-radius:14px" onclick="closeDepositFlow()">Plus tard</button>
   </div>
 </div>
 
 <div class="confirm-overlay" id="depositProofModal" role="dialog" aria-modal="true" aria-labelledby="depositProofTitle">
   <div class="confirm-box">
-    <h2 id="depositProofTitle">Étape 5/5 — Joindre la preuve</h2>
-    <p style="text-align:center;color:var(--muted);font-size:13px">Sélectionnez une photo depuis votre galerie (capture du paiement réussi).</p>
+    <h2 id="depositProofTitle" style="color:#fff;text-transform:uppercase">Étape 5/5 — Joindre la preuve</h2>
+    <p style="text-align:center;color:#fff;font-weight:700;font-size:14px;text-transform:uppercase">Sélectionnez une photo depuis votre galerie (capture du paiement réussi).</p>
     <p class="notice" style="margin:10px 0;border-color:#a82d40;background:linear-gradient(135deg,#3a1518,#1a0c10);color:#ffc9c9;font-weight:800;text-align:center;font-size:13px">⚠️ Tout faux dépôt est un bannissement du compte !!</p>
     <input type="file" id="depositProofFile" accept="image/jpeg,image/png,image/webp,image/jpg,.jpg,.jpeg,.png,.webp" required style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;z-index:-1" onchange="previewDepositProof(this)">
     <button type="button" class="primary" onclick="document.getElementById('depositProofFile').click()" style="width:100%;min-height:56px;margin:16px 0 8px;font-size:16px;border-radius:14px;font-weight:900">
@@ -5174,6 +5174,7 @@ const ROBOT_DESCRIPTIONS = {
 };
 
 const KEY = "unitri_state_v2";
+const PENDING_TX_KEY = "unitri_pending_tx_v1";
 let state = loadState(), current = null, adminOpen = false;
 
 function loadState() {
@@ -5183,9 +5184,56 @@ function loadState() {
     return { users: [], deposits: [], withdrawals: [], investments: [] };
   }
 }
+function saveLocalState() {
+  try {
+    // Ne pas stocker les preuves base64 volumineuses dans localStorage
+    const slim = {
+      users: state.users || [],
+      deposits: (state.deposits || []).map(d => {
+        const x = { ...d };
+        if (x.proof && String(x.proof).startsWith("data:")) delete x.proof;
+        return x;
+      }),
+      withdrawals: state.withdrawals || [],
+      investments: state.investments || []
+    };
+    localStorage.setItem(KEY, JSON.stringify(slim));
+  } catch (e) {
+    console.warn("saveLocalState", e);
+  }
+}
 function save() {
-  localStorage.setItem(KEY, JSON.stringify(state));
-  renderAll();
+  saveLocalState();
+  try { renderAll(); } catch (_) {}
+}
+function savePendingTx(type, record) {
+  try {
+    const all = JSON.parse(localStorage.getItem(PENDING_TX_KEY) || "{}");
+    const uid = String(record.userId || "");
+    if (!uid) return;
+    if (!all[uid]) all[uid] = { deposits: [], withdrawals: [] };
+    const list = all[uid][type] || [];
+    const filtered = list.filter(x => x.id !== record.id);
+    const copy = { ...record };
+    if (copy.proof && String(copy.proof).startsWith("data:")) delete copy.proof;
+    filtered.push(copy);
+    all[uid][type] = filtered.slice(-80);
+    localStorage.setItem(PENDING_TX_KEY, JSON.stringify(all));
+  } catch (e) { console.warn("savePendingTx", e); }
+}
+function loadPendingTx(type, uid) {
+  try {
+    const all = JSON.parse(localStorage.getItem(PENDING_TX_KEY) || "{}");
+    return (all[String(uid)] && all[String(uid)][type]) || [];
+  } catch (_) { return []; }
+}
+function mergeTxLists(serverList, localList) {
+  const byId = new Map();
+  (serverList || []).forEach(d => { if (d && d.id) byId.set(d.id, d); });
+  (localList || []).forEach(d => {
+    if (d && d.id && !byId.has(d.id)) byId.set(d.id, d);
+  });
+  return Array.from(byId.values()).sort((a, b) => (b.created || 0) - (a.created || 0));
 }
 function money(n) {
   return Math.round(n).toLocaleString("fr-FR") + " FCFA";
@@ -5526,17 +5574,12 @@ function updateDepositCountryPayment() {
   if (methodSelect) methodSelect.disabled = false;
   const method = methodSelect?.value || pendingDeposit.method || "Wave";
   pendingDeposit.method = method;
-  // Tip selon pays + moyen
+  // Tip step 1
   const tip = document.getElementById("foreignPayInfo");
   if (tip) {
-    const m = (method || "").toLowerCase();
-    if (country === "CI" && m.includes("wave")) {
-      tip.textContent = "Côte d’Ivoire • Wave : le lien Jeko s’affichera à l’étape paiement.";
-    } else if (country === "CI") {
-      tip.textContent = "Côte d’Ivoire • " + method + " : le numéro Mobile Money s’affichera à l’étape paiement.";
-    } else {
-      tip.textContent = "Le numéro de paiement s’affichera à l’étape « Payer maintenant » selon le moyen choisi.";
-    }
+    tip.textContent = country === "CI"
+      ? "Côte d’Ivoire : le lien Jeko s’affichera à l’étape « Payer maintenant »."
+      : "Le numéro de paiement s’affichera à l’étape « Payer maintenant » selon le moyen choisi.";
   }
 }
 document.getElementById("depositCountry").addEventListener("change", updateDepositCountryPayment);
@@ -5544,21 +5587,17 @@ document.getElementById("depositMethod").addEventListener("change", function() {
   pendingDeposit.method = this.value;
   const label = document.getElementById("selectedPaymentOperator");
   if (label) label.textContent = this.value;
-  try { updateDepositCountryPayment(); } catch(_){}
 });
 function getPayNumberForMethod(method) {
   const m = (method || "").toLowerCase();
   if (m.includes("orange")) return "0749045488";
-  if (m.includes("mtn")) return "0596180495";
-  // Wave (et défaut)
+  // Wave et MTN : même numéro
   return "0596180495";
 }
-/** Côte d'Ivoire : seul Wave passe par le lien Jeko. Orange / MTN = numéro Mobile Money. */
 function isJekoPayment(country, method) {
-  const c = (country || "").toUpperCase();
-  const m = (method || "").toLowerCase();
-  return c === "CI" && m.includes("wave");
+  return String(country || "").toUpperCase() === "CI" && String(method || "").toLowerCase().includes("wave");
 }
+
 function copyForeignPayNumber() {
   const number = getPayNumberForMethod(pendingDeposit?.method || document.getElementById("depositMethod")?.value);
   if (navigator.clipboard?.writeText) {
@@ -5629,18 +5668,17 @@ function goToPayment() {
   const isCI = pendingDeposit.country === "CI";
   const method = pendingDeposit.method || "Wave";
   const payNumber = getPayNumberForMethod(method);
-  const useJeko = isJekoPayment(pendingDeposit.country, method);
+  const useJeko = typeof isJekoPayment === "function" ? isJekoPayment(pendingDeposit.country, method) : (isCI && String(method).toLowerCase().includes("wave"));
   const label = document.getElementById("paymentAmountLabel");
   if (label) {
-    label.textContent = "Montant à payer : " + money(pendingDeposit.amount) +
-      (useJeko ? " • Jeko (Wave)" : " • " + method);
-    label.style.color = "#f2cc82";
+    label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + (useJeko ? " • JEKO (WAVE)" : " • " + method.toUpperCase());
+    label.style.color = "#fff";
+    label.style.fontWeight = "900";
   }
 
   const paymentBox = document.getElementById("ciPaymentActions");
   const foreignBox = document.getElementById("foreignPaymentActions");
 
-  // CI + Wave → lien Jeko ; CI + Orange/MTN ou hors CI → numéro Mobile Money
   if (useJeko) {
     paymentBox?.classList.remove("hidden");
     foreignBox?.classList.add("hidden");
@@ -5651,77 +5689,82 @@ function goToPayment() {
     if (foreignBox) {
       const methodEsc = escapeHtml(method);
       const amt = Number(pendingDeposit.amount || 0).toLocaleString("fr-FR");
-      const countryLabel = isCI ? "Côte d’Ivoire" : "Hors Côte d’Ivoire";
+      const countryLabel = isCI ? "CÔTE D’IVOIRE" : "HORS CÔTE D’IVOIRE";
       const ussdHint = method.toLowerCase().includes("orange")
-        ? "Ouvrez Orange Money (app ou USSD) → Transfert / Paiement, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
+        ? "Ouvrez Orange Money → Transfert, envoyez le montant exact au numéro ci-dessous."
         : method.toLowerCase().includes("mtn")
-        ? "Ouvrez MTN Money (app ou USSD) → Transfert, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
-        : "Ouvrez Wave → Envoyer de l’argent, envoyez le montant exact au numéro ci-dessous et confirmez.";
+        ? "Ouvrez MTN Money → Transfert, envoyez le montant exact au numéro ci-dessous."
+        : "Ouvrez Wave → Envoyer de l’argent au numéro ci-dessous.";
       foreignBox.innerHTML = `
-        <div style="padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
+        <div style="padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#fff">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <b style="color:#f2cc82;text-transform:uppercase">SOULIER D’OR — ${methodEsc}</b>
-            <span style="font-size:11px;background:rgba(242,204,130,.15);padding:4px 10px;border-radius:999px;color:#f2cc82;font-weight:800;text-transform:uppercase">${countryLabel}</span>
+            <b style="color:#fff;text-transform:uppercase">SOULIER D’OR — ${methodEsc}</b>
+            <span style="font-size:11px;background:rgba(242,204,130,.2);padding:4px 10px;border-radius:999px;color:#fff;font-weight:800">${countryLabel}</span>
           </div>
-          <p style="margin:0 0 10px;font-size:13px;line-height:1.55;color:#e8edf5;font-weight:600">${ussdHint}</p>
+          <p style="margin:0 0 10px;font-size:14px;line-height:1.55;color:#fff;font-weight:700">${ussdHint}</p>
           <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;margin:10px 0;text-align:center">
-            <small style="opacity:.85;display:block;margin-bottom:6px;color:#e8edf5;text-transform:uppercase;font-weight:700">Numéro de réception ${methodEsc}</small>
+            <small style="display:block;margin-bottom:6px;color:#fff;text-transform:uppercase;font-weight:800">Numéro de réception</small>
             <strong style="font-size:28px;letter-spacing:1.5px;color:#fff">${payNumber}</strong>
           </div>
           <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0;text-align:center">
-            <small style="opacity:.85;display:block;margin-bottom:4px;color:#e8edf5;text-transform:uppercase;font-weight:700">Montant à envoyer</small>
+            <small style="display:block;margin-bottom:4px;color:#fff;text-transform:uppercase;font-weight:800">Montant à envoyer</small>
             <strong style="font-size:22px;color:#fff">${amt} FCFA</strong>
           </div>
-          <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;color:#e8edf5;font-weight:600">
-            <li>Copiez le numéro de paiement</li>
-            <li>Ouvrez ${methodEsc} (application ou code USSD)</li>
-            <li>Envoyez exactement <b style="color:#fff">${amt} FCFA</b></li>
-            <li>Confirmez avec votre code secret</li>
-            <li>Prenez une capture du message de succès</li>
+          <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;color:#fff;font-weight:700">
+            <li>Copiez le numéro</li>
+            <li>Ouvrez ${methodEsc}</li>
+            <li>Envoyez exactement <b>${amt} FCFA</b></li>
+            <li>Prenez une capture du succès</li>
+            <li>Revenez ici : le bouton « J’ai payé » apparaît</li>
           </ol>
-          <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 COPIER LE NUMÉRO ${payNumber}</button>
+          <button class="primary" type="button" onclick="copyForeignPayNumber(); window.__awaitingPaymentReturn=true; const h=document.getElementById('depositFinishedHint'); if(h){h.textContent='REVenez APRÈS PAIEMENT — LE BOUTON APPARAÎTRA';}" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800;text-transform:uppercase">📋 COPIER LE NUMÉRO ${payNumber}</button>
         </div>`;
     }
   }
 
   const instruction = document.getElementById("paymentInstruction");
   if (instruction) {
-    if (useJeko) {
-      instruction.textContent = "Côte d’Ivoire • Wave : payez uniquement via le lien Jeko sécurisé.";
-    } else if (isCI) {
-      instruction.textContent = "Côte d’Ivoire • " + method + " : envoyez le paiement au numéro affiché ci-dessous.";
-    } else {
-      instruction.textContent = "Hors Côte d’Ivoire : envoyez le paiement au numéro affiché selon le moyen choisi.";
-    }
-    instruction.style.color = "#e8edf5";
-    instruction.style.fontWeight = "700";
+    instruction.style.color = "#fff";
+    instruction.style.fontWeight = "800";
+    instruction.style.textTransform = "uppercase";
+    if (useJeko) instruction.textContent = "Côte d’Ivoire • Wave : payez via le lien Jeko, puis revenez ici.";
+    else if (isCI) instruction.textContent = "Côte d’Ivoire • " + method + " : envoyez au numéro affiché, puis revenez ici.";
+    else instruction.textContent = "Envoyez le paiement au numéro affiché, puis revenez ici.";
   }
-  const operator = document.getElementById("selectedPaymentOperator");
-  if (operator) operator.textContent = method;
 
-  // Bouton "J'ai terminé" : caché pour Jeko jusqu'à ouverture du lien ; visible pour paiement par numéro
+  // Cacher le bouton jusqu'au retour après paiement
   const finBtn = document.getElementById("depositFinishedBtn");
   const hint = document.getElementById("depositFinishedHint");
-  if (finBtn) finBtn.style.display = useJeko ? "none" : "block";
+  window.__awaitingPaymentReturn = false;
+  if (finBtn) finBtn.style.display = "none";
   if (hint) {
-    if (useJeko) {
-      hint.style.display = "block";
-      hint.textContent = "Ouvrez d’abord le lien Jeko, payez, puis revenez sur cette page.";
-      hint.style.color = "#f2cc82";
-    } else {
-      hint.style.display = "block";
-      hint.textContent = "Après envoi du paiement au numéro, prenez une capture puis continuez.";
-      hint.style.color = "#f2cc82";
-    }
+    hint.style.display = "block";
+    hint.style.color = "#fff";
+    hint.style.fontWeight = "800";
+    hint.style.textTransform = "uppercase";
+    hint.textContent = useJeko
+      ? "1) Ouvrez le lien Jeko  2) Payez  3) Revenez ici → bouton « J’ai payé »"
+      : "1) Copiez le numéro  2) Payez  3) Revenez ici → bouton « J’ai payé »";
   }
   showDepositStep("depositPaymentModal");
 }
 function openPaymentLink() {
-  if (!isJekoPayment(pendingDeposit.country, pendingDeposit.method)) {
-    toast("Le lien Jeko est réservé au paiement Wave en Côte d’Ivoire. Utilisez le numéro Mobile Money affiché.");
+  const method = pendingDeposit?.method || "Wave";
+  const country = pendingDeposit?.country || "CI";
+  if (typeof isJekoPayment === "function" && !isJekoPayment(country, method)) {
+    toast("Le lien Jeko est réservé au paiement Wave en Côte d’Ivoire.");
     return;
   }
+  window.__awaitingPaymentReturn = true;
   window.open(PAYMENT_LINK, "_blank", "noopener,noreferrer");
+  const hint = document.getElementById("depositFinishedHint");
+  if (hint) {
+    hint.textContent = "PAYEZ MAINTENANT, PUIS REVenez SUR CETTE PAGE — LE BOUTON APPARAÎTRA";
+    hint.style.color = "#f2cc82";
+  }
+  try { toast("Lien ouvert. Payez, puis revenez sur SOULIER D’OR."); } catch(_){}
+}
+function revealPaidButton() {
   const finBtn = document.getElementById("depositFinishedBtn");
   const hint = document.getElementById("depositFinishedHint");
   if (finBtn) {
@@ -5729,11 +5772,19 @@ function openPaymentLink() {
     finBtn.style.animation = "riseIn .4s ease";
   }
   if (hint) {
-    hint.textContent = "Paiement ouvert. Après validation Jeko, revenez ici et joignez la capture.";
+    hint.textContent = "PAIEMENT EFFECTUÉ ? JOIGNEZ MAINTENANT VOTRE PREUVE";
     hint.style.color = "#2ecc71";
   }
-  try { toast("Lien Jeko ouvert. Payez puis revenez pour joindre la preuve."); } catch(_){}
+  window.__awaitingPaymentReturn = false;
 }
+document.addEventListener("visibilitychange", function() {
+  if (document.visibilityState === "visible" && window.__awaitingPaymentReturn) {
+    revealPaidButton();
+  }
+});
+window.addEventListener("focus", function() {
+  if (window.__awaitingPaymentReturn) revealPaidButton();
+});
 function showDepositPayment() { goToPayment(); }
 function previewDepositProof(input) {
   const file = input.files && input.files[0];
@@ -5801,9 +5852,9 @@ function submitDepositProof() {
     userId: uidOf(current),
     amount: pendingDeposit.amount,
     method: pendingDeposit.method || "Wave",
-    paymentLink: (typeof isJekoPayment === "function" && isJekoPayment(pendingDeposit.country, pendingDeposit.method)) ? (window.PAYMENT_LINK || "") : "",
-    recipientName: (typeof isJekoPayment === "function" && isJekoPayment(pendingDeposit.country, pendingDeposit.method)) ? "Jeko" : "SOULIER D’OR",
-    recipientPhone: (typeof isJekoPayment === "function" && isJekoPayment(pendingDeposit.country, pendingDeposit.method)) ? "" : (typeof getPayNumberForMethod === "function" ? getPayNumberForMethod(pendingDeposit.method) : "0596180495"),
+    paymentLink: pendingDeposit.country === "CI" ? (window.PAYMENT_LINK || "") : "",
+    recipientName: pendingDeposit.country === "CI" ? "Jeko" : "SOULIER D’OR",
+    recipientPhone: pendingDeposit.country === "CI" ? "" : "0596180495",
     phone: pendingDeposit.phone,
     country: pendingDeposit.country,
     ref: "À vérifier par l’administrateur",
@@ -5817,6 +5868,8 @@ function submitDepositProof() {
     try {
       baseRecord.proof = reader.result;
       state.deposits.push(baseRecord);
+      try { savePendingTx("deposits", baseRecord); } catch(_){}
+      try { saveLocalState(); } catch(_){}
       try { save(); } catch(_){}
     } catch (e) {
       console.error(e);
@@ -5830,6 +5883,8 @@ function submitDepositProof() {
   reader.onerror = function() {
     try {
       state.deposits.push(baseRecord);
+      try { savePendingTx("deposits", baseRecord); } catch(_){}
+      try { saveLocalState(); } catch(_){}
       try { save(); } catch(_){}
     } catch(_){}
     clearTimeout(safety);
@@ -5843,6 +5898,8 @@ function submitDepositProof() {
   } catch (e) {
     try {
       state.deposits.push(baseRecord);
+      try { savePendingTx("deposits", baseRecord); } catch(_){}
+      try { saveLocalState(); } catch(_){}
       try { save(); } catch(_){}
     } catch(_){}
     clearTimeout(safety);
@@ -5899,7 +5956,7 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
   }
   const fee = Math.round(amount * 0.20);
   const net = amount - fee;
-  state.withdrawals.push({
+  const wdRecord = {
     id: id(),
     userId: uidOf(current),
     amount,
@@ -5908,10 +5965,17 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
     method: document.getElementById("withdrawMethod").value,
     phone,
     status: "En attente",
-    created: Date.now()
-  });
+    created: Date.now(),
+    email: (current.email || "").toLowerCase()
+  };
+  state.withdrawals.push(wdRecord);
+  try { savePendingTx("withdrawals", wdRecord); } catch(_){}
+  try { saveLocalState(); } catch(_){}
   e.target.reset();
   save();
+  if (typeof window.syncWithdrawalToFirebase === "function") {
+    try { window.syncWithdrawalToFirebase(wdRecord); } catch(_){}
+  }
   showTxAnimation("pending", "Demande de retrait envoyée", "Votre demande est enregistrée et reste en attente de vérification. Une animation de validation ou de refus apparaîtra lorsque le statut sera mis à jour.");
   toast("Demande de retrait enregistrée. Vérification en cours.");
 });
@@ -6007,15 +6071,15 @@ function renderAll() {
     ...myWith.map(x => ({name:"Demande de retrait", amount:-x.amount, status:x.status, date:x.created})),
     ...myInv.map(x => ({name:"Plan " + x.plan, amount:-x.price, status:x.status, date:x.created}))
   ].sort((a,b) => b.date-a.date);
-  renderList("transactionHistory", tx.map(x => `<div class="transaction-row"><div><div class="tx-name">${escapeHtml(x.name)}</div><div class="tx-date">${new Date(x.date).toLocaleDateString("fr-FR")} • ${escapeHtml(x.status)}</div></div><div class="tx-negative">${money(x.amount)}</div></div>`), "Aucune transaction pour le moment.");
+  renderList("transactionHistory", tx.map(x => `<div class="transaction-row"><div><div class="tx-name" style="color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:.3px">${escapeHtml(x.name)}</div><div class="tx-date" style="color:#fff;font-weight:700">${new Date(x.date).toLocaleDateString("fr-FR")} • <span style="color:#f2cc82;text-transform:uppercase;font-weight:900">${escapeHtml(x.status)}</span></div></div><div class="tx-negative" style="color:#ff8b97;font-weight:900">${money(x.amount)}</div></div>`), "Aucune transaction pour le moment.");
 
   renderList("myDeposits", myDep.map(x => `
     <div class="item">
       <div>
-        <b>${money(x.amount)} • ${x.method}</b>
-        <div class="small">Réf. ${escapeHtml(x.ref)} • ${new Date(x.created).toLocaleString("fr-FR")}</div>
+        <b style="color:#fff;text-transform:uppercase">${money(x.amount)} • ${escapeHtml(x.method || "")}</b>
+        <div class="small" style="color:#fff;font-weight:700">RÉF. ${escapeHtml(x.ref || "—")} • ${new Date(x.created).toLocaleString("fr-FR")}</div>
       </div>
-      <span class="badge">${x.status}</span>
+      <span class="badge" style="background:#5a4825;color:#fff;text-transform:uppercase;font-weight:900">${x.status}</span>
     </div>
   `));
 
@@ -6486,9 +6550,38 @@ async function loadOwnData(user) {
     state.users = [safeProfile(profileSnap.data(), uid)];
   }
   for (const col of ["deposits", "withdrawals", "investments"]) {
-    const snap = await getDocs(query(collection(db, col), where("userId", "==", uid)));
-    state[col] = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    try {
+      const snap = await getDocs(query(collection(db, col), where("userId", "==", uid)));
+      state[col] = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    } catch (e) {
+      console.warn("loadOwnData " + col + ":", e);
+      state[col] = state[col] || [];
+    }
   }
+  // Fusion locale : empêche la disparition de l'historique si Firestore a échoué
+  try {
+    state.deposits = mergeTxLists(state.deposits, loadPendingTx("deposits", uid));
+    state.withdrawals = mergeTxLists(state.withdrawals, loadPendingTx("withdrawals", uid));
+    // Aussi fusionner depuis localStorage global KEY
+    try {
+      const localFull = JSON.parse(localStorage.getItem(KEY) || "{}");
+      if (localFull.deposits) state.deposits = mergeTxLists(state.deposits, localFull.deposits.filter(d => String(d.userId) === String(uid)));
+      if (localFull.withdrawals) state.withdrawals = mergeTxLists(state.withdrawals, localFull.withdrawals.filter(d => String(d.userId) === String(uid)));
+      if (localFull.investments) state.investments = mergeTxLists(state.investments, localFull.investments.filter(d => String(d.userId) === String(uid)));
+    } catch (_) {}
+    saveLocalState();
+    // Retente d'envoyer les dépôts/retraits encore en attente vers Firebase
+    for (const d of state.deposits) {
+      if (d.status === "En attente" && !d._synced && typeof window.syncDepositToFirebase === "function") {
+        try { window.syncDepositToFirebase(d, null); } catch (_) {}
+      }
+    }
+    for (const w of state.withdrawals) {
+      if (w.status === "En attente" && !w._synced && typeof window.syncWithdrawalToFirebase === "function") {
+        try { window.syncWithdrawalToFirebase(w); } catch (_) {}
+      }
+    }
+  } catch (e) { console.warn("merge local tx:", e); }
   current = state.users[0];
   firebaseReady = true;
   document.getElementById("sessionPill").textContent = "SOULIER D’OR";
@@ -6591,6 +6684,8 @@ async function persistCurrentState() {
   }
 }
 window.save = function() {
+  // TOUJOURS sauvegarder en local (sinon l'historique disparaît à la reconnexion)
+  try { saveLocalState(); } catch (_) {}
   if (typeof window.renderPlans === "function") window.renderPlans();
   if (current && typeof window.renderAll === "function") window.renderAll();
   if (adminOpen && typeof window.renderAdmin === "function") window.renderAdmin();
@@ -6763,6 +6858,45 @@ document.getElementById("logoutBtn").addEventListener("click", async (e) => {
 
 // Ne plus bloquer l’UI : la preuve est déjà enregistrée localement.
 // On tente seulement une synchro Firebase en arrière-plan.
+
+window.syncWithdrawalToFirebase = async function(record) {
+  try {
+    if (!auth.currentUser || adminMode) return;
+    const payload = {
+      id: record.id,
+      userId: auth.currentUser.uid,
+      amount: Number(record.amount) || 0,
+      fee: Number(record.fee) || 0,
+      net: Number(record.net) || 0,
+      method: record.method || "",
+      phone: record.phone || "",
+      status: "En attente",
+      created: record.created || Date.now(),
+      createdAt: serverTimestamp(),
+      email: (auth.currentUser.email || record.email || "").toLowerCase()
+    };
+    let lastErr = null;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        await setDoc(doc(db, "withdrawals", record.id), payload, { merge: true });
+        const local = state.withdrawals.find(w => w.id === record.id);
+        if (local) local._synced = true;
+        try { savePendingTx("withdrawals", { ...payload, _synced: true }); } catch(_){}
+        console.log("Retrait synchronisé:", record.id);
+        lastErr = null;
+        break;
+      } catch (e) {
+        lastErr = e;
+        console.error("Firestore retrait", attempt, e && (e.code || e.message));
+        await new Promise(r => setTimeout(r, 700 * attempt));
+      }
+    }
+    if (lastErr && typeof toast === "function") {
+      toast("Retrait sauvé sur l’appareil. Règles Firestore à vérifier (withdrawals).");
+    }
+  } catch (e) { console.warn("syncWithdrawalToFirebase", e); }
+};
+
 window.syncDepositToFirebase = async function(record, file) {
   try {
     if (!auth.currentUser || !firebaseReady || adminMode) return;
