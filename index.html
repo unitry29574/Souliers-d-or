@@ -540,6 +540,15 @@ body.auth-mode .app { padding-top:10px; }
 body.auth-mode { background:radial-gradient(ellipse at 50% 10%,#4a1021 0%,#15101b 27%,#08090f 62%); }
 @media(max-width:520px) { .auth-brand { padding:24px 8px 24px; } .auth-logo { width:96px;height:96px;border-radius:27px;font-size:38px;margin-bottom:20px; } .auth-card { padding:22px 18px 28px; border-radius:28px; } .auth-card .form input,.auth-card .form select { min-height:40px; } }
 
+/* Missions : bouton doré et panneau de progression */
+.mission-launch{width:100%;display:flex;align-items:center;gap:14px;text-align:left;margin:0 0 18px;padding:15px 18px;border:1px solid #f6d98c;border-radius:18px;color:#211707;background:linear-gradient(105deg,#ffe9a8 0%,#e6b94f 42%,#bd8726 100%);box-shadow:0 8px 26px rgba(231,184,76,.28),inset 0 1px 0 #fff8d8;position:relative;overflow:hidden;animation:missionGlow 2.8s ease-in-out infinite}
+.mission-launch:after{content:"";position:absolute;top:0;left:-45%;height:100%;width:28%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,#ffffffa8,transparent);animation:missionShine 3.5s ease-in-out infinite}
+.mission-launch-icon{font-size:30px;filter:drop-shadow(0 2px 2px #805b1d66)}.mission-launch b{display:block;font-size:16px;letter-spacing:1.4px}.mission-launch small{display:block;font-size:11px;font-weight:650;opacity:.78;margin-top:2px}.mission-launch-arrow{margin-left:auto;font-size:30px;font-weight:400}
+@keyframes missionGlow{0%,100%{box-shadow:0 8px 22px #dcae4b35}50%{box-shadow:0 10px 32px #f4d27a75,0 0 0 4px #f4d27a12}}
+@keyframes missionShine{0%,35%{left:-45%}75%,100%{left:130%}}
+.mission-overlay{display:none;position:fixed;inset:0;z-index:10020;background:#05080ddc;backdrop-filter:blur(9px);align-items:center;justify-content:center;padding:18px}.mission-overlay.open{display:flex}.mission-panel{width:min(100%,520px);max-height:90vh;overflow:auto;position:relative;padding:26px 20px 22px;border-radius:25px;border:1px solid #8c6b2e;background:linear-gradient(155deg,#202b3b,#101722 70%,#1b1b20);box-shadow:0 25px 80px #000b}.mission-close{position:absolute;right:14px;top:12px;width:36px;height:36px;border-radius:50%;background:#ffffff12;color:#fff;font-size:25px}.mission-kicker{color:#f2cc82;font-size:10px;letter-spacing:2px;font-weight:850}.mission-panel h2{font-size:25px;margin:8px 0 18px}.mission-card{border:1px solid #9b7839;border-radius:19px;padding:18px;background:linear-gradient(145deg,#2c2a24,#151d28 72%)}.mission-card-top,.mission-progress-text{display:flex;justify-content:space-between;align-items:center;gap:10px}.mission-number{font-size:10px;letter-spacing:1.3px;color:#f2cc82;font-weight:900}.mission-status{font-size:9px;padding:5px 9px;border-radius:30px;background:#5a4825;color:#ffe6a4;font-weight:900}.mission-card h3{font-size:19px;margin:14px 0 8px}.mission-card p{font-size:13px;color:#c3cbd7;line-height:1.6}.mission-reward{margin:16px 0;color:#f2cc82;font-size:14px}.mission-reward strong{font-size:20px;color:#ffe5a1}.mission-progress-line{height:11px;border-radius:20px;background:#0b111b;overflow:hidden;border:1px solid #4a4b43}.mission-progress-line span{display:block;width:0;height:100%;border-radius:20px;background:linear-gradient(90deg,#c18b2e,#ffe7a0);transition:width .45s}.mission-progress-text{font-size:12px;color:#cbd2dc;margin-top:8px}.mission-progress-text strong{font-size:15px;color:#ffe5a1}.mission-details{font-size:11px;color:#aeb8c6;margin-top:10px;min-height:18px}.mission-share{width:100%;margin-top:15px;padding:13px;border-radius:12px;background:linear-gradient(100deg,#ffe8a0,#d6a63e);color:#241a08;font-size:13px;font-weight:900}.mission-locked,.mission-complete{margin-top:14px;padding:13px 14px;border-radius:13px;font-size:12px;line-height:1.5}.mission-locked{background:#111a27;border:1px solid #39485b;color:#bdc7d5}.mission-complete{background:#173526;border:1px solid #2e9b65;color:#caffdf}
+@media(max-width:520px){.mission-panel{padding:24px 15px 18px}.mission-card{padding:15px}.mission-launch{padding:13px 14px}}
+
 /* Responsive */
 @media (max-width: 900px) {
   .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -4349,10 +4358,10 @@ hr,.divider{border-color:#765b14!important}
         <label>Pays
           <select id="regCountry" required>
             <option value="CI" selected>🇨🇮 Côte d’Ivoire</option>
-            <option value="BJ">🇧🇯 Bénin</option><option value="TG">🇹🇬 Togo</option>
+            <option value="BJ">🇧🇯 Bénin</option>
             <option value="BF">🇧🇫 Burkina Faso</option><option value="CM">🇨🇲 Cameroun</option>
             <option value="SN">🇸🇳 Sénégal</option>
-            <option value="ML">🇲🇱 Mali</option><option value="GN">🇬🇳 Guinée</option>
+            <option value="ML">🇲🇱 Mali</option>
           </select>
         </label>
         <label>Téléphone (numéro Mobile Money)
@@ -4408,6 +4417,12 @@ hr,.divider{border-color:#765b14!important}
           <button class="secondary" onclick="showPage('deposit')">Faire un dépôt</button>
         </div>
       </div>
+
+      <button type="button" id="missionOpenBtn" class="mission-launch" onclick="openMissions()">
+        <span class="mission-launch-icon">🏆</span>
+        <span><b>MISSIONS</b><small>Relevez des défis et gagnez des récompenses</small></span>
+        <span class="mission-launch-arrow">›</span>
+      </button>
 
       <div class="balance-grid">
         <div class="bcard dep">
@@ -4876,6 +4891,26 @@ hr,.divider{border-color:#765b14!important}
   </main>
 </div>
 
+<div id="missionsModal" class="mission-overlay" aria-hidden="true">
+  <div class="mission-panel" role="dialog" aria-modal="true" aria-labelledby="missionTitle">
+    <button type="button" class="mission-close" onclick="closeMissions()" aria-label="Fermer">×</button>
+    <div class="mission-kicker">SOULIER D’OR • RÉCOMPENSES</div>
+    <h2 id="missionTitle">🎯 Mes missions</h2>
+    <div class="mission-card">
+      <div class="mission-card-top"><span class="mission-number">MISSION 01</span><span id="missionStatus" class="mission-status">EN COURS</span></div>
+      <h3>Inviter 5 personnes qui investissent</h3>
+      <p>Invitez 5 nouveaux membres avec votre lien personnel. Une personne est comptée uniquement après avoir effectué au moins un investissement actif sur la plateforme.</p>
+      <div class="mission-reward">🏅 Récompense : <strong>10 000 FCFA</strong></div>
+      <div class="mission-progress-line"><span id="missionProgressFill"></span></div>
+      <div class="mission-progress-text"><strong id="missionCount">0 / 5</strong><span>filleuls ayant investi</span></div>
+      <div id="missionDetails" class="mission-details">Chargement de votre progression…</div>
+      <button type="button" class="mission-share" onclick="copyMissionLink()">Partager mon lien d’invitation</button>
+    </div>
+    <div id="missionNextLocked" class="mission-locked">🔒 Les prochaines missions seront dévoilées après la validation de la mission 01.</div>
+    <div id="missionCompletedNote" class="mission-complete hidden">🎉 Mission terminée ! Votre récompense de 10 000 FCFA a été ajoutée à votre compte.</div>
+  </div>
+</div>
+
 <nav id="bottomNav" class="tabs hidden" aria-label="Navigation principale">
   <button class="active" data-page="home" type="button">
     <span class="nav-ico" aria-hidden="true">
@@ -4938,12 +4973,10 @@ hr,.divider{border-color:#765b14!important}
       <select id="depositCountry" required style="width:100%;margin-top:6px;min-height:48px;font-size:15px;border-radius:14px">
         <option value="CI">🇨🇮 Côte d’Ivoire</option>
         <option value="BJ">🇧🇯 Bénin</option>
-        <option value="TG">🇹🇬 Togo</option>
         <option value="BF">🇧🇫 Burkina Faso</option>
         <option value="CM">🇨🇲 Cameroun</option>
         <option value="SN">🇸🇳 Sénégal</option>
         <option value="ML">🇲🇱 Mali</option>
-        <option value="GN">🇬🇳 Guinée</option>
       </select>
     </label>
     <label style="display:block;margin-bottom:12px">Moyen de paiement
@@ -5099,12 +5132,10 @@ const ROBOT_PHOTO_CREDITS = [
 const COUNTRIES = {
   CI: "🇨🇮 Côte d’Ivoire",
   BJ: "🇧🇯 Bénin",
-  TG: "🇹🇬 Togo",
   BF: "🇧🇫 Burkina Faso",
   CM: "🇨🇲 Cameroun",
   SN: "🇸🇳 Sénégal",
-  ML: "🇲🇱 Mali",
-  GN: "🇬🇳 Guinée"
+  ML: "🇲🇱 Mali"
 };
 
 const PLANS = [
@@ -5325,26 +5356,29 @@ function invest(i) {
     return;
   }
   if (!confirm(`Activer ${p.name} pour ${money(p.price)} ?`)) return;
-  state.investments.push({
-    id: id(),
-    userId: uidOf(current),
-    plan: p.name,
-    price: p.price,
-    daily: p.daily,
-    gain: p.gain,
-    total: p.total,
-    days: p.days,
-    created: Date.now(),
-    status: "Actif"
-  });
-  save();
-  try {
-    const activeCard = document.querySelectorAll("#vipGrid .vip")[i];
-    if (activeCard) { activeCard.classList.remove("vip-activated"); void activeCard.offsetWidth; activeCard.classList.add("vip-activated"); }
-  } catch (_) {}
-  showTxAnimation("success", "Investissement activé !", "Votre robot " + p.name + " est maintenant activé. Consultez votre historique pour suivre son statut.");
-  toast("Robot " + p.name + " activé.");
+  (async () => {
+    try {
+      const result = await createInvestmentCallable({ planIndex: i });
+      const created = result.data && result.data.investment;
+      if (created) state.investments.push(created);
+      if (typeof renderAll === "function") renderAll();
+      try {
+        const activeCard = document.querySelectorAll("#vipGrid .vip")[i];
+        if (activeCard) { activeCard.classList.remove("vip-activated"); void activeCard.offsetWidth; activeCard.classList.add("vip-activated"); }
+      } catch (_) {}
+      showTxAnimation("success", "Investissement activé !", "Votre robot " + p.name + " est maintenant activé. Consultez votre historique pour suivre son statut.");
+      toast("Robot " + p.name + " activé.");
+      setTimeout(() => window.refreshMissionProgress && window.refreshMissionProgress(), 1200);
+    } catch (err) {
+      console.error("Création investissement:", err);
+      toast(err?.message || "Impossible d’activer cet investissement. Vérifiez votre dépôt validé.");
+    }
+  })();
 }
+
+function openMissions(){const el=document.getElementById("missionsModal");if(!el)return;el.classList.add("open");el.setAttribute("aria-hidden","false");if(window.refreshMissionProgress)window.refreshMissionProgress();}
+function closeMissions(){const el=document.getElementById("missionsModal");if(!el)return;el.classList.remove("open");el.setAttribute("aria-hidden","true");}
+async function copyMissionLink(){const el=document.getElementById("myRefLink");if(!el||!el.value){toast("Votre lien d’invitation n’est pas encore disponible.");return;}try{await navigator.clipboard.writeText(el.value);toast("Lien d’invitation copié.");}catch(_){el.select();document.execCommand("copy");toast("Lien d’invitation copié.");}}
 
 function showPage(name) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
@@ -5875,6 +5909,7 @@ function renderAll() {
   const children = state.users.filter(u => u.parentId === uidOf(current));
 
   const earned = myInv.reduce((s, x) => s + x.daily * x.days, 0)
+    + Number(current.missionRewardBalance || 0)
     - myWith.filter(x => x.status === "Validé").reduce((s, x) => s + x.amount, 0);
 
   document.getElementById("balance").textContent = money(Math.max(0, earned));
@@ -6317,6 +6352,7 @@ import {
 import {
   getStorage, ref as storageRef, uploadBytes, getDownloadURL
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-storage.js";
+import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-functions.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWWIp4UAMaXPq19QE2iZKgm7YtdW9EwnI",
@@ -6331,6 +6367,8 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 const storage = getStorage(fbApp);
+const functions = getFunctions(fbApp, "europe-west1");
+const createInvestmentCallable = httpsCallable(functions, "createInvestment");
 window.firebaseAdminLogout = async function() {
   try { await signOut(auth); } catch (_) {}
   adminMode = false; firebaseReady = false; current = null;
@@ -6355,7 +6393,7 @@ function profileFromForm(uid, email) {
     name: document.getElementById("regName").value.trim(),
     email,
     phone: document.getElementById("regPhone").value.trim(),
-    country: "CI",
+    country: document.getElementById("regCountry").value,
     code: "UT" + uid.slice(0, 8).toUpperCase(),
     parentId: null,
     referralCodeEntered: refCode || null,
@@ -6482,7 +6520,7 @@ async function persistCurrentState() {
     delete profile.pass;
     await setDoc(doc(db, "profiles", uid), profile, { merge: true });
   }
-  for (const col of ["deposits", "withdrawals", "investments"]) {
+  for (const col of ["deposits", "withdrawals"]) {
     const ownRows = state[col].filter(x => x.userId === uid);
     for (const row of ownRows) {
       const rowRef = doc(db, col, row.id);
@@ -6507,6 +6545,47 @@ window.save = function() {
   }
 };
 
+// Le rattachement du parrain est effectué côté serveur à partir du code d’invitation.
+window.refreshMissionProgress = async function() {
+  const countEl = document.getElementById("missionCount");
+  const fill = document.getElementById("missionProgressFill");
+  const details = document.getElementById("missionDetails");
+  if (!current || !countEl || !auth.currentUser) return;
+  try {
+    const uid = auth.currentUser.uid;
+    const profileSnap = await getDoc(doc(db, "profiles", uid));
+    if (!profileSnap.exists()) return;
+    const serverProfile = profileSnap.data();
+    current.missionQualifiedCount = Number(serverProfile.missionQualifiedCount || 0);
+    current.mission1CompletedAt = serverProfile.mission1CompletedAt || null;
+    current.missionRewardBalance = Number(serverProfile.missionRewardBalance || 0);
+    const qualified = Math.min(current.missionQualifiedCount, 5);
+    const done = !!current.mission1CompletedAt;
+    countEl.textContent = qualified + " / 5";
+    if (fill) fill.style.width = qualified * 20 + "%";
+    if (details) details.textContent = qualified + " personne(s) invitée(s) ont un investissement actif. Les inscriptions sans investissement ne sont pas comptabilisées.";
+    const status = document.getElementById("missionStatus");
+    if (status) {
+      status.textContent = done ? "TERMINÉE" : "EN COURS";
+      status.style.background = done ? "#174d32" : "#5a4825";
+      status.style.color = done ? "#caffdf" : "#ffe6a4";
+    }
+    const completedNote = document.getElementById("missionCompletedNote");
+    const locked = document.getElementById("missionNextLocked");
+    if (done) {
+      if (completedNote) completedNote.classList.remove("hidden");
+      if (locked) locked.textContent = "🔓 Mission 01 validée. Les prochaines missions pourront maintenant être débloquées.";
+    } else {
+      if (completedNote) completedNote.classList.add("hidden");
+      if (locked) locked.textContent = "🔒 Les prochaines missions seront dévoilées après la validation de la mission 01.";
+    }
+    if (typeof renderAll === "function") renderAll();
+  } catch (err) {
+    console.error("Progression mission:", err);
+    if (details) details.textContent = "Progression momentanément indisponible. Réessayez dans quelques instants.";
+  }
+};
+
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   e.stopImmediatePropagation();
@@ -6523,6 +6602,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(cred.user, { displayName: name });
     const profile = profileFromForm(cred.user.uid, email);
+    profile.parentId = null; // Le serveur rattache le parrain après vérification du code.
     state = { users: [profile], deposits: [], withdrawals: [], investments: [] };
     current = profile;
     await setDoc(doc(db, "profiles", cred.user.uid), profile);
