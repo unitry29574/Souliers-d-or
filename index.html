@@ -5047,8 +5047,8 @@ hr,.divider{border-color:#765b14!important}
 
     <!-- Côte d'Ivoire : Jeko + numéro -->
     <div id="ciPaymentActions" style="margin:12px 0;padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
-      <b style="color:#f2cc82">SOULIER D’OR — Côte d’Ivoire</b>
-      <p style="margin:10px 0 14px;font-size:14px;opacity:.92;line-height:1.5">Payez uniquement via le lien Jeko sécurisé. Aucun numéro à copier pour la Côte d’Ivoire.</p>
+      <b style="color:#f2cc82;text-transform:uppercase">SOULIER D’OR — Côte d’Ivoire • Wave</b>
+      <p style="margin:10px 0 14px;font-size:14px;color:#e8edf5;font-weight:600;line-height:1.5">Wave uniquement : payez via le lien Jeko sécurisé. Pour Orange Money ou MTN Money, un numéro Mobile Money s’affiche à la place.</p>
       <button class="primary" type="button" id="openPaymentBtn" onclick="openPaymentLink()" style="width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900">🔐 Ouvrir le lien Jeko sécurisé</button>
       <p class="small" style="margin-top:12px;opacity:.8;text-align:center">Après paiement, prenez une capture (montant + statut réussi).</p>
     </div>
@@ -5526,12 +5526,17 @@ function updateDepositCountryPayment() {
   if (methodSelect) methodSelect.disabled = false;
   const method = methodSelect?.value || pendingDeposit.method || "Wave";
   pendingDeposit.method = method;
-  // Tip step 1
+  // Tip selon pays + moyen
   const tip = document.getElementById("foreignPayInfo");
   if (tip) {
-    tip.textContent = country === "CI"
-      ? "Côte d’Ivoire : le lien Jeko s’affichera à l’étape « Payer maintenant »."
-      : "Le numéro de paiement s’affichera à l’étape « Payer maintenant » selon le moyen choisi.";
+    const m = (method || "").toLowerCase();
+    if (country === "CI" && m.includes("wave")) {
+      tip.textContent = "Côte d’Ivoire • Wave : le lien Jeko s’affichera à l’étape paiement.";
+    } else if (country === "CI") {
+      tip.textContent = "Côte d’Ivoire • " + method + " : le numéro Mobile Money s’affichera à l’étape paiement.";
+    } else {
+      tip.textContent = "Le numéro de paiement s’affichera à l’étape « Payer maintenant » selon le moyen choisi.";
+    }
   }
 }
 document.getElementById("depositCountry").addEventListener("change", updateDepositCountryPayment);
@@ -5539,12 +5544,20 @@ document.getElementById("depositMethod").addEventListener("change", function() {
   pendingDeposit.method = this.value;
   const label = document.getElementById("selectedPaymentOperator");
   if (label) label.textContent = this.value;
+  try { updateDepositCountryPayment(); } catch(_){}
 });
 function getPayNumberForMethod(method) {
   const m = (method || "").toLowerCase();
   if (m.includes("orange")) return "0749045488";
-  // Wave et MTN : même numéro
+  if (m.includes("mtn")) return "0596180495";
+  // Wave (et défaut)
   return "0596180495";
+}
+/** Côte d'Ivoire : seul Wave passe par le lien Jeko. Orange / MTN = numéro Mobile Money. */
+function isJekoPayment(country, method) {
+  const c = (country || "").toUpperCase();
+  const m = (method || "").toLowerCase();
+  return c === "CI" && m.includes("wave");
 }
 function copyForeignPayNumber() {
   const number = getPayNumberForMethod(pendingDeposit?.method || document.getElementById("depositMethod")?.value);
@@ -5616,20 +5629,29 @@ function goToPayment() {
   const isCI = pendingDeposit.country === "CI";
   const method = pendingDeposit.method || "Wave";
   const payNumber = getPayNumberForMethod(method);
+  const useJeko = isJekoPayment(pendingDeposit.country, method);
   const label = document.getElementById("paymentAmountLabel");
-  if (label) label.textContent = "Montant à payer : " + money(pendingDeposit.amount) + (isCI ? " • Jeko" : " • " + method);
+  if (label) {
+    label.textContent = "Montant à payer : " + money(pendingDeposit.amount) +
+      (useJeko ? " • Jeko (Wave)" : " • " + method);
+    label.style.color = "#f2cc82";
+  }
 
   const paymentBox = document.getElementById("ciPaymentActions");
-  paymentBox?.classList.toggle("hidden", !isCI);
   const foreignBox = document.getElementById("foreignPaymentActions");
-  foreignBox?.classList.toggle("hidden", isCI);
 
-  if (foreignBox) {
-    if (isCI) {
-      foreignBox.innerHTML = "";
-    } else {
+  // CI + Wave → lien Jeko ; CI + Orange/MTN ou hors CI → numéro Mobile Money
+  if (useJeko) {
+    paymentBox?.classList.remove("hidden");
+    foreignBox?.classList.add("hidden");
+    if (foreignBox) foreignBox.innerHTML = "";
+  } else {
+    paymentBox?.classList.add("hidden");
+    foreignBox?.classList.remove("hidden");
+    if (foreignBox) {
       const methodEsc = escapeHtml(method);
       const amt = Number(pendingDeposit.amount || 0).toLocaleString("fr-FR");
+      const countryLabel = isCI ? "Côte d’Ivoire" : "Hors Côte d’Ivoire";
       const ussdHint = method.toLowerCase().includes("orange")
         ? "Ouvrez Orange Money (app ou USSD) → Transfert / Paiement, envoyez le montant exact au numéro ci-dessous et confirmez avec votre code secret."
         : method.toLowerCase().includes("mtn")
@@ -5638,44 +5660,79 @@ function goToPayment() {
       foreignBox.innerHTML = `
         <div style="padding:18px;border-radius:16px;background:linear-gradient(145deg,#2a2210,#1a1510);border:1px solid rgba(212,175,55,.35);color:#f7f0dc">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-            <b style="color:#f2cc82">SOULIER D’OR — ${methodEsc}</b>
-            <span style="font-size:11px;background:rgba(242,204,130,.15);padding:4px 10px;border-radius:999px;color:#f2cc82">Hors Côte d’Ivoire</span>
+            <b style="color:#f2cc82;text-transform:uppercase">SOULIER D’OR — ${methodEsc}</b>
+            <span style="font-size:11px;background:rgba(242,204,130,.15);padding:4px 10px;border-radius:999px;color:#f2cc82;font-weight:800;text-transform:uppercase">${countryLabel}</span>
           </div>
-          <p style="margin:0 0 10px;font-size:13px;line-height:1.55;opacity:.92">${ussdHint}</p>
+          <p style="margin:0 0 10px;font-size:13px;line-height:1.55;color:#e8edf5;font-weight:600">${ussdHint}</p>
           <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;margin:10px 0;text-align:center">
-            <small style="opacity:.75;display:block;margin-bottom:6px">Numéro de réception ${methodEsc}</small>
-            <strong style="font-size:26px;letter-spacing:1.5px;color:#ffe9a8">${payNumber}</strong>
+            <small style="opacity:.85;display:block;margin-bottom:6px;color:#e8edf5;text-transform:uppercase;font-weight:700">Numéro de réception ${methodEsc}</small>
+            <strong style="font-size:28px;letter-spacing:1.5px;color:#fff">${payNumber}</strong>
           </div>
           <div style="background:#0f0c08;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:12px;margin:10px 0;text-align:center">
-            <small style="opacity:.75;display:block;margin-bottom:4px">Montant à envoyer</small>
-            <strong style="font-size:20px;color:#ffe9a8">${amt} FCFA</strong>
+            <small style="opacity:.85;display:block;margin-bottom:4px;color:#e8edf5;text-transform:uppercase;font-weight:700">Montant à envoyer</small>
+            <strong style="font-size:22px;color:#fff">${amt} FCFA</strong>
           </div>
-          <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;opacity:.95">
+          <ol style="margin:12px 0 8px;padding-left:18px;font-size:13px;line-height:1.7;color:#e8edf5;font-weight:600">
             <li>Copiez le numéro de paiement</li>
             <li>Ouvrez ${methodEsc} (application ou code USSD)</li>
-            <li>Envoyez exactement <b>${amt} FCFA</b></li>
+            <li>Envoyez exactement <b style="color:#fff">${amt} FCFA</b></li>
             <li>Confirmez avec votre code secret</li>
             <li>Prenez une capture du message de succès</li>
           </ol>
-          <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 Copier le numéro ${payNumber}</button>
+          <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;margin-top:10px;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 COPIER LE NUMÉRO ${payNumber}</button>
         </div>`;
     }
   }
 
   const instruction = document.getElementById("paymentInstruction");
-  if (instruction) instruction.textContent = isCI
-    ? "Côte d’Ivoire : utilisez uniquement le lien Jeko sécurisé."
-    : "Hors Côte d’Ivoire : envoyez le paiement au numéro affiché selon le moyen choisi.";
+  if (instruction) {
+    if (useJeko) {
+      instruction.textContent = "Côte d’Ivoire • Wave : payez uniquement via le lien Jeko sécurisé.";
+    } else if (isCI) {
+      instruction.textContent = "Côte d’Ivoire • " + method + " : envoyez le paiement au numéro affiché ci-dessous.";
+    } else {
+      instruction.textContent = "Hors Côte d’Ivoire : envoyez le paiement au numéro affiché selon le moyen choisi.";
+    }
+    instruction.style.color = "#e8edf5";
+    instruction.style.fontWeight = "700";
+  }
   const operator = document.getElementById("selectedPaymentOperator");
   if (operator) operator.textContent = method;
+
+  // Bouton "J'ai terminé" : caché pour Jeko jusqu'à ouverture du lien ; visible pour paiement par numéro
+  const finBtn = document.getElementById("depositFinishedBtn");
+  const hint = document.getElementById("depositFinishedHint");
+  if (finBtn) finBtn.style.display = useJeko ? "none" : "block";
+  if (hint) {
+    if (useJeko) {
+      hint.style.display = "block";
+      hint.textContent = "Ouvrez d’abord le lien Jeko, payez, puis revenez sur cette page.";
+      hint.style.color = "#f2cc82";
+    } else {
+      hint.style.display = "block";
+      hint.textContent = "Après envoi du paiement au numéro, prenez une capture puis continuez.";
+      hint.style.color = "#f2cc82";
+    }
+  }
   showDepositStep("depositPaymentModal");
 }
 function openPaymentLink() {
-  if (pendingDeposit.country !== "CI") {
-    toast("Le lien Jeko est réservé à la Côte d’Ivoire. Utilisez le numéro Mobile Money affiché.");
+  if (!isJekoPayment(pendingDeposit.country, pendingDeposit.method)) {
+    toast("Le lien Jeko est réservé au paiement Wave en Côte d’Ivoire. Utilisez le numéro Mobile Money affiché.");
     return;
   }
   window.open(PAYMENT_LINK, "_blank", "noopener,noreferrer");
+  const finBtn = document.getElementById("depositFinishedBtn");
+  const hint = document.getElementById("depositFinishedHint");
+  if (finBtn) {
+    finBtn.style.display = "block";
+    finBtn.style.animation = "riseIn .4s ease";
+  }
+  if (hint) {
+    hint.textContent = "Paiement ouvert. Après validation Jeko, revenez ici et joignez la capture.";
+    hint.style.color = "#2ecc71";
+  }
+  try { toast("Lien Jeko ouvert. Payez puis revenez pour joindre la preuve."); } catch(_){}
 }
 function showDepositPayment() { goToPayment(); }
 function previewDepositProof(input) {
@@ -5744,9 +5801,9 @@ function submitDepositProof() {
     userId: uidOf(current),
     amount: pendingDeposit.amount,
     method: pendingDeposit.method || "Wave",
-    paymentLink: pendingDeposit.country === "CI" ? (window.PAYMENT_LINK || "") : "",
-    recipientName: pendingDeposit.country === "CI" ? "Jeko" : "SOULIER D’OR",
-    recipientPhone: pendingDeposit.country === "CI" ? "" : "0596180495",
+    paymentLink: (typeof isJekoPayment === "function" && isJekoPayment(pendingDeposit.country, pendingDeposit.method)) ? (window.PAYMENT_LINK || "") : "",
+    recipientName: (typeof isJekoPayment === "function" && isJekoPayment(pendingDeposit.country, pendingDeposit.method)) ? "Jeko" : "SOULIER D’OR",
+    recipientPhone: (typeof isJekoPayment === "function" && isJekoPayment(pendingDeposit.country, pendingDeposit.method)) ? "" : (typeof getPayNumberForMethod === "function" ? getPayNumberForMethod(pendingDeposit.method) : "0596180495"),
     phone: pendingDeposit.phone,
     country: pendingDeposit.country,
     ref: "À vérifier par l’administrateur",
