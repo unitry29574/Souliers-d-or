@@ -4889,7 +4889,7 @@ hr,.divider{border-color:#765b14!important}
             <h3 style="margin:0">Tableau de bord administrateur</h3>
             <p class="small" style="margin:4px 0 0">Connecté en tant qu’administrateur</p>
           </div>
-          <button type="button" class="danger" id="adminLogoutBtn" onclick="adminLogout()">Se déconnecter</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="secondary" onclick="refreshAdminDeposits()">↻ Actualiser</button><button type="button" class="danger" id="adminLogoutBtn" onclick="adminLogout()">Se déconnecter</button></div>
         </div>
         <div class="row">
           <div class="stat"><small>Clients</small><strong id="adminUsersCount">0</strong></div>
@@ -5532,6 +5532,10 @@ document.getElementById("registerForm").addEventListener("submit", async e => {
     const profile = profileFromForm(credential.user.uid, email);
     profile.hasValidatedDeposit = false;
     profile.hasInvestment = false;
+    // Bonus d'inscription : 500 FCFA crédités une seule fois au profil créé.
+    profile.registrationBonus = 500;
+    profile.registrationBonusGranted = true;
+    profile.missionRewardBalance = 500;
     await setDoc(doc(db, "profiles", credential.user.uid), profile);
     await loadOwnData(credential.user);
     document.getElementById("welcomeMessage").textContent =
@@ -5828,76 +5832,54 @@ function finishDepositSuccess() {
   if (modal) modal.style.display = "flex";
   try { toast("Bon, votre demande est en cours d’attente de validation par l’administrateur."); } catch(_){}
 }
-function submitDepositProof() {
+async function submitDepositProof() {
   if (!current) { toast("Connectez-vous avant de continuer."); return; }
+  if (!auth.currentUser || !firebaseReady || adminMode) {
+    toast("Connexion Firebase indisponible. Reconnectez-vous puis réessayez."); return;
+  }
   const input = document.getElementById("depositProofFile");
   const file = input && input.files && input.files[0];
   if (!file || !file.type.startsWith("image/")) {
-    toast("Veuillez joindre une capture d’écran de la preuve de paiement.");
-    return;
+    toast("Veuillez joindre une capture d’écran de la preuve de paiement."); return;
   }
   if (file.size > 5 * 1024 * 1024) {
-    toast("Choisissez une image de moins de 5 Mo.");
-    return;
+    toast("Choisissez une image de moins de 5 Mo."); return;
   }
+  const btn = document.getElementById("depositSendBtn");
+  if (btn) { btn.disabled = true; btn.textContent = "⏳ Envoi en cours…"; }
   setDepositSending(true);
-  // Sécurité : débloquer l’UI au bout de 4s maximum
-  const safety = setTimeout(function() {
-    try { finishDepositSuccess(); } catch(_) { setDepositSending(false); }
-  }, 4000);
-
   const depositId = "dep_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
   const baseRecord = {
-    id: depositId,
-    userId: uidOf(current),
-    amount: pendingDeposit.amount,
+    id: depositId, userId: auth.currentUser.uid, amount: pendingDeposit.amount,
     method: pendingDeposit.method || "Wave",
     paymentLink: pendingDeposit.country === "CI" ? (window.PAYMENT_LINK || "") : "",
     recipientName: pendingDeposit.country === "CI" ? "Jeko" : "SOULIER D’OR",
     recipientPhone: pendingDeposit.country === "CI" ? "" : "0596180495",
-    phone: pendingDeposit.phone,
-    country: pendingDeposit.country,
-    ref: "À vérifier par l’administrateur",
-    status: "En attente",
-    created: Date.now()
-  };
-
-  // Lecture locale immédiate puis succès UI — jamais bloquant
-  const reader = new FileReader();
-  reader.onload = function() {
-    try {
-      baseRecord.proof = reader.result;
-      state.deposits.push(baseRecord);
-      try { save(); } catch(_){}
-    } catch (e) {
-      console.error(e);
-    }
-    clearTimeout(safety);
-    finishDepositSuccess();
-    if (typeof window.syncDepositToFirebase === "function") {
-      try { window.syncDepositToFirebase(baseRecord, file); } catch(_){}
-    }
-  };
-  reader.onerror = function() {
-    try {
-      state.deposits.push(baseRecord);
-      try { save(); } catch(_){}
-    } catch(_){}
-    clearTimeout(safety);
-    finishDepositSuccess();
-    if (typeof window.syncDepositToFirebase === "function") {
-      try { window.syncDepositToFirebase(baseRecord, file); } catch(_){}
-    }
+    phone: pendingDeposit.phone, country: pendingDeposit.country,
+    ref: "À vérifier par l’administrateur", status: "En attente", created: Date.now()
   };
   try {
-    reader.readAsDataURL(file);
-  } catch (e) {
-    try {
-      state.deposits.push(baseRecord);
-      try { save(); } catch(_){}
-    } catch(_){}
-    clearTimeout(safety);
+    // Lire la capture, puis attendre l'écriture Firestore avant d'afficher le succès.
+    const proofData = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("Lecture de la capture impossible."));
+      reader.readAsDataURL(file);
+    });
+    baseRecord.proof = proofData;
+    await window.syncDepositToFirebase(baseRecord, file);
+    state.deposits = state.deposits.filter(x => x.id !== depositId);
+    state.deposits.push(baseRecord);
+    try { save(); } catch (_) {}
     finishDepositSuccess();
+  } catch (err) {
+    console.error("Envoi dépôt:", err);
+    toast("Échec de l’envoi Firebase. Votre demande n’a pas été confirmée : réessayez.");
+    const status = document.getElementById("depositSendStatus");
+    if (status) status.textContent = "Échec d’envoi — demande non confirmée.";
+  } finally {
+    setDepositSending(false);
+    if (btn) { btn.disabled = false; btn.textContent = "📤 Envoyer à l’admin"; }
   }
 }
 function closeDepositSuccess()
@@ -6107,6 +6089,19 @@ function renderAll() {
   `));
   try { updateMemberLevel(); } catch(_){}
 }
+
+window.refreshAdminDeposits = async function() {
+  try {
+    if (!auth.currentUser || (auth.currentUser.email || "").toLowerCase() !== ADMIN_EMAIL_FIREBASE) throw new Error("Session administrateur requise.");
+    const snap = await getDocs(collection(db, "deposits"));
+    state.deposits = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    renderAll(); renderAdmin();
+    fbToast("Liste des dépôts actualisée.");
+  } catch (e) {
+    console.error("Actualisation dépôts:", e);
+    fbToast("Impossible de charger les dépôts. Vérifiez les règles Firestore.");
+  }
+};
 
 function renderAdmin() {
   if (!adminOpen) return;
@@ -6534,6 +6529,9 @@ function profileFromForm(uid, email) {
     status: "Actif",
     hasValidatedDeposit: false,
     hasInvestment: false,
+    registrationBonus: 500,
+    registrationBonusGranted: true,
+    missionRewardBalance: 500,
     walletMethod: "",
     walletPhone: ""
   };
@@ -6915,55 +6913,33 @@ document.getElementById("logoutBtn").addEventListener("click", async (e) => {
 // Ne plus bloquer l’UI : la preuve est déjà enregistrée localement.
 // On tente seulement une synchro Firebase en arrière-plan.
 window.syncDepositToFirebase = async function(record, file) {
-  try {
-    if (!auth.currentUser || !firebaseReady || adminMode) return;
-    const depositId = record.id;
-    let proofUrl = null;
-    // Storage optionnel — ignore toute erreur / abort
-    if (file) {
-      try {
-        const path = "payment-proofs/" + auth.currentUser.uid + "/" + depositId;
-        const fileRef = storageRef(storage, path);
-        const ctrl = typeof AbortController !== "undefined" ? new AbortController() : null;
-        const timer = setTimeout(() => { try { ctrl && ctrl.abort(); } catch(_){} }, 10000);
-        try {
-          await uploadBytes(fileRef, file, { contentType: (file.type || "image/jpeg") });
-          proofUrl = await getDownloadURL(fileRef);
-        } finally {
-          clearTimeout(timer);
-        }
-      } catch (e) {
-        console.warn("Storage ignore:", e && (e.name || e.message));
-      }
-    }
-    const payload = {
-      id: depositId,
-      userId: auth.currentUser.uid,
-      amount: record.amount,
-      method: record.method || "Paiement",
-      paymentLink: record.paymentLink || "",
-      phone: record.phone,
-      country: record.country,
-      ref: record.ref || "À vérifier par l’administrateur",
-      proofUrl: proofUrl,
-      status: "En attente",
-      created: record.created || Date.now(),
-      createdAt: serverTimestamp()
-    };
+  if (!auth.currentUser || !firebaseReady || adminMode) throw new Error("Session Firebase client indisponible.");
+  const depositId = record.id;
+  let proofUrl = null;
+  // Le stockage de la preuve est tenté; l'écriture Firestore, elle, est obligatoire.
+  if (file) {
     try {
-      await setDoc(doc(db, "deposits", depositId), payload);
-      // Mettre à jour l’entrée locale si présente
-      const local = state.deposits.find(d => d.id === depositId);
-      if (local && proofUrl) local.proofUrl = proofUrl;
+      const path = "payment-proofs/" + auth.currentUser.uid + "/" + depositId;
+      const fileRef = storageRef(storage, path);
+      await uploadBytes(fileRef, file, { contentType: file.type || "image/jpeg" });
+      proofUrl = await getDownloadURL(fileRef);
     } catch (e) {
-      console.warn("Firestore ignore:", e && (e.message || e));
+      console.warn("Upload preuve échoué (document Firestore sera quand même enregistré):", e);
     }
-  } catch (e) {
-    console.warn("syncDepositToFirebase:", e);
   }
+  const payload = {
+    id: depositId, userId: auth.currentUser.uid, amount: Number(record.amount),
+    method: record.method || "Paiement", paymentLink: record.paymentLink || "",
+    phone: record.phone || "", country: record.country || "",
+    ref: record.ref || "À vérifier par l’administrateur", proofUrl,
+    status: "En attente", created: record.created || Date.now(), createdAt: serverTimestamp()
+  };
+  // Ne pas masquer l'erreur: submitDepositProof doit savoir si Firebase a échoué.
+  await setDoc(doc(db, "deposits", depositId), payload);
+  const local = state.deposits.find(d => d.id === depositId);
+  if (local && proofUrl) local.proofUrl = proofUrl;
+  return { id: depositId, proofUrl };
 };
-// L’envoi UI reste sur submitDepositProof local (instantané)
-
 
 window.review = async function(type, itemId, approve) {
   if (!adminMode || !firebaseReady || !auth.currentUser ||
