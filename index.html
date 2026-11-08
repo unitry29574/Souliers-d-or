@@ -5038,7 +5038,9 @@ hr,.divider{border-color:#765b14!important}
       <button type="button" class="dep-amt-btn" data-amt="400000" onclick="selectDepositAmount(400000,this)">VIP 9<br><b>400 000</b></button>
       <button type="button" class="dep-amt-btn" data-amt="700000" onclick="selectDepositAmount(700000,this)">VIP 10<br><b>700 000</b></button>
     </div>
-    <label id="customDepositWrap" style="display:block;margin-top:4px">Autre montant (FCFA)
+    <div id="depositChosen" style="text-align:center;margin:0 0 10px;padding:12px;border-radius:14px;border:1px solid rgba(242,204,130,.45);background:rgba(242,204,130,.08);color:#f7f0dc;font-size:13px">Montant choisi : <b id="depositChosenValue" style="color:#ffe9a8;font-size:20px">4 000 FCFA</b></div>
+    <button type="button" id="toggleCustomDeposit" class="secondary" style="width:100%;min-height:40px;border-radius:12px;font-size:13px" onclick="document.getElementById('customDepositWrap').classList.toggle('hidden')">Autre montant</button>
+    <label id="customDepositWrap" class="hidden" style="display:block;margin-top:4px">Autre montant (FCFA)
       <input type="number" id="customDepositAmount" min="4000" step="500" placeholder="Minimum 4 000" style="width:100%;margin-top:6px;min-height:48px;border-radius:14px" oninput="selectCustomDepositAmount()">
     </label>
     <div class="actions" style="margin-top:18px;display:flex;gap:10px">
@@ -5631,6 +5633,8 @@ function startDepositFlow() {
   document.getElementById("customDepositAmount").value = "";
   // highlight default VIP 1
   document.querySelectorAll(".dep-amt-btn").forEach(b => b.classList.toggle("selected", b.getAttribute("data-amt") === "4000"));
+  updateChosenDeposit(4000);
+  document.getElementById("customDepositWrap")?.classList.add("hidden");
   setDepositSending(false);
   showDepositStep("depositAmountModal"); // d'abord les montants VIP
 }
@@ -5677,7 +5681,12 @@ function copyForeignPayNumber() {
   }
 }
 
+function updateChosenDeposit(v) {
+  const el = document.getElementById("depositChosenValue");
+  if (el) el.textContent = Number(v).toLocaleString("fr-FR").replace(/\u202f|\u00a0/g, " ") + " FCFA";
+}
 function selectDepositAmount(amt, btn) {
+  updateChosenDeposit(amt);
   pendingDeposit.amount = Number(amt);
   document.getElementById("depositAmount").value = String(amt);
   document.getElementById("customDepositAmount").value = "";
@@ -5687,6 +5696,7 @@ function selectDepositAmount(amt, btn) {
 function selectCustomDepositAmount() {
   const v = Number(document.getElementById("customDepositAmount").value);
   if (v >= 4000) {
+    updateChosenDeposit(v);
     pendingDeposit.amount = v;
     document.getElementById("depositAmount").value = "custom";
     document.querySelectorAll(".dep-amt-btn").forEach(b => b.classList.remove("selected"));
@@ -5934,24 +5944,17 @@ async function submitDepositProof(file) {
   try {
     depositStatus("Préparation de la capture…");
     const blob = await withTimeout(compressProofImage(file), 20000, "Lecture de l’image trop longue. Choisissez une autre capture.");
-    try {
-      depositStatus("Envoi de la capture d’écran…");
-      proofUrl = await withTimeout(window.uploadDepositProof(depositId, blob), 15000, "Stockage indisponible");
-    } catch (storageErr) {
-      // Mode secours : la capture (compressée) est enregistrée avec la demande dans Firestore.
-      console.warn("Storage indisponible, mode secours Firestore:", storageErr);
-      depositStatus("Envoi de la capture (mode secours)…");
-      proofData = await blobToDataURL(blob);
-    }
+    proofData = await blobToDataURL(blob);
   } catch (err) {
-    console.error("Envoi capture:", err);
+    console.error("Préparation capture:", err);
     const detail = err?.code || err?.message || "réessayez";
-    toast("Échec de l’envoi de la capture : " + detail);
+    toast("Capture illisible : " + detail);
     depositStatus("Capture non envoyée (" + detail + ") — demande non confirmée.");
     setDepositSending(false);
     if (btn) { btn.disabled = false; btn.textContent = "Envoyer"; }
     return;
   }
+  depositStatus("Envoi de la demande à l’administrateur…");
   const baseRecord = {
     id: depositId, userId: window.fbAuth?.currentUser.uid, amount: pendingDeposit.amount,
     method: pendingDeposit.method || "Wave",
@@ -6094,7 +6097,12 @@ function renderAll() {
   const myInv = state.investments.filter(x => matchesUser(x, current));
   const myDep = state.deposits.filter(x => matchesUser(x, current));
   const myWith = state.withdrawals.filter(x => matchesUser(x, current));
-  const children = state.users.filter(u => u.parentId === uidOf(current));
+  const localKids = state.users.filter(u => u.parentId === uidOf(current));
+  const remoteKids = (window.__myReferrals || []).filter(r => !localKids.some(k => uidOf(k) === r.childUid));
+  const children = localKids.concat(remoteKids.map(r => ({
+    id: r.childUid, name: r.name, email: r.email, code: r.childCode,
+    country: r.country, status: r.status || "Actif", created: r.created
+  })));
 
   const earned = myInv.reduce((s, x) => s + investmentEarnedAmount(x), 0)
     + Number(current.missionRewardBalance || 0)
@@ -6178,8 +6186,9 @@ function renderAll() {
   renderList("myReferrals", children.map(u => `
     <div class="item">
       <div>
-        <b>${escapeHtml(u.email)}</b>
-        <div class="small">Code ${u.code} • ${COUNTRIES[u.country] || u.country || ""}</div>
+        <b>${escapeHtml(u.name || u.email || "Filleul")}</b>
+        <div class="small">${escapeHtml(u.email || "")}</div>
+        <div class="small">Code ${escapeHtml(u.code || "")} • ${COUNTRIES[u.country] || u.country || ""}${u.created ? " • " + new Date(u.created).toLocaleDateString("fr-FR") : ""}</div>
       </div>
       <span class="badge">${u.status}</span>
     </div>
@@ -6213,7 +6222,7 @@ function renderAdmin() {
       <div class="item">
         <div>
           <b>${money(x.amount)} • ${x.method}</b>
-          <div class="small">${escapeHtml(u?.email || "Client")} • Tél. ${escapeHtml(x.phone || "—")} • Réf. ${escapeHtml(x.ref || "—")} ${x.proofUrl ? `<br><a href="${escapeHtml(x.proofUrl)}" target="_blank" rel="noopener noreferrer">Voir la preuve de paiement ↗</a>` : (x.proof && String(x.proof).startsWith("data:image/") ? `<br><img src="${x.proof}" alt="Preuve de paiement" style="display:block;max-width:220px;max-height:180px;margin-top:8px;border-radius:8px">` : `• ${escapeHtml(x.proof || "Sans preuve")}`)}</div>
+          <div class="small">${escapeHtml(u?.email || "Client")} • Tél. ${escapeHtml(x.phone || "—")} • Réf. ${escapeHtml(x.ref || "—")} ${x.proofUrl ? `<br><a href="${escapeHtml(x.proofUrl)}" target="_blank" rel="noopener noreferrer">Voir la preuve de paiement ↗</a>` : (x.proof && String(x.proof).startsWith("data:image/") ? `<br><img src="${x.proof}" alt="Preuve de paiement" style="display:block;max-width:220px;max-height:180px;margin-top:8px;border-radius:8px;cursor:zoom-in" onclick="const z=this.dataset.z==='1';this.dataset.z=z?'0':'1';this.style.maxWidth=z?'220px':'100%';this.style.maxHeight=z?'180px':'none'">` : `• ${escapeHtml(x.proof || "Sans preuve")}`)}</div>
         </div>
         <div class="actions">
           <span class="badge">${x.status}</span>
@@ -6411,7 +6420,11 @@ try { applyReferralFromUrl(); } catch (_) {}
 
 function applyReferralFromUrl() {
   const params = new URLSearchParams(location.search);
-  const refParam = (params.get("ref") || "").trim();
+  let refParam = (params.get("ref") || "").trim();
+  try {
+    if (refParam) localStorage.setItem("souliers_ref", refParam.toUpperCase());
+    else refParam = (localStorage.getItem("souliers_ref") || "").trim();
+  } catch (_) {}
   const telParam = (params.get("tel") || params.get("phone") || "").trim();
   const regRef = document.getElementById("regRef");
   const box = document.getElementById("sponsorBox");
@@ -6552,7 +6565,7 @@ import {
   signInWithEmailAndPassword, signOut, updateProfile
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 import {
-  getFirestore, doc, getDoc, setDoc, getDocs, collection, query, where,
+  getFirestore, initializeFirestore, doc, getDoc, setDoc, getDocs, collection, query, where,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 import {
@@ -6571,7 +6584,9 @@ const firebaseConfig = {
 };
 const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
-const db = getFirestore(fbApp);
+let db;
+try { db = initializeFirestore(fbApp, { experimentalForceLongPolling: true, useFetchStreams: false }); }
+catch (_) { db = getFirestore(fbApp); }
 const storage = getStorage(fbApp);
 try { storage.maxUploadRetryTime = 12000; storage.maxOperationRetryTime = 12000; } catch (_) {}
 const functions = getFunctions(fbApp, "europe-west1");
@@ -6610,6 +6625,79 @@ window.fbAuth = auth;
 window.ADMIN_EMAIL_FIREBASE = ADMIN_EMAIL_FIREBASE;
 window.isFirebaseReady = () => firebaseReady;
 window.resetFirebaseReady = () => { firebaseReady = false; };
+// ===== Méthode REST Firestore : fiable même quand le SDK reste bloqué (WebView, réseau lent) =====
+const FS_BASE = "https://firestore.googleapis.com/v1/projects/" + firebaseConfig.projectId + "/databases/(default)/documents";
+function withTimeoutM(promise, ms, message) {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error(message)), ms);
+    Promise.resolve(promise).then(v => { clearTimeout(t); resolve(v); }, e => { clearTimeout(t); reject(e); });
+  });
+}
+function toFS(v) {
+  if (v === null || v === undefined) return { nullValue: null };
+  if (typeof v === "string") return { stringValue: v };
+  if (typeof v === "boolean") return { booleanValue: v };
+  if (typeof v === "number") return Number.isInteger(v) ? { integerValue: String(v) } : { doubleValue: v };
+  if (v instanceof Date) return { timestampValue: v.toISOString() };
+  if (Array.isArray(v)) return { arrayValue: { values: v.map(toFS) } };
+  return { mapValue: { fields: fieldsTo(v) } };
+}
+function fieldsTo(o) { const f = {}; for (const k in o) if (o[k] !== undefined) f[k] = toFS(o[k]); return f; }
+function fromFS(v) {
+  if (!v) return null;
+  if ("stringValue" in v) return v.stringValue;
+  if ("integerValue" in v) return Number(v.integerValue);
+  if ("doubleValue" in v) return v.doubleValue;
+  if ("booleanValue" in v) return v.booleanValue;
+  if ("timestampValue" in v) return Date.parse(v.timestampValue) || v.timestampValue;
+  if ("arrayValue" in v) return (v.arrayValue.values || []).map(fromFS);
+  if ("mapValue" in v) return fieldsFrom(v.mapValue.fields || {});
+  return null;
+}
+function fieldsFrom(f) { const o = {}; for (const k in f) o[k] = fromFS(f[k]); return o; }
+async function fsFetch(method, path, body, ms = 25000) {
+  const user = auth.currentUser;
+  if (!user) throw new Error("Session Firebase indisponible. Reconnectez-vous.");
+  const token = await withTimeoutM(user.getIdToken(), 15000, "Session expirée. Reconnectez-vous.");
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), ms);
+  try {
+    const r = await fetch(FS_BASE + path, {
+      method, signal: ctl.signal,
+      headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
+      body: body ? JSON.stringify(body) : undefined
+    });
+    const txt = await r.text();
+    let j = {}; try { j = JSON.parse(txt); } catch (_) {}
+    if (!r.ok) {
+      const reason = (j.error && j.error.message) || txt.slice(0, 120);
+      const e = new Error(
+        r.status === 403 ? "Accès refusé par les règles Firestore (403)." :
+        r.status === 404 ? "Base Firestore introuvable (404) : créez la base dans Firebase Console." :
+        "Erreur serveur " + r.status + " : " + reason);
+      e.http = r.status; throw e;
+    }
+    return j;
+  } catch (e) {
+    if (e && e.name === "AbortError") throw new Error("Connexion trop lente : vérifiez Internet puis réessayez.");
+    throw e;
+  } finally { clearTimeout(timer); }
+}
+async function restList(col) {
+  const rows = []; let pageToken = "";
+  do {
+    const j = await fsFetch("GET", "/" + col + "?pageSize=300" + (pageToken ? "&pageToken=" + encodeURIComponent(pageToken) : ""));
+    for (const d of (j.documents || [])) rows.push({ ...fieldsFrom(d.fields || {}), id: d.name.split("/").pop() });
+    pageToken = j.nextPageToken || "";
+  } while (pageToken);
+  return rows;
+}
+async function patchDoc(col, id, fields) {
+  const mask = Object.keys(fields).map(k => "updateMask.fieldPaths=" + encodeURIComponent(k)).join("&");
+  try { await fsFetch("PATCH", "/" + col + "/" + encodeURIComponent(id) + "?" + mask, { fields: fieldsTo(fields) }); return; }
+  catch (e) { if (e && e.http) throw e; console.warn("PATCH REST échoué, essai SDK:", e); }
+  await withTimeoutM(setDoc(doc(db, col, id), fields, { merge: true }), 20000, "Connexion trop lente : vérifiez Internet puis réessayez.");
+}
 let saveInProgress = Promise.resolve();
 
 function fbToast(msg) {
@@ -6639,6 +6727,14 @@ function profileFromForm(uid, email) {
     walletPhone: ""
   };
 }
+window.loadMyReferrals = async function () {
+  try {
+    if (!current || !current.code) return;
+    const snap = await getDocs(query(collection(db, "referrals"), where("parentCode", "==", String(current.code).toUpperCase())));
+    window.__myReferrals = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    if (typeof renderAll === "function") renderAll();
+  } catch (e) { console.warn("Lecture des filleuls:", e); }
+};
 function safeProfile(data, uid) {
   return { ...data, id: uid, uid, pass: undefined };
 }
@@ -6685,6 +6781,7 @@ async function loadOwnData(user) {
   } catch (e) { console.warn("merge local", e); }
   current = state.users[0];
   firebaseReady = true;
+  try { window.loadMyReferrals && window.loadMyReferrals(); } catch (_) {}
   document.getElementById("sessionPill").textContent = "SOULIER D’OR";
   enter(current);
   const welcomeName = current.name || current.email.split("@")[0];
@@ -6734,11 +6831,15 @@ async function loadAdminData() {
   const errors = [];
   for (const col of collections) {
     try {
-      const snap = await getDocs(collection(db, col));
-      const rows = snap.docs.map(d => {
-        const data = { ...d.data(), id: d.id };
-        return col === "profiles" ? safeProfile(data, d.id) : data;
-      });
+      let raw;
+      try { raw = await restList(col); }
+      catch (restErr) {
+        if (restErr && restErr.http) throw restErr;
+        console.warn("Liste REST échouée, essai SDK:", restErr);
+        const snap = await withTimeoutM(getDocs(collection(db, col)), 20000, "Connexion trop lente : vérifiez Internet.");
+        raw = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+      }
+      const rows = raw.map(data => col === "profiles" ? safeProfile(data, data.id) : data);
       if (col === "profiles") results.users = rows;
       else results[col] = rows;
     } catch (e) {
@@ -6951,8 +7052,20 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     state = { users: [profile], deposits: [], withdrawals: [], investments: [] };
     current = profile;
     await setDoc(doc(db, "profiles", cred.user.uid), profile);
+    try {
+      const pc = (profile.referralCodeEntered || "").toUpperCase();
+      if (pc && pc !== profile.code) {
+        await setDoc(doc(db, "referrals", cred.user.uid), {
+          childUid: cred.user.uid, parentCode: pc, childCode: profile.code,
+          name: profile.name || "", email: profile.email || "",
+          country: profile.country || "", created: Date.now(), status: "Actif"
+        });
+      }
+      localStorage.removeItem("souliers_ref");
+    } catch (refErr) { console.warn("Enregistrement du parrainage:", refErr); }
     firebaseReady = true;
     enter(profile);
+    try { window.loadMyReferrals && window.loadMyReferrals(); } catch (_) {}
     document.getElementById("welcomeMessage").textContent =
       `Félicitations ${name} ! Votre inscription sur SOULIER D’OR est terminée. Bienvenue dans votre espace personnel : vous pouvez consulter vos opérations et découvrir les fonctionnalités de la plateforme.`;
     document.getElementById("welcomeModal").style.display = "flex";
@@ -7059,19 +7172,27 @@ window.uploadDepositProof = async function(depositId, blob) {
   return await getDownloadURL(r);
 };
 window.syncDepositToFirebase = async function(record, proofData) {
-  if (!auth.currentUser || !firebaseReady || adminMode) throw new Error("Session Firebase client indisponible.");
+  const user = auth.currentUser;
+  if (!user || !firebaseReady || adminMode) throw new Error("Session Firebase client indisponible.");
   const depositId = record.id;
   const payload = {
-    id: depositId, userId: auth.currentUser.uid, amount: Number(record.amount),
+    id: depositId, userId: user.uid, amount: Number(record.amount),
     method: record.method || "Paiement", paymentLink: record.paymentLink || "",
     phone: record.phone || "", country: record.country || "",
-    ref: record.ref || "À vérifier par l’administrateur", proofUrl: record.proofUrl || "", ...(proofData ? { proof: proofData } : {}),
-    status: "En attente", created: record.created || Date.now(), createdAt: serverTimestamp()
+    ref: record.ref || "À vérifier par l’administrateur", proofUrl: record.proofUrl || "",
+    ...(proofData ? { proof: proofData } : {}),
+    status: "En attente", created: record.created || Date.now()
   };
-  await Promise.race([
-    setDoc(doc(db, "deposits", depositId), payload),
-    new Promise((_, rej) => setTimeout(() => rej(new Error("Connexion trop lente : vérifiez Internet puis réessayez.")), 25000))
-  ]);
+  try {
+    // Méthode principale : API REST (réponse confirmée par le serveur avant le message de succès)
+    await fsFetch("POST", "/deposits?documentId=" + encodeURIComponent(depositId), { fields: fieldsTo({ ...payload, createdAt: new Date() }) }, 30000);
+    return { id: depositId };
+  } catch (e) {
+    if (e && e.http) throw e;
+    console.warn("Envoi REST échoué, essai SDK:", e);
+  }
+  await withTimeoutM(setDoc(doc(db, "deposits", depositId), { ...payload, createdAt: serverTimestamp() }), 20000,
+    "Connexion trop lente : vérifiez Internet puis réessayez.");
   return { id: depositId };
 };
 
@@ -7087,20 +7208,20 @@ window.review = async function(type, itemId, approve) {
   const oldFx = document.getElementById("unitriTxEffect"); if (oldFx) oldFx.remove();
   if (window.__unitriTxTimer) { clearTimeout(window.__unitriTxTimer); window.__unitriTxTimer = null; }
   try {
-    await setDoc(doc(db, col, itemId), updated, { merge: true });
+    await patchDoc(col, itemId, { status: updated.status, reviewedAt: updated.reviewedAt });
     Object.assign(row, updated);
     if (type === "deposit" && approve) {
       const u = state.users.find(x => (x.uid || x.id) === row.userId);
       if (u) {
         u.hasValidatedDeposit = true;
-        try { await setDoc(doc(db, "profiles", u.uid || u.id), { hasValidatedDeposit: true }, { merge: true }); } catch (_) {}
+        try { await patchDoc("profiles", u.uid || u.id, { hasValidatedDeposit: true }); } catch (_) {}
       }
     }
     try { renderAll(); } catch (_) {} try { renderAdmin(); } catch (_) {}
     fbToast(approve ? "Demande validée dans Firebase." : "Demande refusée dans Firebase.");
   } catch (err) {
     console.error("Validation transaction Firebase:", err);
-    fbToast("Échec Firebase : statut inchangé. Vérifiez les règles Firestore.");
+    fbToast("Échec : statut inchangé (" + (err && err.message ? err.message : "erreur") + ")");
   }
 };
 
