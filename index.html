@@ -4246,8 +4246,7 @@ hr,.divider{border-color:#765b14!important}
 #depositPhoneModal .confirm-box,
 #depositAmountModal .confirm-box,
 #depositConfirmModal .confirm-box,
-#depositPaymentModal .confirm-box,
-#depositProofModal .confirm-box{
+#depositPaymentModal .confirm-box{
   background:linear-gradient(160deg,#1c2330,#121820)!important;
   border:1px solid rgba(242,204,130,.28)!important;
 }
@@ -4727,7 +4726,7 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <div class="faq-item" data-cat="depot">
           <button type="button" class="faq-q">Combien de temps pour valider un dépôt ?</button>
-          <div class="faq-a">Après envoi de la capture d’écran de paiement, votre demande passe en statut « En attente ». L’administrateur vérifie la preuve puis valide ou refuse. Le délai habituel est de quelques heures en journée ouvrable.</div>
+          <div class="faq-a">Après l’envoi de votre demande, elle passe en statut « En attente ». L’administrateur vérifie les informations puis valide ou refuse. Le délai habituel est de quelques heures en journée ouvrable.</div>
         </div>
         <div class="faq-item" data-cat="depot">
           <button type="button" class="faq-q">Quels moyens de paiement sont acceptés ?</button>
@@ -4763,10 +4762,10 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <div class="faq-item" data-cat="compte">
           <button type="button" class="faq-q">Mes données sont-elles sécurisées ?</button>
-          <div class="faq-a">L’authentification et le stockage des profils passent par Firebase (Google). Les preuves de paiement peuvent être stockées de façon sécurisée. Ne partagez jamais votre mot de passe. SOULIER D’OR ne vous demandera jamais votre code secret par message non officiel.</div>
+          <div class="faq-a">L’authentification et le stockage des profils passent par Firebase (Google). Les demandes de dépôt sont enregistrées de façon sécurisée. Ne partagez jamais votre mot de passe. SOULIER D’OR ne vous demandera jamais votre code secret par message non officiel.</div>
         </div>
         <div class="faq-item" data-cat="depot">
-          <button type="button" class="faq-q">Ma capture d’écran a été refusée, pourquoi ?</button>
+          <button type="button" class="faq-q">Pourquoi ma demande de dépôt a-t-elle été refusée ?</button>
           <div class="faq-a">Les motifs fréquents : montant incorrect, numéro non visible, capture floue, ou paiement non abouti. Vérifiez que la preuve montre clairement le montant, le destinataire et le statut « réussi », puis renvoyez une nouvelle demande.</div>
         </div>
       </div>
@@ -4798,7 +4797,7 @@ hr,.divider{border-color:#765b14!important}
         <div class="card mt-2">
           <ul style="padding-left:18px;color:var(--muted);line-height:1.8;font-size:14px">
             <li>Indiquez toujours l’e-mail exact de votre compte SOULIER D’OR.</li>
-            <li>Pour un dépôt : montant, date approximative et capture d’écran claire.</li>
+            <li>Pour un dépôt : montant, date approximative et numéro utilisé pour le paiement.</li>
             <li>Pour un retrait : montant demandé, moyen (Orange / MTN / Wave) et numéro de réception.</li>
             <li>Évitez d’envoyer plusieurs messages identiques ; cela ralentit le traitement.</li>
             <li>Ne communiquez jamais votre mot de passe, même à quelqu’un qui prétend être le support.</li>
@@ -4831,8 +4830,8 @@ hr,.divider{border-color:#765b14!important}
         <div data-doc-panel="cgu">
           <h3 style="color:var(--text);margin-bottom:12px">Conditions générales d’utilisation — SOULIER D’OR</h3>
           <p>La plateforme SOULIER D’OR (« la Plateforme ») permet aux utilisateurs inscrits de consulter des plans VIP liés à des robots, d’effectuer des dépôts, d’activer des plans et de demander des retraits selon les règles en vigueur. En créant un compte, vous acceptez les présentes conditions.</p>
-          <p><b>1. Compte utilisateur.</b> Vous devez fournir des informations exactes (nom, e-mail, téléphone, pays). Vous êtes responsable de la confidentialité de votre mot de passe. SOULIER D’OR peut suspendre un compte en cas d’usage frauduleux, de fausse preuve de paiement ou de non-respect des règles.</p>
-          <p><b>2. Dépôts.</b> Les dépôts sont soumis à validation manuelle après envoi d’une preuve de paiement. Le montant minimum et les canaux acceptés sont indiqués dans l’interface. Une demande « En attente » n’est pas un crédit disponible tant qu’elle n’est pas « Validé ».</p>
+          <p><b>1. Compte utilisateur.</b> Vous devez fournir des informations exactes (nom, e-mail, téléphone, pays). Vous êtes responsable de la confidentialité de votre mot de passe. SOULIER D’OR peut suspendre un compte en cas d’usage frauduleux ou de fausse déclaration concernant un dépôt, de paiement ou de non-respect des règles.</p>
+          <p><b>2. Dépôts.</b> Les demandes de dépôt sont soumises à validation manuelle après leur envoi. Le montant minimum et les canaux acceptés sont indiqués dans l’interface. Une demande « En attente » n’est pas un crédit disponible tant qu’elle n’est pas « Validé ».</p>
           <p><b>3. Plans VIP / Robots.</b> Chaque plan affiche un prix, un gain journalier indicatif et une durée. L’activation consomme le solde de dépôt validé. Les gains alimentent le solde de retrait selon les règles du plan. Les performances passées ou affichées ne constituent pas une garantie absolue de résultat.</p>
           <p><b>4. Retraits.</b> Minimum, frais et conditions (ex. investissement actif) sont précisés dans l’écran de retrait. Les retraits sont traités après vérification administrative. Les délais dépendent des réseaux Mobile Money et de la charge de traitement.</p>
           <p><b>5. Parrainage.</b> Le programme de parrainage et les taux de commission peuvent évoluer. Les commissions ne sont dues que dans le respect des conditions publiées sur la Plateforme.</p>
@@ -4843,7 +4842,7 @@ hr,.divider{border-color:#765b14!important}
         <div data-doc-panel="privacy" class="hidden">
           <h3 style="color:var(--text);margin-bottom:12px">Politique de confidentialité — SOULIER D’OR</h3>
           <p>Cette politique décrit les données collectées via la Plateforme SOULIER D’OR et leur usage.</p>
-          <p><b>Données collectées.</b> Identifiants de compte (e-mail, nom affiché), numéro de téléphone, pays, code de parrainage, historique de dépôts / retraits / investissements, preuves de paiement téléversées, données techniques de connexion (via le prestataire d’authentification).</p>
+          <p><b>Données collectées.</b> Identifiants de compte (e-mail, nom affiché), numéro de téléphone, pays, code de parrainage, historique de dépôts / retraits / investissements, demandes de dépôt et informations de paiement, données techniques de connexion (via le prestataire d’authentification).</p>
           <p><b>Finalités.</b> Création et gestion du compte, traitement des demandes financières, prévention de la fraude, support client, amélioration du service, obligations légales éventuelles.</p>
           <p><b>Base et conservation.</b> Les données sont conservées le temps nécessaire au fonctionnement du compte et au traitement des opérations, puis archivées ou supprimées selon les besoins opérationnels et légaux.</p>
           <p><b>Sous-traitants.</b> L’authentification et le stockage peuvent s’appuyer sur des services cloud (ex. Firebase / Google). Les transferts s’effectuent selon les mécanismes proposés par ces prestataires.</p>
@@ -4856,7 +4855,7 @@ hr,.divider{border-color:#765b14!important}
           <p><b>Activation.</b> Un plan ne peut être activé que si le solde de dépôt validé disponible est supérieur ou égal au prix du plan. Le solde disponible = somme des dépôts « Validé » − somme des prix des investissements déjà enregistrés.</p>
           <p><b>Gains.</b> Les gains affichés (journalier / total) sont ceux du catalogue VIP au moment de l’activation. Ils alimentent le calcul du solde de retrait selon la formule en vigueur dans l’application (gain journalier × durée du plan, sous réserve des règles de validation des retraits).</p>
           <p><b>Retrait des gains.</b> Un retrait peut être refusé si le solde disponible est insuffisant, si aucun investissement n’est actif, ou si les informations Mobile Money sont incorrectes. Les frais de 20 % sont déduits du montant demandé (minimum de retrait : 1 500 FCFA).</p>
-          <p><b>Preuves de paiement.</b> Toute preuve falsifiée, incomplète ou ne correspondant pas au montant déclaré entraîne le refus du dépôt. <b>Tout faux dépôt est un bannissement du compte.</b></p>
+          <p><b>Exactitude des demandes de dépôt.</b> Toute information fausse ou tout paiement non effectué peut entraîner le refus du dépôt. <b>Toute fraude peut entraîner la suspension du compte.</b></p>
           <p><b>Multi-comptes.</b> La création de comptes multiples dans le but de contourner les règles (bonus, parrainage, limites) est interdite et peut entraîner la suspension de l’ensemble des comptes liés.</p>
           <p><b>Évolution du catalogue.</b> SOULIER D’OR peut ajouter, retirer ou modifier des plans VIP. Les plans déjà activés conservent les paramètres enregistrés au moment de l’activation.</p>
         </div>
@@ -4989,7 +4988,7 @@ hr,.divider{border-color:#765b14!important}
       <span style="display:inline-block;background:rgba(242,204,130,.12);color:#f2cc82;font-size:11px;font-weight:800;letter-spacing:1.5px;padding:6px 12px;border-radius:999px">ÉTAPE 2 / 5</span>
     </div>
     <h2 id="depositPhoneTitle" style="text-align:center;margin:10px 0 6px">Numéro Mobile Money</h2>
-    <p style="margin-bottom:14px;color:var(--muted);text-align:center;font-size:13px">Saisissez le numéro exact qui effectuera le paiement. Il doit correspondre à la preuve envoyée.</p>
+    <p style="margin-bottom:14px;color:var(--muted);text-align:center;font-size:13px">Saisissez le numéro exact qui effectuera le paiement afin que l’administrateur puisse vérifier votre demande.</p>
     <label style="display:block;margin-bottom:12px">Pays
       <select id="depositCountry" required style="width:100%;margin-top:6px;min-height:48px;font-size:15px;border-radius:14px">
         <option value="CI">🇨🇮 Côte d’Ivoire</option>
@@ -5084,37 +5083,15 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <button class="primary" type="button" onclick="copyForeignPayNumber()" style="width:100%;min-height:50px;font-size:15px;border-radius:14px;font-weight:800">📋 Copier le numéro</button>
       </div>
-      <p class="small" style="margin-top:12px;opacity:.8;text-align:center">Après paiement, prenez une capture (montant + statut réussi).</p>
+      <p class="small" style="margin-top:12px;opacity:.8;text-align:center">Après le paiement, revenez ici pour envoyer votre demande. Aucune photo n’est nécessaire.</p>
     </div>
 
     <!-- Hors CI : guide type USSD / Mobile Money (même esprit que la vidéo) -->
     <div id="foreignPaymentActions" class="hidden" style="margin:12px 0"></div>
 
-    <p class="small" style="margin-top:10px;text-align:center">Après le paiement, prenez une capture d’écran claire (montant + statut réussi) puis continuez.</p>
-    <button class="primary" type="button" style="margin-top:14px;width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900" onclick="showDepositStep('depositProofModal')">✅ J’ai terminé → Joindre la preuve</button>
+    <button class="primary" id="depositSendBtn" type="button" style="margin-top:14px;width:100%;min-height:54px;font-size:16px;border-radius:14px;font-weight:900" onclick="submitDepositProof()">✅ J’ai effectué le paiement → Envoyer ma demande</button>
+    <p id="depositSendStatus" class="small" style="margin-top:10px;text-align:center;min-height:18px"></p>
     <button class="secondary" type="button" style="margin-top:10px;width:100%;min-height:48px;border-radius:14px" onclick="closeDepositFlow()">Plus tard</button>
-  </div>
-</div>
-
-<div class="confirm-overlay" id="depositProofModal" role="dialog" aria-modal="true" aria-labelledby="depositProofTitle">
-  <div class="confirm-box">
-    <h2 id="depositProofTitle">Étape 5/5 — Joindre la preuve</h2>
-    <p style="text-align:center;color:var(--muted);font-size:13px">Sélectionnez une photo depuis votre galerie (capture du paiement réussi).</p>
-    <p class="notice" style="margin:10px 0;border-color:#a82d40;background:linear-gradient(135deg,#3a1518,#1a0c10);color:#ffc9c9;font-weight:800;text-align:center;font-size:13px">⚠️ Tout faux dépôt est un bannissement du compte !!</p>
-    <input type="file" id="depositProofFile" accept="image/jpeg,image/png,image/webp,image/jpg,.jpg,.jpeg,.png,.webp" required style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;z-index:-1" onchange="previewDepositProof(this)">
-    <button type="button" class="primary" onclick="document.getElementById('depositProofFile').click()" style="width:100%;min-height:56px;margin:16px 0 8px;font-size:16px;border-radius:14px;font-weight:900">
-      🖼️ Choisir une photo dans la galerie
-    </button>
-    <p class="small" style="text-align:center;opacity:.75;margin-bottom:8px">Galerie uniquement — pas de caméra</p>
-    <div id="depositProofPreviewWrap" class="hidden" style="margin:12px 0;text-align:center">
-      <img id="depositProofPreview" alt="Aperçu de la preuve" style="max-width:100%;max-height:220px;border-radius:12px;border:1px solid var(--line);object-fit:contain;background:#0d121a">
-      <p class="small" id="depositProofFileName" style="margin-top:8px"></p>
-    </div>
-    <div class="actions">
-      <button class="secondary" type="button" onclick="showDepositStep('depositPaymentModal')" style="flex:1;min-height:50px;border-radius:14px">Retour</button>
-      <button class="primary" type="button" id="depositSendBtn" onclick="submitDepositProof()" style="flex:1.4;min-height:54px;font-size:16px;border-radius:14px;font-weight:900">📤 Envoyer à l’admin</button>
-    </div>
-    <p id="depositSendStatus" class="small" style="margin-top:10px;min-height:18px"></p>
   </div>
 </div>
 
@@ -5616,7 +5593,7 @@ const WAVE_CI_LINK = "https://pay.wave.com/m/M_ci_M32Pfr2sR-WA/c/ci/";
 window.WAVE_CI_LINK = WAVE_CI_LINK;
 
 function showDepositStep(id) {
-  ["depositPhoneModal","depositAmountModal","depositConfirmModal","depositPaymentModal","depositProofModal","depositSuccessModal"].forEach(x => {
+  ["depositPhoneModal","depositAmountModal","depositConfirmModal","depositPaymentModal","depositSuccessModal"].forEach(x => {
     const el = document.getElementById(x);
     if (el) el.style.display = "none";
   });
@@ -5631,13 +5608,8 @@ function startDepositFlow() {
   document.getElementById("depositPhone").value = current.phone || "";
   document.getElementById("depositAmount").value = "4000";
   document.getElementById("customDepositAmount").value = "";
-  document.getElementById("depositProofFile").value = "";
   // highlight default VIP 1
   document.querySelectorAll(".dep-amt-btn").forEach(b => b.classList.toggle("selected", b.getAttribute("data-amt") === "4000"));
-  const prevWrap = document.getElementById("depositProofPreviewWrap");
-  if (prevWrap) prevWrap.classList.add("hidden");
-  const prevImg = document.getElementById("depositProofPreview");
-  if (prevImg) prevImg.removeAttribute("src");
   setDepositSending(false);
   showDepositStep("depositAmountModal"); // d'abord les montants VIP
 }
@@ -5791,25 +5763,6 @@ function openPaymentLink() {
   window.open(WAVE_CI_LINK, "_blank", "noopener,noreferrer");
 }
 function showDepositPayment() { goToPayment(); }
-function previewDepositProof(input) {
-  const file = input.files && input.files[0];
-  const wrap = document.getElementById("depositProofPreviewWrap");
-  const img = document.getElementById("depositProofPreview");
-  const name = document.getElementById("depositProofFileName");
-  if (!file || !file.type.startsWith("image/")) {
-    if (wrap) wrap.classList.add("hidden");
-    return;
-  }
-  try {
-    const url = URL.createObjectURL(file);
-    if (img) {
-      img.onload = () => { try { URL.revokeObjectURL(url); } catch(_){} };
-      img.src = url;
-    }
-  } catch (_) {}
-  if (name) name.textContent = file.name + " (" + Math.round(file.size/1024) + " Ko)";
-  if (wrap) wrap.classList.remove("hidden");
-}
 function setDepositSending(loading) {
   const btn = document.getElementById("depositSendBtn");
   const st = document.getElementById("depositSendStatus");
@@ -5817,12 +5770,12 @@ function setDepositSending(loading) {
     btn.disabled = !!loading;
     btn.textContent = loading ? "Envoi en cours…" : "Envoyer";
   }
-  if (st) st.textContent = loading ? "Envoi de votre preuve…" : "";
+  if (st) st.textContent = loading ? "Envoi de votre demande…" : "";
 }
 function finishDepositSuccess() {
   try { setDepositSending(false); } catch(_){}
   try {
-    ["depositPhoneModal","depositAmountModal","depositConfirmModal","depositPaymentModal","depositProofModal"].forEach(id => {
+    ["depositPhoneModal","depositAmountModal","depositConfirmModal","depositPaymentModal"].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = "none";
     });
@@ -5835,19 +5788,26 @@ function finishDepositSuccess() {
 }
 async function submitDepositProof() {
   if (!current) { toast("Connectez-vous avant de continuer."); return; }
-  if (!auth.currentUser || !firebaseReady || adminMode || typeof window.syncDepositToFirebase !== "function") {
-    toast("Connexion Firebase indisponible. Reconnectez-vous puis réessayez.");
+  // La restauration de session Firebase peut finir après l'ouverture de l'écran.
+  // On vérifie/répare la session avant de bloquer l'envoi.
+  let sessionReady = false;
+  let sessionError = null;
+  try {
+    sessionReady = typeof window.ensureFirebaseClientReady === "function"
+      ? await window.ensureFirebaseClientReady()
+      : !!(auth.currentUser && firebaseReady && !adminMode);
+  } catch (err) {
+    sessionError = err;
+    console.warn("Préparation session Firebase dépôt:", err);
+  }
+  if (!sessionReady || !auth.currentUser || !firebaseReady || adminMode ||
+      typeof window.syncDepositToFirebase !== "function") {
+    const message = sessionError?.message ||
+      "Session Firebase non prête. Vérifiez Internet, reconnectez-vous puis réessayez.";
+    toast(message);
     const st = document.getElementById("depositSendStatus");
-    if (st) st.textContent = "Firebase non connecté : la preuve n’a pas été envoyée.";
+    if (st) st.textContent = message + " Aucune preuve n’a été envoyée.";
     return;
-  }
-  const input = document.getElementById("depositProofFile");
-  const file = input && input.files && input.files[0];
-  if (!file || !file.type.startsWith("image/")) {
-    toast("Veuillez joindre une capture d’écran de la preuve de paiement."); return;
-  }
-  if (file.size > 5 * 1024 * 1024) {
-    toast("Choisissez une image de moins de 5 Mo."); return;
   }
   const btn = document.getElementById("depositSendBtn");
   if (btn) { btn.disabled = true; btn.textContent = "⏳ Envoi en cours…"; }
@@ -5863,18 +5823,18 @@ async function submitDepositProof() {
     ref: "À vérifier par l’administrateur", status: "En attente", created: Date.now()
   };
   try {
-    // Attendre l'upload de la preuve et l'écriture Firestore avant confirmation.
-    const syncResult = await window.syncDepositToFirebase(baseRecord, file);
-    if (syncResult && syncResult.proofUrl) baseRecord.proofUrl = syncResult.proofUrl;
+    // Enregistrer la demande directement dans Firestore, sans photo de preuve.
+    await window.syncDepositToFirebase(baseRecord);
     state.deposits = state.deposits.filter(x => x.id !== depositId);
     state.deposits.push(baseRecord);
     try { save(); } catch (_) {}
     finishDepositSuccess();
   } catch (err) {
     console.error("Envoi dépôt:", err);
-    toast("Échec Firebase : " + (err?.code || err?.message || "réessayez après reconnexion"));
+    const detail = err?.code || err?.message || "réessayez après reconnexion";
+    toast("Échec Firebase : " + detail);
     const status = document.getElementById("depositSendStatus");
-    if (status) status.textContent = "Échec d’envoi — demande non confirmée.";
+    if (status) status.textContent = "Échec d’envoi (" + detail + ") — demande non confirmée.";
   } finally {
     setDepositSending(false);
     if (btn) { btn.disabled = false; btn.textContent = "📤 Envoyer à l’admin"; }
@@ -6586,6 +6546,42 @@ async function loadOwnData(user) {
   document.getElementById("welcomeMessage").textContent = `Heureux de vous revoir ${welcomeName} ! Votre espace SOULIER D’OR est prêt. Consultez vos opérations et découvrez les fonctionnalités disponibles. Prenez le temps de vérifier les conditions et les risques avant toute opération.`;
   document.getElementById("welcomeModal").style.display = "flex";
 }
+// Garantit que la session Firebase du membre est prête avant un envoi.
+window.ensureFirebaseClientReady = async function() {
+  // Firebase peut encore restaurer la session persistante au moment du clic.
+  // authStateReady() attend la fin de cette restauration avant de lire currentUser.
+  try {
+    if (typeof auth.authStateReady === "function") {
+      await auth.authStateReady();
+    }
+  } catch (e) {
+    console.warn("Restauration de session Firebase:", e);
+  }
+
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("Aucune session Firebase active. Déconnectez-vous puis reconnectez-vous.");
+  }
+  if ((user.email || "").toLowerCase() === ADMIN_EMAIL_FIREBASE || adminMode) {
+    throw new Error("Connectez-vous avec un compte membre pour envoyer une demande de dépôt.");
+  }
+
+  // Ne pas se fier uniquement au drapeau firebaseReady : il peut être faux
+  // pendant que le rappel onAuthStateChanged termine le chargement du profil.
+  const sameUser = current && String(current.uid || current.id) === String(user.uid);
+  if (!firebaseReady || !sameUser) {
+    await loadOwnData(user);
+  }
+
+  // Vérification finale : la session n'a pas changé pendant le chargement.
+  if (!auth.currentUser || auth.currentUser.uid !== user.uid ||
+      !firebaseReady || adminMode ||
+      !current || String(current.uid || current.id) !== String(user.uid)) {
+    throw new Error("La session du compte n'est pas prête. Reconnectez-vous puis réessayez.");
+  }
+  return true;
+};
+
 async function loadAdminData() {
   const email = (auth.currentUser?.email || "").toLowerCase();
   if (email !== ADMIN_EMAIL_FIREBASE) throw new Error("Ce compte n’est pas autorisé comme administrateur.");
@@ -6910,32 +6906,18 @@ document.getElementById("logoutBtn").addEventListener("click", async (e) => {
 
 // Ne plus bloquer l’UI : la preuve est déjà enregistrée localement.
 // On tente seulement une synchro Firebase en arrière-plan.
-window.syncDepositToFirebase = async function(record, file) {
+window.syncDepositToFirebase = async function(record) {
   if (!auth.currentUser || !firebaseReady || adminMode) throw new Error("Session Firebase client indisponible.");
   const depositId = record.id;
-  let proofUrl = null;
-  // Une preuve est obligatoire : aucun dépôt ne doit être créé si l'upload échoue.
-  if (!file || !file.type || !file.type.startsWith("image/")) {
-    throw new Error("Preuve de paiement manquante ou format invalide.");
-  }
-  const path = "payment-proofs/" + auth.currentUser.uid + "/" + depositId;
-  const fileRef = storageRef(storage, path);
-  await uploadBytes(fileRef, file, { contentType: file.type });
-  proofUrl = await getDownloadURL(fileRef);
-  if (!proofUrl) throw new Error("La preuve n’a pas obtenu d’URL de téléchargement.");
   const payload = {
     id: depositId, userId: auth.currentUser.uid, amount: Number(record.amount),
     method: record.method || "Paiement", paymentLink: record.paymentLink || "",
     phone: record.phone || "", country: record.country || "",
-    ref: record.ref || "À vérifier par l’administrateur", proofUrl,
+    ref: record.ref || "À vérifier par l’administrateur",
     status: "En attente", created: record.created || Date.now(), createdAt: serverTimestamp()
   };
-  // La preuve doit exister avant toute création du dépôt dans Firestore.
-  if (!payload.proofUrl) throw new Error("Preuve de paiement non sauvegardée : dépôt annulé.");
   await setDoc(doc(db, "deposits", depositId), payload);
-  const local = state.deposits.find(d => d.id === depositId);
-  if (local && proofUrl) local.proofUrl = proofUrl;
-  return { id: depositId, proofUrl };
+  return { id: depositId };
 };
 
 window.review = async function(type, itemId, approve) {
