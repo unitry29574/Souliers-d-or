@@ -5533,29 +5533,28 @@ function invest(i) {
       email: (current.email || "").toLowerCase()
     };
     try {
-      if (typeof window.createInvestmentCallable === "function") {
-        const result = await window.createInvestmentCallable({ planIndex: i });
-        const created = result && result.data && result.data.investment;
-        if (created) {
-          Object.assign(inv, created);
-          if (!inv.id) inv.id = "inv_" + Date.now().toString(36);
-          if (inv.daily == null) inv.daily = p.daily;
-          if (inv.days == null) inv.days = p.days;
-          if (inv.price == null) inv.price = p.price;
-          if (!inv.plan) inv.plan = p.name;
-          if (!inv.status) inv.status = "Actif";
-          if (!inv.userId) inv.userId = uidOf(current);
-          if (!inv.created) inv.created = Date.now();
-        }
+      if (typeof window.createInvestmentCallable !== "function") {
+        throw new Error("Service d’investissement sécurisé indisponible.");
       }
+      const result = await window.createInvestmentCallable({ planIndex: i });
+      const created = result && result.data && result.data.investment;
+      if (!created || !created.id) throw new Error("Firebase n’a pas confirmé l’investissement.");
+      Object.assign(inv, created);
+      if (!inv.daily) inv.daily = p.daily;
+      if (!inv.days) inv.days = p.days;
+      if (!inv.price) inv.price = p.price;
+      if (!inv.plan) inv.plan = p.name;
+      if (!inv.status) inv.status = "Actif";
+      if (!inv.userId) inv.userId = uidOf(current);
+      if (!inv.created) inv.created = Date.now();
+      if (!state.investments.some(x => x.id === inv.id)) state.investments.push(inv);
+      try { saveLocalState(); } catch (_) {}
+      try { save(); } catch (_) {}
     } catch (err) {
-      console.warn("Cloud Function indisponible, fallback local:", err);
+      console.error("Investissement non confirmé par Firebase:", err);
+      toast("Investissement non effectué : " + (err.message || "service Firebase indisponible"));
+      return;
     }
-    if (!state.investments.some(x => x.id === inv.id)) state.investments.push(inv);
-    try { savePendingTx("investments", inv); } catch (_) {}
-    try { saveLocalState(); } catch (_) {}
-    try { save(); } catch (_) {}
-    try { if (typeof window.syncInvestmentToFirebase === "function") window.syncInvestmentToFirebase(inv); } catch (_) {}
     if (typeof renderAll === "function") renderAll();
     try {
       const activeCard = document.querySelectorAll("#vipGrid .vip")[i];
@@ -6059,7 +6058,7 @@ function closeDepositSuccess()
   renderAll();
 }
 
-document.getElementById("withdrawForm").addEventListener("submit", e => {
+document.getElementById("withdrawForm").addEventListener("submit", async e => {
   e.preventDefault();
   if (!current) return;
   if (current.status === "Suspendu") {
@@ -6090,34 +6089,49 @@ document.getElementById("withdrawForm").addEventListener("submit", e => {
     toast("Indiquez un numéro Mobile Money valide pour recevoir le retrait.");
     return;
   }
+  const now = new Date();
+  const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const alreadyToday = state.withdrawals.some(x => matchesUser(x, current) && Number(x.created || 0) >= dayStart);
+  if (alreadyToday) {
+    toast("Limite atteinte : un seul retrait peut être demandé par jour.");
+    return;
+  }
   const earned = state.investments
     .filter(x => matchesUser(x, current))
     .reduce((s, x) => s + investmentEarnedAmount(x), 0)
     + Number(current.missionRewardBalance || 0)
     - state.withdrawals
-      .filter(x => matchesUser(x, current) && x.status === "Validé")
-      .reduce((s, x) => s + x.amount, 0);
+      .filter(x => matchesUser(x, current) && ["En attente", "Validé", "Payé"].includes(String(x.status || "")))
+      .reduce((s, x) => s + Number(x.amount || 0), 0);
   if (amount > earned) {
     toast("Solde disponible insuffisant.");
     return;
   }
+  // Frais de retrait fixes : 20 % du montant demandé.
+  // Le solde réservé est le montant brut (amount) ; le client reçoit net.
   const fee = Math.round(amount * 0.20);
   const net = amount - fee;
-  state.withdrawals.push({
-    id: id(),
-    userId: uidOf(current),
-    amount,
-    fee,
-    net,
-    method: document.getElementById("withdrawMethod").value,
-    phone,
-    status: "En attente",
-    created: Date.now()
-  });
-  e.target.reset();
-  save();
-  showTxAnimation("pending", "Demande de retrait envoyée", "Votre demande est enregistrée et reste en attente de vérification. Une animation de validation ou de refus apparaîtra lorsque le statut sera mis à jour.");
-  toast("Demande de retrait enregistrée. Vérification en cours.");
+  const withdrawal = {
+    id: id(), userId: uidOf(current), amount, fee, net,
+    method: document.getElementById("withdrawMethod").value, phone,
+    status: "En attente", created: Date.now(), email: (current.email || "").toLowerCase()
+  };
+  try {
+    if (!firebaseReady || !auth.currentUser) throw new Error("Firebase non connecté.");
+    await setDoc(doc(db, "withdrawals", withdrawal.id), { ...withdrawal, createdAt: serverTimestamp() });
+    state.withdrawals.push(withdrawal);
+    try { saveLocalState(); } catch (_) {}
+    try { save(); } catch (_) {}
+    e.target.reset();
+    showTxAnimation("pending", "Demande de retrait envoyée",
+      "Montant demandé : " + amount.toLocaleString("fr-FR") +
+      " FCFA · Frais (20 %) : " + fee.toLocaleString("fr-FR") +
+      " FCFA · Vous recevrez : " + net.toLocaleString("fr-FR") + " FCFA.");
+    toast("Retrait envoyé à Firebase. Frais de 20 % appliqués.");
+  } catch (err) {
+    console.error("Retrait Firebase:", err);
+    toast("Retrait non envoyé : " + (err.message || "connexion Firebase"));
+  }
 });
 
 document.getElementById("copyCode").addEventListener("click", async () => {
@@ -6305,7 +6319,7 @@ function renderAdmin() {
     `;
   }), "Aucune demande de dépôt.");
 
-  renderList("adminWithdrawals", state.withdrawals.filter(x => x.status === "En attente").map(x => {
+  renderList("adminWithdrawals", state.withdrawals.slice().sort((a,b)=>(b.created||0)-(a.created||0)).map(x => {
     const u = userById(x.userId);
     return `
       <div class="item">
@@ -6379,9 +6393,10 @@ function renderAdmin() {
               <b style="font-size:10px;color:#f2cc82;text-transform:uppercase;letter-spacing:.3px">Investissements</b>
               ${invLines}
             </div>
-            <div class="ac-actions">${statusBtns}
-              <button class="secondary" onclick="adminManualCredit('${uid}')">💰 Créditer</button>
-              <button class="secondary" onclick="adminManualVIP('${uid}')">👟 Attribuer VIP</button>
+            <div class="ac-actions">
+              ${statusBtns}
+              <button class="success" onclick="adminCreditMember()">💰 Envoyer argent</button>
+              <button class="secondary" onclick="adminAssignVip()">👑 Envoyer VIP</button>
             </div>
           </div>`;
       }).join("");
@@ -6408,6 +6423,70 @@ function renderAdmin() {
     `;
   }), "Aucun investissement.");
 }
+
+
+function chooseAdminMember(uid) {
+  if (uid) return state.users.find(u => String(u.uid || u.id) === String(uid));
+  const members = state.users.filter(u => u.uid || u.id);
+  if (!members.length) { fbToast("Aucun membre disponible."); return null; }
+  const menu = members.map((u, i) => `${i + 1}. ${u.email || u.phone || u.uid || u.id}`).join("\n");
+  const pick = Number(prompt("Sélectionnez le membre à qui envoyer :\n" + menu));
+  if (!Number.isInteger(pick) || pick < 1 || pick > members.length) return null;
+  return members[pick - 1];
+}
+window.adminCreditMember = async function(uid) {
+  if (!adminMode || !firebaseReady || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
+    fbToast("Accès administrateur Firebase requis."); return;
+  }
+  const member = chooseAdminMember(uid);
+  if (!member) return;
+  uid = String(member.uid || member.id);
+  const amount = Number(prompt("Montant sans frais à envoyer en FCFA pour " + (member.email || uid) + " :"));
+  if (!Number.isFinite(amount) || amount <= 0) { fbToast("Montant invalide."); return; }
+  const currentBalance = Number(member.missionRewardBalance || 0);
+  const nextBalance = currentBalance + amount;
+  try {
+    await setDoc(doc(db, "profiles", uid), {
+      missionRewardBalance: nextBalance,
+      adminCreditUpdatedAt: Date.now()
+    }, { merge: true });
+    member.missionRewardBalance = nextBalance;
+    // Historique de crédit manuel
+    const creditId = "admcredit_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+    await setDoc(doc(db, "adminCredits", creditId), {
+      id: creditId, userId: uid, amount, type: "Crédit administrateur",
+      createdAt: Date.now(), adminEmail: auth.currentUser.email
+    });
+    renderAdmin(); renderAll();
+    fbToast(amount.toLocaleString("fr-FR") + " FCFA crédités au membre.");
+  } catch (err) {
+    console.error("Crédit admin:", err);
+    fbToast("Échec du crédit Firebase : " + (err.message || "vérifiez les règles Firestore"));
+  }
+};
+
+window.adminAssignVip = async function(uid) {
+  if (!adminMode || !firebaseReady || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
+    fbToast("Accès administrateur Firebase requis."); return;
+  }
+  const member = chooseAdminMember(uid);
+  if (!member) return;
+  uid = String(member.uid || member.id);
+  const plan = prompt("Plan VIP à attribuer (ex. VIP 3000, VIP 6000, VIP 12000) :", member.vipPlan || "VIP 3000");
+  if (!plan || !plan.trim()) return;
+  try {
+    await setDoc(doc(db, "profiles", uid), {
+      vipPlan: plan.trim(), vipActive: true, vipAssignedByAdmin: true,
+      vipAssignedAt: Date.now()
+    }, { merge: true });
+    Object.assign(member, { vipPlan: plan.trim(), vipActive: true, vipAssignedByAdmin: true });
+    renderAdmin(); renderAll();
+    fbToast("VIP attribué à " + (member.email || "ce membre") + ".");
+  } catch (err) {
+    console.error("Attribution VIP:", err);
+    fbToast("Échec VIP Firebase : " + (err.message || "vérifiez les règles Firestore"));
+  }
+};
 
 function review(type, itemId, approved) {
   const arr = type === "deposit" ? state.deposits : state.withdrawals;
@@ -6452,42 +6531,6 @@ function banUser(uid) {
   renderAdmin();
   toast("Compte banni.");
 }
-
-// Actions manuelles réservées à l'administrateur Firebase.
-window.adminManualCredit = async function(uid) {
-  if (!adminMode || !firebaseReady || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) return fbToast("Accès administrateur requis.");
-  const user = userById(uid); if (!user) return fbToast("Membre introuvable.");
-  const amount = Number(prompt("Montant à créditer en FCFA :", "5000"));
-  if (!Number.isFinite(amount) || amount <= 0) return fbToast("Montant invalide.");
-  // Choix confirmé par l’administrateur : crédit manuel vers le solde de retrait.
-  const bucket = "RETRAIT";
-  const txId = "admin_credit_" + uid + "_" + Date.now();
-  const profilePatch = bucket === "DEPOT"
-    ? { adminDepositBalance: Number(user.adminDepositBalance||0)+amount }
-    : { adminWithdrawBalance: Number(user.adminWithdrawBalance||0)+amount };
-  try {
-    await setDoc(doc(db,"profiles",uid), profilePatch, {merge:true});
-    await setDoc(doc(db,"adminTransactions",txId), {id:txId,userId:uid,email:user.email||"",type:"credit_manuel",bucket,amount,status:"Validé",created:Date.now(),admin:auth.currentUser.email});
-    Object.assign(user,profilePatch);
-    fbToast(amount.toLocaleString("fr-FR")+" FCFA crédités ("+bucket+")."); renderAdmin();
-  } catch(e) { console.error(e); fbToast("Crédit échoué : vérifiez les règles Firestore."); }
-};
-window.adminManualVIP = async function(uid) {
-  if (!adminMode || !firebaseReady || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) return fbToast("Accès administrateur requis.");
-  const user = userById(uid); if (!user) return fbToast("Membre introuvable.");
-  const options = PLANS.map(p=>p.name+" — "+p.price+" FCFA").join("\\n");
-  const choice = prompt("VIP à attribuer (VIP 1 à VIP 10) :\\n"+options,"VIP 1");
-  const plan = PLANS.find(p=>p.name.toLowerCase()===String(choice||"").trim().toLowerCase());
-  if (!plan) return fbToast("Plan VIP non reconnu.");
-  if (!confirm("Attribuer "+plan.name+" à "+(user.email||uid)+" sans débit du solde ?")) return;
-  const invId = "admin_vip_"+uid+"_"+Date.now();
-  const inv = {id:invId,userId:uid,plan:plan.name,price:plan.price,daily:plan.daily,days:plan.days,total:plan.total,status:"Actif (admin)",created:Date.now(),adminAssigned:true,assignedBy:auth.currentUser.email};
-  try {
-    await setDoc(doc(db,"investments",invId),inv);
-    state.investments.push(inv); renderAdmin(); renderAll();
-    fbToast(plan.name+" attribué manuellement.");
-  } catch(e) { console.error(e); fbToast("Attribution VIP échouée : vérifiez les règles Firestore."); }
-};
 
 function adminCancelInvestment(invId) {
   const inv = state.investments.find(x => x.id === invId);
