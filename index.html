@@ -451,6 +451,69 @@ button:active { transform: scale(0.97); }
   gap: 8px;
 }
 
+/* Admin client cards — compact mobile-friendly */
+.admin-client-card {
+  background: linear-gradient(145deg, #1a1510, #0e0c08);
+  border: 1px solid #4a3a20;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.admin-client-card .ac-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.admin-client-card .ac-email {
+  font-weight: 800;
+  font-size: 13px;
+  color: #f7f0dc;
+  word-break: break-all;
+}
+.admin-client-card .ac-meta {
+  font-size: 11px;
+  color: #c9b896;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.admin-client-card .ac-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 10px;
+  margin: 8px 0;
+  font-size: 11px;
+}
+.admin-client-card .ac-grid b {
+  display: block;
+  color: #f2cc82;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 1px;
+}
+.admin-client-card .ac-grid span { color: #e8dcc0; }
+.admin-client-card .ac-yes { color: #2ecc71 !important; font-weight: 800; }
+.admin-client-card .ac-no { color: #ff8797 !important; font-weight: 700; }
+.admin-client-card .ac-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.admin-client-card .ac-actions button {
+  padding: 6px 10px;
+  font-size: 11px;
+  min-height: 30px;
+  border-radius: 8px;
+}
+.badge-actif { background: #174d32 !important; color: #caffdf !important; }
+.badge-suspendu { background: #5a3a15 !important; color: #ffd9a0 !important; }
+.badge-banni { background: #4a1515 !important; color: #ffb0b0 !important; }
+.admin-inv-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.admin-inv-actions button { padding: 5px 9px; font-size: 11px; min-height: 28px; }
+
 /* Robot showcase */
 .robot-banner {
   display: grid;
@@ -4898,8 +4961,16 @@ hr,.divider{border-color:#765b14!important}
         </div>
         <div class="section"><h2>Demandes de dépôt</h2><div id="adminDeposits" class="list"></div></div>
         <div class="section"><h2>Demandes de retrait</h2><div id="adminWithdrawals" class="list"></div></div>
-        <div class="section"><h2>Clients & parrainage</h2><div id="adminUsers" class="list"></div></div>
-        <div class="section"><h2>Investissements des clients</h2><div id="adminInvestments" class="list"></div></div>
+        <div class="section">
+          <h2>Clients & parrainage</h2>
+          <p class="small" style="margin:-6px 0 10px;color:var(--muted)">Parrain · parent investi · filleuls · investissements · ban</p>
+          <div id="adminUsers" class="list"></div>
+        </div>
+        <div class="section">
+          <h2>Investissements des clients</h2>
+          <p class="small" style="margin:-6px 0 10px;color:var(--muted)">Annuler (solde retourné) ou supprimer définitivement</p>
+          <div id="adminInvestments" class="list"></div>
+        </div>
         <div class="section">
           <h2>Réglages des plans VIP</h2>
 
@@ -5004,7 +5075,6 @@ hr,.divider{border-color:#765b14!important}
         <option value="Wave">Wave</option>
         <option value="Orange Money">Orange Money</option>
         <option value="MTN Money">MTN Money</option>
-        <option value="Moov Money">Moov Money</option>
       </select>
     </label>
     <label style="display:block;margin-bottom:12px">Votre numéro de téléphone
@@ -5435,7 +5505,7 @@ function invest(i) {
   if (window.vipPlanLocks?.[i]) { toast("Ce plan VIP est temporairement verrouillé par l’administrateur."); return; }
   const myDep = state.deposits.filter(x => matchesUser(x, current) && x.status === "Validé");
   const depOk = myDep.reduce((s, x) => s + Number(x.amount || 0), 0);
-  const spent = state.investments.filter(x => matchesUser(x, current)).reduce((s, x) => s + Number(x.price || 0), 0);
+  const spent = state.investments.filter(x => matchesUser(x, current) && String(x.status || "").startsWith("Actif")).reduce((s, x) => s + Number(x.price || 0), 0);
   const available = Math.max(0, depOk - spent);
   if (depOk <= 0) {
     toast("Faites d’abord un dépôt validé avant d’investir.");
@@ -5760,7 +5830,7 @@ function goToPayment() {
     ? "Orange Money Côte d’Ivoire : copiez le numéro Orange et le nom SOULIER D’OR, puis effectuez le transfert."
     : methodLower.includes("mtn")
       ? "MTN Côte d’Ivoire : copiez le numéro MTN et le nom SOULIER D’OR, puis effectuez le transfert."
-      : "Moov Money : copiez le numéro affiché et le nom SOULIER D’OR.";
+      : "Copiez le numéro affiché et le nom SOULIER D’OR, puis effectuez le transfert.";
   const foreignBox = document.getElementById("foreignPaymentActions");
   foreignBox?.classList.toggle("hidden", isCI);
   if (foreignBox) {
@@ -5779,7 +5849,7 @@ function goToPayment() {
   if (instruction) instruction.textContent = isWaveCI
     ? "Côte d’Ivoire — Wave : cliquez sur le lien Wave pour payer Romeo."
     : isNumberCI
-      ? "Côte d’Ivoire — Orange/MTN/Moov : copiez le numéro et le bénéficiaire SOULIER D’OR."
+      ? "Côte d’Ivoire — Orange / MTN : copiez le numéro et le bénéficiaire SOULIER D’OR."
       : "Autres pays : copiez le numéro affiché et effectuez le transfert Mobile Money.";
   const operator = document.getElementById("selectedPaymentOperator");
   if (operator) operator.textContent = method;
@@ -6110,7 +6180,7 @@ function renderAll() {
 
   document.getElementById("balance").textContent = money(Math.max(0, earned));
   const depOk = myDep.filter(x => x.status === "Validé").reduce((s, x) => s + x.amount, 0);
-  const spent = myInv.reduce((s, x) => s + x.price, 0);
+  const spent = myInv.filter(x => String(x.status || "").startsWith("Actif")).reduce((s, x) => s + Number(x.price || 0), 0);
   document.getElementById("depBalance").textContent = money(Math.max(0, depOk - spent));
   document.getElementById("activeInvestments").textContent = myInv.filter(x => x.status.startsWith("Actif")).length;
   document.getElementById("referrals").textContent = children.length;
@@ -6254,31 +6324,86 @@ function renderAdmin() {
     `;
   }), "Aucune demande de retrait.");
 
-  renderList("adminUsers", state.users.map(u => {
-    const direct = state.users.filter(x => x.parentId === u.id).length;
+  // ===== Clients compact (lisible mobile) =====
+  const usersEl = document.getElementById("adminUsers");
+  if (usersEl) {
+    if (!state.users.length) {
+      usersEl.innerHTML = `<div class="empty">Aucun client enregistré.</div>`;
+    } else {
+      usersEl.innerHTML = state.users.map(u => {
+        const uid = u.uid || u.id;
+        const kids = state.users.filter(x => x.parentId === uid || x.parentId === u.id);
+        const parent = state.users.find(x => (x.uid || x.id) === u.parentId);
+        const parentLabel = parent
+          ? escapeHtml(parent.email || parent.code || "—")
+          : (u.referralCodeEntered ? "Code " + escapeHtml(u.referralCodeEntered) : "—");
+        const parentInvs = parent
+          ? state.investments.filter(inv => matchesUser(inv, parent) && String(inv.status || "").startsWith("Actif"))
+          : [];
+        const parentAmount = parentInvs.reduce((s, inv) => s + Number(inv.price || 0), 0);
+        const parentHasInv = parentInvs.length > 0;
+        const myInvs = state.investments.filter(inv => matchesUser(inv, u));
+        const activeInvs = myInvs.filter(inv => String(inv.status || "").startsWith("Actif"));
+        const myAmount = activeInvs.reduce((s, inv) => s + Number(inv.price || 0), 0);
+        const statusClass = u.status === "Actif" ? "badge-actif" : (u.status === "Banni" ? "badge-banni" : "badge-suspendu");
+        const statusBtns = u.status === "Banni"
+          ? `<button class="secondary" onclick="toggleUser('${uid}')">Réactiver</button>`
+          : `<button class="secondary" onclick="toggleUser('${uid}')">${u.status === "Actif" ? "Suspendre" : "Réactiver"}</button>
+             <button class="danger" onclick="banUser('${uid}')">Bannir</button>`;
+        const invLines = activeInvs.length
+          ? activeInvs.map(inv => `
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:4px;padding:6px 8px;background:#120e08;border-radius:8px;border:1px solid #3a3018">
+                <span style="font-size:11px">${escapeHtml(inv.plan || "?")} · ${money(inv.price)}</span>
+                <span style="display:flex;gap:4px">
+                  <button class="secondary" style="padding:4px 8px;font-size:10px;min-height:26px" onclick="adminCancelInvestment('${inv.id}')">Annuler</button>
+                  <button class="danger" style="padding:4px 8px;font-size:10px;min-height:26px" onclick="adminDeleteInvestment('${inv.id}')">Effacer</button>
+                </span>
+              </div>`).join("")
+          : `<div style="font-size:11px;color:#a89878;margin-top:4px">Aucun investissement actif</div>`;
+        return `
+          <div class="admin-client-card">
+            <div class="ac-top">
+              <div>
+                <div class="ac-email">${escapeHtml(u.email || "—")}</div>
+                <div class="ac-meta">${escapeHtml(u.phone || "—")} · ${COUNTRIES[u.country] || u.country || "—"} · <b style="color:#f2cc82">${escapeHtml(u.code || "—")}</b></div>
+              </div>
+              <span class="badge ${statusClass}">${escapeHtml(u.status || "—")}</span>
+            </div>
+            <div class="ac-grid">
+              <div><b>Parrain</b><span>${parentLabel}</span></div>
+              <div><b>Parent a investi</b><span class="${parent ? (parentHasInv ? "ac-yes" : "ac-no") : ""}">${parent ? (parentHasInv ? "Oui · " + money(parentAmount) : "Non") : "—"}</span></div>
+              <div><b>Filleuls</b><span>${kids.length}</span></div>
+              <div><b>Ses inv.</b><span>${activeInvs.length} · ${money(myAmount)}</span></div>
+            </div>
+            <div style="margin-top:6px">
+              <b style="font-size:10px;color:#f2cc82;text-transform:uppercase;letter-spacing:.3px">Investissements</b>
+              ${invLines}
+            </div>
+            <div class="ac-actions">${statusBtns}</div>
+          </div>`;
+      }).join("");
+    }
+  }
+
+  // ===== Liste globale investissements =====
+  renderList("adminInvestments", state.investments.slice().sort((a, b) => (b.created || 0) - (a.created || 0)).map(x => {
+    const u = userById(x.userId);
+    const isActive = String(x.status || "").startsWith("Actif");
     return `
       <div class="item">
         <div>
-          <b>${escapeHtml(u.email)}</b>
-          <div class="small">${escapeHtml(u.phone)} • ${COUNTRIES[u.country] || u.country || ""} • code ${u.code} • ${direct} filleul(s)</div>
+          <b>${escapeHtml(x.plan || "?")} · ${money(x.price)}</b>
+          <div class="small">${escapeHtml(u?.email || "Client")} · ${x.days || "?"} j · ${money((x.daily || 0) * (x.days || 0))} gains
+            ${x.created ? " · " + new Date(x.created).toLocaleDateString("fr-FR") : ""}</div>
+          <div class="admin-inv-actions">
+            ${isActive ? `<button class="secondary" onclick="adminCancelInvestment('${x.id}')">Annuler (solde retourné)</button>` : ""}
+            <button class="danger" onclick="adminDeleteInvestment('${x.id}')">Supprimer définitivement</button>
+          </div>
         </div>
-        <div class="actions">
-          <span class="badge">${u.status}</span>
-          <button class="secondary" onclick="toggleUser('${u.id}')">${u.status === "Actif" ? "Suspendre" : "Réactiver"}</button>
-        </div>
+        <span class="badge ${isActive ? "badge-actif" : ""}">${escapeHtml(x.status || "—")}</span>
       </div>
     `;
-  }), "Aucun client enregistré.");
-
-  renderList("adminInvestments", state.investments.map(x => `
-    <div class="item">
-      <div>
-        <b>${escapeHtml(x.plan)} • ${money(x.price)}</b>
-        <div class="small">${escapeHtml(userById(x.userId)?.email || "Client")} • ${x.days} jours • ${money(x.daily * x.days)} gains</div>
-      </div>
-      <span class="badge">${x.status}</span>
-    </div>
-  `), "Aucun investissement.");
+  }), "Aucun investissement.");
 }
 
 function review(type, itemId, approved) {
@@ -6302,9 +6427,54 @@ function review(type, itemId, approved) {
 function toggleUser(uid) {
   const u = userById(uid);
   if (!u) return;
-  u.status = u.status === "Actif" ? "Suspendu" : "Actif";
+  if (u.status === "Banni" || u.status === "Suspendu") u.status = "Actif";
+  else u.status = "Suspendu";
   save();
+  if (typeof window.fbToggleUser === "function") {
+    try { window.fbToggleUser(uid, u.status); } catch (_) {}
+  }
   renderAdmin();
+  toast(u.status === "Actif" ? "Compte réactivé." : "Compte suspendu.");
+}
+
+function banUser(uid) {
+  const u = userById(uid);
+  if (!u) return;
+  if (!confirm("Bannir définitivement ce compte ?")) return;
+  u.status = "Banni";
+  save();
+  if (typeof window.fbBanUser === "function") {
+    try { window.fbBanUser(uid); } catch (_) {}
+  }
+  renderAdmin();
+  toast("Compte banni.");
+}
+
+function adminCancelInvestment(invId) {
+  const inv = state.investments.find(x => x.id === invId);
+  if (!inv) return;
+  if (!confirm("Annuler ? Le montant revient sur le solde dépôt du client.")) return;
+  inv.status = "Annulé";
+  inv.cancelledAt = Date.now();
+  save();
+  if (typeof window.fbUpdateInvestment === "function") {
+    try { window.fbUpdateInvestment(invId, { status: "Annulé", cancelledAt: inv.cancelledAt }); } catch (_) {}
+  }
+  renderAdmin();
+  toast("Investissement annulé — solde retourné.");
+}
+
+function adminDeleteInvestment(invId) {
+  const inv = state.investments.find(x => x.id === invId);
+  if (!inv) return;
+  if (!confirm("Supprimer définitivement cet investissement ?")) return;
+  state.investments = state.investments.filter(x => x.id !== invId);
+  save();
+  if (typeof window.fbDeleteInvestment === "function") {
+    try { window.fbDeleteInvestment(invId); } catch (_) {}
+  }
+  renderAdmin();
+  toast("Investissement supprimé.");
 }
 
 
@@ -7225,22 +7395,59 @@ window.review = async function(type, itemId, approve) {
   }
 };
 
-window.toggleUser = async function(uid) {
+window.toggleUser = async function(uid, forcedStatus) {
   if (!adminMode || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
     fbToast("Accès administrateur refusé.");
     return;
   }
   const row = state.users.find(u => (u.uid || u.id) === uid);
   if (!row) return;
-  const updated = { ...row, status: row.status === "Actif" ? "Suspendu" : "Actif" };
+  const nextStatus = forcedStatus || ((row.status === "Banni" || row.status === "Suspendu") ? "Actif" : "Suspendu");
   try {
-    await setDoc(doc(db, "profiles", uid), updated, { merge: true });
-    Object.assign(row, updated);
+    await setDoc(doc(db, "profiles", uid), { status: nextStatus }, { merge: true });
+    row.status = nextStatus;
     renderAll(); renderAdmin();
-    fbToast("Statut du client mis à jour.");
+    fbToast(nextStatus === "Actif" ? "Compte réactivé." : "Compte suspendu.");
   } catch (err) {
     console.error(err);
     fbToast("Impossible de modifier ce client.");
+  }
+};
+
+window.fbBanUser = async function(uid) {
+  if (!adminMode || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) return;
+  const row = state.users.find(u => (u.uid || u.id) === uid);
+  if (!row) return;
+  try {
+    await setDoc(doc(db, "profiles", uid), { status: "Banni" }, { merge: true });
+    row.status = "Banni";
+    renderAll(); renderAdmin();
+    fbToast("Compte banni.");
+  } catch (err) { console.error(err); fbToast("Impossible de bannir."); }
+};
+
+window.fbToggleUser = window.toggleUser;
+
+window.fbUpdateInvestment = async function(invId, fields) {
+  if (!adminMode || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) return;
+  try {
+    if (typeof patchDoc === "function") await patchDoc("investments", invId, fields);
+    else await setDoc(doc(db, "investments", invId), fields, { merge: true });
+  } catch (err) {
+    try { await setDoc(doc(db, "investments", invId), fields, { merge: true }); } catch (_) {}
+  }
+};
+
+window.fbDeleteInvestment = async function(invId) {
+  if (!adminMode || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) return;
+  try {
+    const token = await auth.currentUser.getIdToken();
+    const r = await fetch(FS_BASE + "/investments/" + encodeURIComponent(invId), {
+      method: "DELETE", headers: { "Authorization": "Bearer " + token }
+    });
+    if (!r.ok) await setDoc(doc(db, "investments", invId), { status: "Supprimé", deletedAt: Date.now() }, { merge: true });
+  } catch (err) {
+    try { await setDoc(doc(db, "investments", invId), { status: "Supprimé", deletedAt: Date.now() }, { merge: true }); } catch (_) {}
   }
 };
 
