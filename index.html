@@ -6379,7 +6379,10 @@ function renderAdmin() {
               <b style="font-size:10px;color:#f2cc82;text-transform:uppercase;letter-spacing:.3px">Investissements</b>
               ${invLines}
             </div>
-            <div class="ac-actions">${statusBtns}</div>
+            <div class="ac-actions">${statusBtns}
+              <button class="secondary" onclick="adminManualCredit('${uid}')">💰 Créditer</button>
+              <button class="secondary" onclick="adminManualVIP('${uid}')">👟 Attribuer VIP</button>
+            </div>
           </div>`;
       }).join("");
     }
@@ -6449,6 +6452,42 @@ function banUser(uid) {
   renderAdmin();
   toast("Compte banni.");
 }
+
+// Actions manuelles réservées à l'administrateur Firebase.
+window.adminManualCredit = async function(uid) {
+  if (!adminMode || !firebaseReady || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) return fbToast("Accès administrateur requis.");
+  const user = userById(uid); if (!user) return fbToast("Membre introuvable.");
+  const amount = Number(prompt("Montant à créditer en FCFA :", "5000"));
+  if (!Number.isFinite(amount) || amount <= 0) return fbToast("Montant invalide.");
+  // Choix confirmé par l’administrateur : crédit manuel vers le solde de retrait.
+  const bucket = "RETRAIT";
+  const txId = "admin_credit_" + uid + "_" + Date.now();
+  const profilePatch = bucket === "DEPOT"
+    ? { adminDepositBalance: Number(user.adminDepositBalance||0)+amount }
+    : { adminWithdrawBalance: Number(user.adminWithdrawBalance||0)+amount };
+  try {
+    await setDoc(doc(db,"profiles",uid), profilePatch, {merge:true});
+    await setDoc(doc(db,"adminTransactions",txId), {id:txId,userId:uid,email:user.email||"",type:"credit_manuel",bucket,amount,status:"Validé",created:Date.now(),admin:auth.currentUser.email});
+    Object.assign(user,profilePatch);
+    fbToast(amount.toLocaleString("fr-FR")+" FCFA crédités ("+bucket+")."); renderAdmin();
+  } catch(e) { console.error(e); fbToast("Crédit échoué : vérifiez les règles Firestore."); }
+};
+window.adminManualVIP = async function(uid) {
+  if (!adminMode || !firebaseReady || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) return fbToast("Accès administrateur requis.");
+  const user = userById(uid); if (!user) return fbToast("Membre introuvable.");
+  const options = PLANS.map(p=>p.name+" — "+p.price+" FCFA").join("\\n");
+  const choice = prompt("VIP à attribuer (VIP 1 à VIP 10) :\\n"+options,"VIP 1");
+  const plan = PLANS.find(p=>p.name.toLowerCase()===String(choice||"").trim().toLowerCase());
+  if (!plan) return fbToast("Plan VIP non reconnu.");
+  if (!confirm("Attribuer "+plan.name+" à "+(user.email||uid)+" sans débit du solde ?")) return;
+  const invId = "admin_vip_"+uid+"_"+Date.now();
+  const inv = {id:invId,userId:uid,plan:plan.name,price:plan.price,daily:plan.daily,days:plan.days,total:plan.total,status:"Actif (admin)",created:Date.now(),adminAssigned:true,assignedBy:auth.currentUser.email};
+  try {
+    await setDoc(doc(db,"investments",invId),inv);
+    state.investments.push(inv); renderAdmin(); renderAll();
+    fbToast(plan.name+" attribué manuellement.");
+  } catch(e) { console.error(e); fbToast("Attribution VIP échouée : vérifiez les règles Firestore."); }
+};
 
 function adminCancelInvestment(invId) {
   const inv = state.investments.find(x => x.id === invId);
