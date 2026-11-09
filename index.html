@@ -6117,8 +6117,8 @@ document.getElementById("withdrawForm").addEventListener("submit", async e => {
     status: "En attente", created: Date.now(), email: (current.email || "").toLowerCase()
   };
   try {
-    if (!firebaseReady || !auth.currentUser) throw new Error("Firebase non connecté.");
-    await setDoc(doc(db, "withdrawals", withdrawal.id), { ...withdrawal, createdAt: serverTimestamp() });
+    if (typeof window.sendWithdrawalToFirebase !== "function") throw new Error("Module Firebase non chargé.");
+    await window.sendWithdrawalToFirebase(withdrawal);
     state.withdrawals.push(withdrawal);
     try { saveLocalState(); } catch (_) {}
     try { save(); } catch (_) {}
@@ -6842,6 +6842,14 @@ catch (_) { db = getFirestore(fbApp); }
 const storage = getStorage(fbApp);
 try { storage.maxUploadRetryTime = 12000; storage.maxOperationRetryTime = 12000; } catch (_) {}
 const functions = getFunctions(fbApp, "europe-west1");
+// Pont Firebase explicite pour les scripts classiques (les variables d'un module ne sont pas globales).
+window.sendWithdrawalToFirebase = async function(withdrawal) {
+  if (!auth.currentUser || !firebaseReady || adminMode) throw new Error("Firebase non connecté.");
+  if (withdrawal.userId !== auth.currentUser.uid) throw new Error("Compte Firebase incorrect.");
+  await setDoc(doc(db, "withdrawals", withdrawal.id), {
+    ...withdrawal, createdAt: serverTimestamp()
+  });
+};
 const createInvestmentCallable = httpsCallable(functions, "createInvestment");
 window.createInvestmentCallable = createInvestmentCallable;
 window.syncInvestmentToFirebase = async function(record) {
