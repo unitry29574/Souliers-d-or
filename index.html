@@ -5533,12 +5533,24 @@ function invest(i) {
       email: (current.email || "").toLowerCase()
     };
     try {
-      if (typeof window.createInvestmentCallable !== "function") {
-        throw new Error("Service d’investissement sécurisé indisponible.");
+      let created = null;
+      if (typeof window.createInvestmentCallable === "function") {
+        try {
+          const result = await window.createInvestmentCallable({ planIndex: i });
+          created = result && result.data && result.data.investment;
+        } catch (cfErr) {
+          console.warn("Cloud Function createInvestment indisponible, fallback client:", cfErr);
+        }
       }
-      const result = await window.createInvestmentCallable({ planIndex: i });
-      const created = result && result.data && result.data.investment;
-      if (!created || !created.id) throw new Error("Firebase n’a pas confirmé l’investissement.");
+      if (!created || !created.id) {
+        // Fallback client via helper exposé par le module (règles autorisent create status Actif)
+        if (!window.fbAuth || !window.fbAuth.currentUser) throw new Error("Session Firebase requise.");
+        if (typeof window.syncInvestmentToFirebase !== "function") {
+          throw new Error("Service d’écriture investissement indisponible.");
+        }
+        await window.syncInvestmentToFirebase(inv);
+        created = inv;
+      }
       Object.assign(inv, created);
       if (!inv.daily) inv.daily = p.daily;
       if (!inv.days) inv.days = p.days;
@@ -5548,6 +5560,13 @@ function invest(i) {
       if (!inv.userId) inv.userId = uidOf(current);
       if (!inv.created) inv.created = Date.now();
       if (!state.investments.some(x => x.id === inv.id)) state.investments.push(inv);
+      // Marquer hasInvestment sur le profil (autorisé par les règles)
+      try {
+        current.hasInvestment = true;
+        if (typeof window.fbUpdateOwnProfile === "function") {
+          await window.fbUpdateOwnProfile({ hasInvestment: true });
+        }
+      } catch (_) {}
       try { saveLocalState(); } catch (_) {}
       try { save(); } catch (_) {}
     } catch (err) {
@@ -5600,85 +5619,7 @@ function enter(user) {
   renderAll();
 }
 
-document.getElementById("registerForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  const name = document.getElementById("regName").value.trim();
-  const email = document.getElementById("regEmail").value.trim().toLowerCase();
-  const phone = document.getElementById("regPhone").value.trim();
-  const pass = document.getElementById("regPass").value;
-  const country = document.getElementById("regCountry").value;
-  if (pass.length < 6) { toast("Le mot de passe doit contenir au moins 6 caractères."); return; }
-  try {
-    const credential = await createUserWithEmailAndPassword(auth, email, pass);
-    await updateProfile(credential.user, { displayName: name });
-    const profile = profileFromForm(credential.user.uid, email);
-    profile.hasValidatedDeposit = false;
-    profile.hasInvestment = false;
-    // Bonus d'inscription : 500 FCFA crédités une seule fois au profil créé.
-    profile.registrationBonus = 500;
-    profile.registrationBonusGranted = true;
-    profile.missionRewardBalance = 500;
-    await setDoc(doc(db, "profiles", credential.user.uid), profile);
-    await loadOwnData(credential.user);
-    document.getElementById("welcomeMessage").textContent =
-      `Félicitations ${name} ! Votre inscription SOULIER D’OR est terminée.`;
-    document.getElementById("welcomeModal").style.display = "flex";
-    toast("Compte créé avec succès.");
-  } catch (err) {
-    console.error("Inscription Firebase:", err);
-    toast(err.code === "auth/email-already-in-use" ? "Cette adresse e-mail existe déjà."
-      : err.code === "auth/weak-password" ? "Mot de passe trop faible."
-      : "Inscription impossible : vérifiez Firebase Auth et les règles Firestore.");
-  }
-});
-
-document.getElementById("loginForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  const email = document.getElementById("loginEmail").value.trim().toLowerCase();
-  const pass = document.getElementById("loginPass").value;
-  try {
-    const credential = await signInWithEmailAndPassword(auth, email, pass);
-    if (credential.user.email?.toLowerCase() === ADMIN_EMAIL_FIREBASE) {
-      await loadAdminData();
-      showPage("admin");
-      return;
-    }
-    await loadOwnData(credential.user);
-  } catch (err) {
-    console.error("Connexion Firebase:", err);
-    const msg = (err && (err.message || err.code || "")).toString();
-    if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
-      toast("Email ou mot de passe incorrect.");
-    } else if (msg.includes("permission") || msg.includes("Permissions Firestore") || err.code === "permission-denied") {
-      toast("Permissions Firestore insuffisantes. Mettez à jour les Règles Firestore.");
-    } else {
-      toast("Connexion impossible : vérifiez Firebase Auth et les règles Firestore.");
-    }
-  }
-});
-
-document.getElementById("walletForm").addEventListener("submit", e => {
-  e.preventDefault();
-  if (!current) return;
-  current.walletMethod = document.getElementById("walletMethod").value;
-  current.walletPhone = document.getElementById("walletPhone").value.trim();
-  save();
-  toast("Portefeuille enregistré.");
-});
-
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  current = null;
-  adminOpen = false;
-  document.body.classList.add("auth-mode");
-  document.getElementById("auth").classList.remove("hidden");
-  document.getElementById("mainApp").classList.add("hidden");
-  document.getElementById("bottomNav").classList.add("hidden");
-  document.getElementById("sessionPill").textContent = "SOULIER D’OR";
-  document.getElementById("adminLoginBox").classList.add("hidden");
-  document.getElementById("adminPanel").classList.add("hidden");
-  switchAuth("register");
-  toast("Déconnexion effectuée.");
-});
+/* Handlers inscription/connexion/déconnexion gérés exclusivement par le module Firebase (évite ReferenceError) */
 
 let pendingDeposit = { country: "CI", phone: "", amount: 3000, method: "Wave" };
 const WAVE_CI_LINK = "https://pay.wave.com/m/M_ci_M32Pfr2sR-WA/c/ci/";
@@ -6117,8 +6058,9 @@ document.getElementById("withdrawForm").addEventListener("submit", async e => {
     status: "En attente", created: Date.now(), email: (current.email || "").toLowerCase()
   };
   try {
-    if (typeof window.sendWithdrawalToFirebase !== "function") throw new Error("Module Firebase non chargé.");
-    await window.sendWithdrawalToFirebase(withdrawal);
+    if (typeof window.syncWithdrawalToFirebase !== "function") throw new Error("Service de retrait indisponible.");
+    if (!window.isFirebaseReady?.() || !window.fbAuth?.currentUser) throw new Error("Firebase non connecté.");
+    await window.syncWithdrawalToFirebase(withdrawal);
     state.withdrawals.push(withdrawal);
     try { saveLocalState(); } catch (_) {}
     try { save(); } catch (_) {}
@@ -6435,7 +6377,8 @@ function chooseAdminMember(uid) {
   return members[pick - 1];
 }
 window.adminCreditMember = async function(uid) {
-  if (!adminMode || !firebaseReady || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
+  if (!adminMode || !window.isFirebaseReady?.() || !window.fbAuth?.currentUser ||
+      (window.fbAuth.currentUser.email || "").toLowerCase() !== (window.ADMIN_EMAIL_FIREBASE || "")) {
     fbToast("Accès administrateur Firebase requis."); return;
   }
   const member = chooseAdminMember(uid);
@@ -6446,17 +6389,16 @@ window.adminCreditMember = async function(uid) {
   const currentBalance = Number(member.missionRewardBalance || 0);
   const nextBalance = currentBalance + amount;
   try {
-    await setDoc(doc(db, "profiles", uid), {
+    await window.fbAdminWrite("profiles", uid, {
       missionRewardBalance: nextBalance,
       adminCreditUpdatedAt: Date.now()
-    }, { merge: true });
+    }, true);
     member.missionRewardBalance = nextBalance;
-    // Historique de crédit manuel
     const creditId = "admcredit_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    await setDoc(doc(db, "adminCredits", creditId), {
+    await window.fbAdminWrite("adminCredits", creditId, {
       id: creditId, userId: uid, amount, type: "Crédit administrateur",
-      createdAt: Date.now(), adminEmail: auth.currentUser.email
-    });
+      createdAt: Date.now(), adminEmail: window.fbAuth.currentUser.email
+    }, false);
     renderAdmin(); renderAll();
     fbToast(amount.toLocaleString("fr-FR") + " FCFA crédités au membre.");
   } catch (err) {
@@ -6466,7 +6408,8 @@ window.adminCreditMember = async function(uid) {
 };
 
 window.adminAssignVip = async function(uid) {
-  if (!adminMode || !firebaseReady || auth.currentUser?.email?.toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
+  if (!adminMode || !window.isFirebaseReady?.() || !window.fbAuth?.currentUser ||
+      (window.fbAuth.currentUser.email || "").toLowerCase() !== (window.ADMIN_EMAIL_FIREBASE || "")) {
     fbToast("Accès administrateur Firebase requis."); return;
   }
   const member = chooseAdminMember(uid);
@@ -6475,10 +6418,10 @@ window.adminAssignVip = async function(uid) {
   const plan = prompt("Plan VIP à attribuer (ex. VIP 3000, VIP 6000, VIP 12000) :", member.vipPlan || "VIP 3000");
   if (!plan || !plan.trim()) return;
   try {
-    await setDoc(doc(db, "profiles", uid), {
+    await window.fbAdminWrite("profiles", uid, {
       vipPlan: plan.trim(), vipActive: true, vipAssignedByAdmin: true,
       vipAssignedAt: Date.now()
-    }, { merge: true });
+    }, true);
     Object.assign(member, { vipPlan: plan.trim(), vipActive: true, vipAssignedByAdmin: true });
     renderAdmin(); renderAll();
     fbToast("VIP attribué à " + (member.email || "ce membre") + ".");
@@ -6489,6 +6432,10 @@ window.adminAssignVip = async function(uid) {
 };
 
 function review(type, itemId, approved) {
+  // Délègue à la version Firebase (module) si disponible
+  if (typeof window.review === "function" && window.review !== review) {
+    return window.review(type, itemId, approved);
+  }
   const arr = type === "deposit" ? state.deposits : state.withdrawals;
   const item = arr.find(x => x.id === itemId);
   if (!item) return;
@@ -6842,20 +6789,12 @@ catch (_) { db = getFirestore(fbApp); }
 const storage = getStorage(fbApp);
 try { storage.maxUploadRetryTime = 12000; storage.maxOperationRetryTime = 12000; } catch (_) {}
 const functions = getFunctions(fbApp, "europe-west1");
-// Pont Firebase explicite pour les scripts classiques (les variables d'un module ne sont pas globales).
-window.sendWithdrawalToFirebase = async function(withdrawal) {
-  if (!auth.currentUser || !firebaseReady || adminMode) throw new Error("Firebase non connecté.");
-  if (withdrawal.userId !== auth.currentUser.uid) throw new Error("Compte Firebase incorrect.");
-  await setDoc(doc(db, "withdrawals", withdrawal.id), {
-    ...withdrawal, createdAt: serverTimestamp()
-  });
-};
 const createInvestmentCallable = httpsCallable(functions, "createInvestment");
 window.createInvestmentCallable = createInvestmentCallable;
 window.syncInvestmentToFirebase = async function(record) {
   try {
-    if (!auth.currentUser || adminMode) return;
-    await setDoc(doc(db, "investments", record.id), {
+    if (!auth.currentUser || adminMode) throw new Error("Session membre requise.");
+    const payload = {
       id: record.id,
       userId: auth.currentUser.uid,
       plan: record.plan || "",
@@ -6863,12 +6802,52 @@ window.syncInvestmentToFirebase = async function(record) {
       price: Number(record.price)||0,
       daily: Number(record.daily)||0,
       days: Number(record.days)||0,
+      gain: Number(record.gain)||0,
+      total: Number(record.total)||0,
       status: record.status || "Actif",
       created: record.created || Date.now(),
-      createdAt: serverTimestamp(),
       email: (auth.currentUser.email||"").toLowerCase()
-    }, { merge: true });
-  } catch(e) { console.warn("syncInvestment", e); }
+    };
+    // create (sans merge) pour respecter hasOnly des règles
+    await setDoc(doc(db, "investments", record.id), { ...payload, createdAt: serverTimestamp() });
+    return payload;
+  } catch(e) {
+    console.warn("syncInvestment", e);
+    throw e;
+  }
+};
+window.fbUpdateOwnProfile = async function(fields) {
+  if (!auth.currentUser || adminMode) throw new Error("Session membre requise.");
+  const allowed = {};
+  for (const k of ["name","phone","country","walletMethod","walletPhone","missionLevel","missionRewardBalance","missionQualifiedCount","hasInvestment"]) {
+    if (k in fields) allowed[k] = fields[k];
+  }
+  if (!Object.keys(allowed).length) return;
+  await setDoc(doc(db, "profiles", auth.currentUser.uid), allowed, { merge: true });
+};
+window.syncWithdrawalToFirebase = async function(record) {
+  if (!auth.currentUser || adminMode) throw new Error("Session membre requise.");
+  const payload = {
+    id: record.id,
+    userId: auth.currentUser.uid,
+    amount: Number(record.amount) || 0,
+    fee: Number(record.fee) || 0,
+    net: Number(record.net) || 0,
+    method: record.method || "",
+    phone: record.phone || "",
+    status: "En attente",
+    created: record.created || Date.now(),
+    email: (auth.currentUser.email || "").toLowerCase()
+  };
+  await setDoc(doc(db, "withdrawals", record.id), { ...payload, createdAt: serverTimestamp() });
+  return payload;
+};
+window.fbAdminWrite = async function(col, id, fields, merge = true) {
+  if (!auth.currentUser || !adminMode || (auth.currentUser.email || "").toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
+    throw new Error("Session administrateur requise.");
+  }
+  if (merge) await setDoc(doc(db, col, id), fields, { merge: true });
+  else await setDoc(doc(db, col, id), fields);
 };
 window.firebaseAdminLogout = async function() {
   try { await signOut(auth); } catch (_) {}
@@ -6983,6 +6962,8 @@ function profileFromForm(uid, email) {
     registrationBonus: 500,
     registrationBonusGranted: true,
     missionRewardBalance: 500,
+    missionLevel: 1,
+    missionQualifiedCount: 0,
     walletMethod: "",
     walletPhone: ""
   };
@@ -7011,6 +6992,13 @@ async function loadOwnData(user) {
       email: user.email, phone: "", country: "CI",
       code: "UT" + uid.slice(0, 8).toUpperCase(),
       parentId: null, created: Date.now(), status: "Actif",
+      hasValidatedDeposit: false,
+      hasInvestment: false,
+      registrationBonus: 500,
+      registrationBonusGranted: true,
+      missionRewardBalance: 500,
+      missionLevel: 1,
+      missionQualifiedCount: 0,
       walletMethod: "", walletPhone: ""
     };
     await setDoc(doc(db, "profiles", uid), profile);
