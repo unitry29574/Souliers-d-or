@@ -4951,7 +4951,7 @@ hr,.divider{border-color:#765b14!important}
             <h3 style="margin:0">Tableau de bord administrateur</h3>
             <p class="small" style="margin:4px 0 0">Connecté en tant qu’administrateur</p>
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="secondary" onclick="refreshAdminDeposits()">↻ Actualiser</button><button type="button" class="danger" id="adminLogoutBtn" onclick="adminLogout()">Se déconnecter</button></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="success" onclick="document.getElementById('adminSendMoneySection').scrollIntoView({behavior:'smooth'});setTimeout(()=>document.getElementById('asmSearch').focus(),400)">💰 Envoyer argent</button><button type="button" class="secondary" onclick="refreshAdminDeposits()">↻ Actualiser</button><button type="button" class="danger" id="adminLogoutBtn" onclick="adminLogout()">Se déconnecter</button></div>
         </div>
         <div class="row">
           <div class="stat"><small>Clients</small><strong id="adminUsersCount">0</strong></div>
@@ -4959,11 +4959,33 @@ hr,.divider{border-color:#765b14!important}
           <div class="stat"><small>Retraits en attente</small><strong id="pendingWithdrawals">0</strong></div>
           <div class="stat"><small>Plans enregistrés</small><strong id="adminInvestCount">0</strong></div>
         </div>
+        <div class="section" id="adminSendMoneySection">
+          <h2 style="font-size:22px">💰 Envoyer de l’argent</h2>
+          <p style="margin:-4px 0 12px;font-size:16px;color:#f2cc82">Tapez le Gmail du client : il apparaît en grand juste en dessous.</p>
+          <input type="search" id="asmSearch" placeholder="🔍 Gmail du client…" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="asmSearch(this.value)" style="width:100%;min-height:62px;font-size:20px;font-weight:700;border-radius:16px;padding:12px 16px">
+          <div id="asmResults" style="margin-top:12px;display:flex;flex-direction:column;gap:10px"></div>
+          <div id="asmSelected" style="display:none;margin-top:14px;padding:16px;border:2px solid #d4a73a;border-radius:18px;background:#120e08">
+            <div style="font-size:13px;color:#a89878;text-transform:uppercase;letter-spacing:.5px">Destinataire</div>
+            <div id="asmSelEmail" style="font-size:22px;font-weight:900;word-break:break-all;margin:4px 0 2px;color:#fff"></div>
+            <div id="asmSelMeta" style="font-size:15px;color:#f2cc82"></div>
+            <label style="display:block;margin-top:14px;font-size:17px;font-weight:700">Montant à envoyer (FCFA)
+              <input type="number" id="asmAmount" inputmode="numeric" min="1" placeholder="Ex. 5000" style="width:100%;margin-top:8px;min-height:62px;font-size:24px;font-weight:800;border-radius:16px;padding:10px 16px">
+            </label>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">
+              <button type="button" class="secondary" style="padding:12px 16px;font-size:17px;border-radius:12px" onclick="document.getElementById('asmAmount').value=1000">1 000</button><button type="button" class="secondary" style="padding:12px 16px;font-size:17px;border-radius:12px" onclick="document.getElementById('asmAmount').value=2000">2 000</button><button type="button" class="secondary" style="padding:12px 16px;font-size:17px;border-radius:12px" onclick="document.getElementById('asmAmount').value=5000">5 000</button><button type="button" class="secondary" style="padding:12px 16px;font-size:17px;border-radius:12px" onclick="document.getElementById('asmAmount').value=10000">10 000</button><button type="button" class="secondary" style="padding:12px 16px;font-size:17px;border-radius:12px" onclick="document.getElementById('asmAmount').value=20000">20 000</button><button type="button" class="secondary" style="padding:12px 16px;font-size:17px;border-radius:12px" onclick="document.getElementById('asmAmount').value=50000">50 000</button>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:16px">
+              <button type="button" class="secondary" style="flex:1;min-height:58px;font-size:18px;border-radius:16px" onclick="asmClear()">Changer</button>
+              <button type="button" id="asmSendBtn" class="primary" style="flex:2;min-height:58px;font-size:20px;font-weight:900;border-radius:16px" onclick="asmSend()">Envoyer l’argent</button>
+            </div>
+          </div>
+        </div>
         <div class="section"><h2>Demandes de dépôt</h2><div id="adminDeposits" class="list"></div></div>
         <div class="section"><h2>Demandes de retrait</h2><div id="adminWithdrawals" class="list"></div></div>
         <div class="section">
           <h2>Clients & parrainage</h2>
           <p class="small" style="margin:-6px 0 10px;color:var(--muted)">Parrain · parent investi · filleuls · investissements · ban</p>
+          <input type="search" id="adminUserSearch" placeholder="🔍 Rechercher un Gmail, téléphone ou code…" oninput="filterAdminUsers(this.value)" style="width:100%;margin:0 0 10px;min-height:44px;border-radius:12px;padding:10px 14px">
           <div id="adminUsers" class="list"></div>
         </div>
         <div class="section">
@@ -5242,6 +5264,73 @@ const COUNTRIES = {
   ML: "🇲🇱 Mali"
 };
 
+// ===== Règles de numéros par pays (numéro national, sans l'indicatif) =====
+const PHONE_RULES = {
+  CI: { name: "Côte d’Ivoire", adj: "ivoirien",   dial: "225", len: 10, starts: ["01","05","07"], groups: [2,2,2,2,2], example: "05 75 41 98 00" },
+  BJ: { name: "Bénin",         adj: "béninois",   dial: "229", len: 10, starts: ["01"],           groups: [2,2,2,2,2], example: "01 97 12 34 56" },
+  BF: { name: "Burkina Faso",  adj: "burkinabè",  dial: "226", len: 8,  starts: ["5","6","7"],    groups: [2,2,2,2],   example: "70 12 34 56" },
+  CM: { name: "Cameroun",      adj: "camerounais",dial: "237", len: 9,  starts: ["6"],            groups: [1,2,2,2,2], example: "6 71 23 45 67" },
+  SN: { name: "Sénégal",       adj: "sénégalais", dial: "221", len: 9,  starts: ["7"],            groups: [2,3,2,2],   example: "77 123 45 67" },
+  ML: { name: "Mali",          adj: "malien",     dial: "223", len: 8,  starts: ["5","6","7","8","9"], groups: [2,2,2,2], example: "70 12 34 56" }
+};
+function phoneNationalDigits(country, raw) {
+  const r = PHONE_RULES[country];
+  let d = String(raw || "").replace(/[^\d]/g, "");
+  if (!r) return d;
+  if (/^\s*\+/.test(String(raw)) || /^\s*00/.test(String(raw))) {
+    if (String(raw).trim().startsWith("00")) d = d.slice(2);
+    if (d.startsWith(r.dial)) d = d.slice(r.dial.length);
+  }
+  return d;
+}
+function formatPhoneByRule(country, digits) {
+  const r = PHONE_RULES[country]; if (!r) return digits;
+  const out = []; let i = 0;
+  for (const g of r.groups) { out.push(digits.slice(i, i + g)); i += g; }
+  return out.filter(Boolean).join(" ");
+}
+// Retourne { ok, value, message }
+window.validateCountryPhone = function(country, raw) {
+  const r = PHONE_RULES[country];
+  if (!r) return { ok: false, message: "Choisissez d’abord votre pays." };
+  const d = phoneNationalDigits(country, raw);
+  const fail = "Numéro invalide pour " + r.name + ". Entrez un vrai numéro " + r.adj + " de " + r.len + " chiffres (ex. " + r.example + ").";
+  if (d.length !== r.len) return { ok: false, message: fail };
+  if (!r.starts.some(st => d.startsWith(st))) return { ok: false, message: fail };
+  return { ok: true, value: formatPhoneByRule(country, d), digits: d };
+};
+(function wireRegisterPhone() {
+  const sel = document.getElementById("regCountry"), inp = document.getElementById("regPhone");
+  if (!sel || !inp) return;
+  let hint = document.getElementById("regPhoneHint");
+  if (!hint) {
+    hint = document.createElement("div");
+    hint.id = "regPhoneHint";
+    hint.style.cssText = "font-size:12px;color:#a89878;margin-top:6px";
+    inp.insertAdjacentElement("afterend", hint);
+  }
+  inp.setAttribute("inputmode", "tel");
+  function refresh() {
+    const r = PHONE_RULES[sel.value]; if (!r) return;
+    inp.placeholder = "Ex. " + r.example;
+    hint.textContent = "Numéro " + r.adj + " : " + r.len + " chiffres, commence par " + r.starts.join(", ") + ".";
+    sanitize();
+  }
+  function sanitize() {
+    const r = PHONE_RULES[sel.value]; if (!r) return;
+    let v = inp.value.replace(/[^\d+\s]/g, "");
+    const hasPrefix = /^\s*(\+|00)/.test(v);
+    if (!hasPrefix) {
+      const d = v.replace(/\D/g, "").slice(0, r.len);
+      v = formatPhoneByRule(sel.value, d);
+    }
+    if (v !== inp.value) inp.value = v;
+  }
+  sel.addEventListener("change", refresh);
+  inp.addEventListener("input", sanitize);
+  refresh();
+})();
+
 const PLANS = [
   { name: "VIP 1", price: 4000, gain: 1000, total: 60000, days: 60, daily: 1000, img: 0, tag: "VIP 1" },
   { name: "VIP 2", price: 7000, gain: 1750, total: 105000, days: 60, daily: 1750, img: 1, tag: "VIP 2" },
@@ -5505,7 +5594,7 @@ function invest(i) {
   if (window.vipPlanLocks?.[i]) { toast("Ce plan VIP est temporairement verrouillé par l’administrateur."); return; }
   const myDep = state.deposits.filter(x => matchesUser(x, current) && x.status === "Validé");
   const depOk = myDep.reduce((s, x) => s + Number(x.amount || 0), 0);
-  const spent = state.investments.filter(x => matchesUser(x, current) && String(x.status || "").startsWith("Actif")).reduce((s, x) => s + Number(x.price || 0), 0);
+  const spent = state.investments.filter(x => matchesUser(x, current) && !x.adminGranted && String(x.status || "").startsWith("Actif")).reduce((s, x) => s + Number(x.price || 0), 0);
   const available = Math.max(0, depOk - spent);
   if (depOk <= 0) {
     toast("Faites d’abord un dépôt validé avant d’investir.");
@@ -6007,15 +6096,18 @@ document.getElementById("withdrawForm").addEventListener("submit", async e => {
     return;
   }
   // Aucun retrait sans dépôt validé
+  // Argent ou VIP envoyé par l'administrateur = retirable sans dépôt préalable
+  const adminGifted = !!current.adminCreditUpdatedAt || !!current.vipAssignedByAdmin
+    || state.investments.some(x => matchesUser(x, current) && x.adminGranted);
   const hasDeposit = state.deposits.some(x => matchesUser(x, current) && x.status === "Validé")
-    || !!current.hasValidatedDeposit;
+    || !!current.hasValidatedDeposit || adminGifted;
   if (!hasDeposit) {
     toast("Aucun dépôt validé. Effectuez et validez un dépôt avant tout retrait.");
     showPage("deposit");
     return;
   }
   const hasInvest = state.investments.some(x => matchesUser(x, current) && String(x.status || "").startsWith("Actif"));
-  if (!hasInvest) {
+  if (!hasInvest && !adminGifted) {
     toast("Aucun robot VIP actif. Activez un plan avant de demander un retrait.");
     showPage("invest");
     return;
@@ -6136,7 +6228,7 @@ function renderAll() {
 
   document.getElementById("balance").textContent = money(Math.max(0, earned));
   const depOk = myDep.filter(x => x.status === "Validé").reduce((s, x) => s + x.amount, 0);
-  const spent = myInv.filter(x => String(x.status || "").startsWith("Actif")).reduce((s, x) => s + Number(x.price || 0), 0);
+  const spent = myInv.filter(x => !x.adminGranted && String(x.status || "").startsWith("Actif")).reduce((s, x) => s + Number(x.price || 0), 0);
   document.getElementById("depBalance").textContent = money(Math.max(0, depOk - spent));
   document.getElementById("activeInvestments").textContent = myInv.filter(x => x.status.startsWith("Actif")).length;
   document.getElementById("referrals").textContent = children.length;
@@ -6337,8 +6429,8 @@ function renderAdmin() {
             </div>
             <div class="ac-actions">
               ${statusBtns}
-              <button class="success" onclick="adminCreditMember()">💰 Envoyer argent</button>
-              <button class="secondary" onclick="adminAssignVip()">👑 Envoyer VIP</button>
+              <button class="success" onclick="adminCreditMember('${uid}')">💰 Envoyer argent</button>
+              <button class="secondary" onclick="adminAssignVip('${uid}')">👑 Envoyer plan VIP</button>
             </div>
           </div>`;
       }).join("");
@@ -6367,68 +6459,238 @@ function renderAdmin() {
 }
 
 
-function chooseAdminMember(uid) {
-  if (uid) return state.users.find(u => String(u.uid || u.id) === String(uid));
-  const members = state.users.filter(u => u.uid || u.id);
-  if (!members.length) { fbToast("Aucun membre disponible."); return null; }
-  const menu = members.map((u, i) => `${i + 1}. ${u.email || u.phone || u.uid || u.id}`).join("\n");
-  const pick = Number(prompt("Sélectionnez le membre à qui envoyer :\n" + menu));
-  if (!Number.isInteger(pick) || pick < 1 || pick > members.length) return null;
-  return members[pick - 1];
-}
-window.adminCreditMember = async function(uid) {
+// ===== Recherche dans la liste des clients =====
+window.filterAdminUsers = function(q) {
+  q = String(q || "").trim().toLowerCase();
+  document.querySelectorAll("#adminUsers .admin-client-card").forEach(card => {
+    card.style.display = !q || card.textContent.toLowerCase().includes(q) ? "" : "none";
+  });
+};
+
+// ===== Fenêtre admin : Envoyer argent / Envoyer plan VIP (membre déjà choisi) =====
+function adminGuardOk() {
   if (!adminMode || !window.isFirebaseReady?.() || !window.fbAuth?.currentUser ||
       (window.fbAuth.currentUser.email || "").toLowerCase() !== (window.ADMIN_EMAIL_FIREBASE || "")) {
-    fbToast("Accès administrateur Firebase requis."); return;
+    fbToast("Accès administrateur Firebase requis."); return false;
   }
-  const member = chooseAdminMember(uid);
+  return true;
+}
+let adminActionState = { member: null, mode: "money", planIndex: null };
+function ensureAdminActionModal() {
+  let el = document.getElementById("adminActionModal");
+  if (el) return el;
+  el = document.createElement("div");
+  el.id = "adminActionModal";
+  el.className = "confirm-overlay";
+  el.innerHTML = `
+    <div class="confirm-box" style="max-height:92vh;overflow:auto;text-align:left">
+      <div id="aamEmail" style="font-weight:800;font-size:15px;word-break:break-all;text-align:center"></div>
+      <div id="aamMeta" class="small" style="text-align:center;margin:4px 0 12px;color:#a89878"></div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button type="button" id="aamTabMoney" style="flex:1;min-height:44px;border-radius:12px" onclick="adminActionSetMode('money')">💰 Envoyer de l’argent</button>
+        <button type="button" id="aamTabVip" style="flex:1;min-height:44px;border-radius:12px" onclick="adminActionSetMode('vip')">👑 Envoyer un plan VIP</button>
+      </div>
+      <div id="aamMoney">
+        <label style="display:block">Montant à envoyer (FCFA, sans frais)
+          <input type="number" id="aamAmount" inputmode="numeric" min="1" placeholder="Ex. 5000" style="width:100%;margin-top:6px;min-height:48px;font-size:16px;border-radius:14px">
+        </label>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+          ${[1000,2000,5000,10000,20000,50000].map(a => `<button type="button" class="secondary" style="padding:8px 12px;border-radius:10px" onclick="document.getElementById('aamAmount').value=${a}">${a.toLocaleString("fr-FR")}</button>`).join("")}
+        </div>
+      </div>
+      <div id="aamVip" style="display:none">
+        <div style="font-size:13px;margin-bottom:8px">Choisissez directement le montant du plan :</div>
+        <div id="aamPlans" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+        <div id="aamPlanInfo" class="small" style="margin-top:10px;color:#f2cc82;min-height:18px"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button type="button" class="secondary" style="flex:1;min-height:48px;border-radius:14px" onclick="adminActionClose()">Annuler</button>
+        <button type="button" id="aamSubmit" class="primary" style="flex:1.4;min-height:48px;border-radius:14px;font-weight:900" onclick="adminActionSubmit()">Envoyer</button>
+      </div>
+    </div>`;
+  el.addEventListener("click", e => { if (e.target === el) adminActionClose(); });
+  document.body.appendChild(el);
+  return el;
+}
+window.adminActionClose = function() {
+  const el = document.getElementById("adminActionModal");
+  if (el) el.style.display = "none";
+};
+window.adminActionSetMode = function(mode) {
+  adminActionState.mode = mode;
+  document.getElementById("aamMoney").style.display = mode === "money" ? "block" : "none";
+  document.getElementById("aamVip").style.display = mode === "vip" ? "block" : "none";
+  document.getElementById("aamTabMoney").className = mode === "money" ? "primary" : "secondary";
+  document.getElementById("aamTabVip").className = mode === "vip" ? "primary" : "secondary";
+  document.getElementById("aamSubmit").textContent = mode === "money" ? "Envoyer l’argent" : "Envoyer le plan VIP";
+};
+window.adminActionPickPlan = function(i) {
+  adminActionState.planIndex = i;
+  const p = PLANS[i];
+  document.querySelectorAll("#aamPlans button").forEach(b => {
+    b.className = Number(b.dataset.i) === i ? "primary" : "secondary";
+  });
+  document.getElementById("aamPlanInfo").textContent = p.name + " : " + money(p.price) + " • " + money(p.daily) + "/jour pendant " + p.days + " jours";
+};
+function adminActionOpen(uid, mode) {
+  if (!adminGuardOk()) return;
+  const member = state.users.find(u => String(u.uid || u.id) === String(uid));
+  if (!member) { fbToast("Membre introuvable. Rechargez l’espace admin."); return; }
+  const el = ensureAdminActionModal();
+  adminActionState = { member, mode, planIndex: null };
+  document.getElementById("aamEmail").textContent = member.email || "—";
+  document.getElementById("aamMeta").textContent = [member.phone, COUNTRIES[member.country] || member.country].filter(Boolean).join(" · ");
+  document.getElementById("aamAmount").value = "";
+  document.getElementById("aamPlanInfo").textContent = "";
+  document.getElementById("aamPlans").innerHTML = PLANS.map((p, i) =>
+    `<button type="button" class="secondary" data-i="${i}" style="min-height:46px;border-radius:12px;font-weight:800" onclick="adminActionPickPlan(${i})">${escapeHtml(p.name)}<br><span style="font-weight:600;font-size:12px">${money(p.price)}</span></button>`).join("");
+  adminActionSetMode(mode);
+  el.style.display = "flex";
+}
+window.adminCreditMember = function(uid) { adminActionOpen(uid, "money"); };
+window.adminAssignVip = function(uid) { adminActionOpen(uid, "vip"); };
+
+window.adminResultPopup = function(ok, title, message) {
+  let el = document.getElementById("adminResultModal");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "adminResultModal";
+    el.className = "confirm-overlay";
+    el.style.zIndex = "10001";
+    el.innerHTML = `<div class="confirm-box" style="text-align:center">
+      <div id="arIcon" style="font-size:54px;line-height:1"></div>
+      <h2 id="arTitle" style="margin:10px 0 8px"></h2>
+      <p id="arMsg" style="word-break:break-word"></p>
+      <button type="button" class="primary" style="min-height:48px;border-radius:14px;font-weight:900" onclick="document.getElementById('adminResultModal').style.display='none'">OK</button>
+    </div>`;
+    document.body.appendChild(el);
+  }
+  document.getElementById("arIcon").textContent = ok ? "🎉" : "❌";
+  document.getElementById("arTitle").textContent = title;
+  document.getElementById("arTitle").style.color = ok ? "#2ecc71" : "#ff8797";
+  document.getElementById("arMsg").textContent = message;
+  el.style.display = "flex";
+};
+
+window.adminActionSubmit = async function() {
+  if (!adminGuardOk()) return;
+  const { member, mode } = adminActionState;
   if (!member) return;
-  uid = String(member.uid || member.id);
-  const amount = Number(prompt("Montant sans frais à envoyer en FCFA pour " + (member.email || uid) + " :"));
-  if (!Number.isFinite(amount) || amount <= 0) { fbToast("Montant invalide."); return; }
-  const currentBalance = Number(member.missionRewardBalance || 0);
-  const nextBalance = currentBalance + amount;
+  const uid = String(member.uid || member.id);
+  const btn = document.getElementById("aamSubmit");
+  if (mode === "money") {
+    const amount = Number(document.getElementById("aamAmount").value);
+    if (!Number.isFinite(amount) || amount <= 0) { fbToast("Montant invalide."); return; }
+    const nextBalance = Number(member.missionRewardBalance || 0) + amount;
+    btn.disabled = true;
+    try {
+      await window.fbAdminWrite("profiles", uid, { missionRewardBalance: nextBalance, adminCreditUpdatedAt: Date.now() }, true);
+      member.missionRewardBalance = nextBalance;
+      const creditId = "admcredit_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+      await window.fbAdminWrite("adminCredits", creditId, {
+        id: creditId, userId: uid, amount, type: "Crédit administrateur",
+        createdAt: Date.now(), adminEmail: window.fbAuth.currentUser.email
+      }, false);
+      adminActionClose(); renderAdmin(); renderAll();
+      adminResultPopup(true, "Félicitations !", "Vous avez envoyé " + amount.toLocaleString("fr-FR") + " FCFA à " + (member.email || "ce client") + ".");
+    } catch (err) {
+      console.error("Crédit admin:", err);
+      adminResultPopup(false, "Envoi non effectué", "L’argent n’est pas parti vers " + (member.email || "ce client") + ". " + (err.message || "Vérifiez les règles Firestore et réessayez."));
+    } finally { btn.disabled = false; }
+    return;
+  }
+  // mode VIP
+  const i = adminActionState.planIndex;
+  const p = PLANS[i];
+  if (!p) { adminResultPopup(false, "Plan non choisi", "Choisissez d’abord le montant du plan VIP."); return; }
+  btn.disabled = true;
   try {
+    const inv = {
+      id: "inv_adm_" + Date.now().toString(36) + Math.random().toString(36).slice(2,6),
+      userId: uid, plan: p.name, planIndex: i, price: p.price, daily: p.daily,
+      days: p.days, gain: p.gain, total: p.total, status: "Actif",
+      created: Date.now(), email: (member.email || "").toLowerCase(),
+      adminGranted: true, grantedBy: window.fbAuth.currentUser.email
+    };
+    await window.fbAdminWrite("investments", inv.id, { ...inv, createdAt: Date.now() }, false);
     await window.fbAdminWrite("profiles", uid, {
-      missionRewardBalance: nextBalance,
-      adminCreditUpdatedAt: Date.now()
+      hasInvestment: true, vipPlan: p.name, vipActive: true,
+      vipAssignedByAdmin: true, vipAssignedAt: Date.now()
     }, true);
+    Object.assign(member, { hasInvestment: true, vipPlan: p.name, vipActive: true, vipAssignedByAdmin: true });
+    state.investments.push(inv);
+    adminActionClose(); renderAdmin(); renderAll();
+    adminResultPopup(true, "Félicitations !", "Vous avez envoyé un " + p.name + " (" + money(p.price) + ") à " + (member.email || "ce client") + ".");
+  } catch (err) {
+    console.error("Attribution VIP:", err);
+    adminResultPopup(false, "Envoi non effectué", "Le " + p.name + " n’est pas parti vers " + (member.email || "ce client") + ". " + (err.message || "Vérifiez les règles Firestore et réessayez."));
+  } finally { btn.disabled = false; }
+};
+
+// ===== Menu admin : rechercher un client par Gmail et lui envoyer de l'argent =====
+let asmMember = null;
+window.asmSearch = function(q) {
+  q = String(q || "").trim().toLowerCase();
+  const box = document.getElementById("asmResults");
+  if (!box) return;
+  asmMember = null;
+  document.getElementById("asmSelected").style.display = "none";
+  if (!q) { box.innerHTML = ""; return; }
+  const found = state.users.filter(u => String(u.email || "").toLowerCase().includes(q)).slice(0, 8);
+  if (!found.length) {
+    box.innerHTML = `<div style="padding:16px;font-size:17px;border-radius:14px;background:#1c1208;color:#ff8797">Aucun client trouvé avec « ${escapeHtml(q)} ». Essayez ↻ Actualiser.</div>`;
+    return;
+  }
+  box.innerHTML = found.map(u => {
+    const uid = String(u.uid || u.id);
+    return `<button type="button" onclick="asmPick('${uid}')" style="text-align:left;width:100%;padding:16px;border-radius:16px;border:2px solid #5a4620;background:#1a140a;color:#fff;cursor:pointer">
+      <div style="font-size:21px;font-weight:900;word-break:break-all">${escapeHtml(u.email || "—")}</div>
+      <div style="font-size:15px;color:#f2cc82;margin-top:4px">${escapeHtml(u.phone || "")} ${COUNTRIES[u.country] || u.country || ""} · Solde bonus : ${money(Number(u.missionRewardBalance || 0))}</div>
+    </button>`;
+  }).join("");
+};
+window.asmPick = function(uid) {
+  const m = state.users.find(u => String(u.uid || u.id) === String(uid));
+  if (!m) { fbToast("Client introuvable. Actualisez."); return; }
+  asmMember = m;
+  document.getElementById("asmResults").innerHTML = "";
+  document.getElementById("asmSearch").value = m.email || "";
+  document.getElementById("asmSelEmail").textContent = m.email || "—";
+  document.getElementById("asmSelMeta").textContent = [m.phone, COUNTRIES[m.country] || m.country, "Solde bonus : " + money(Number(m.missionRewardBalance || 0))].filter(Boolean).join(" · ");
+  document.getElementById("asmAmount").value = "";
+  document.getElementById("asmSelected").style.display = "block";
+  document.getElementById("asmAmount").focus();
+};
+window.asmClear = function() {
+  asmMember = null;
+  document.getElementById("asmSelected").style.display = "none";
+  document.getElementById("asmResults").innerHTML = "";
+  const i = document.getElementById("asmSearch"); i.value = ""; i.focus();
+};
+window.asmSend = async function() {
+  if (!adminGuardOk()) return;
+  const member = asmMember;
+  if (!member) { fbToast("Choisissez d’abord un client."); return; }
+  const amount = Number(document.getElementById("asmAmount").value);
+  if (!Number.isFinite(amount) || amount <= 0) { fbToast("Montant invalide."); return; }
+  const uid = String(member.uid || member.id);
+  const btn = document.getElementById("asmSendBtn");
+  const nextBalance = Number(member.missionRewardBalance || 0) + amount;
+  btn.disabled = true;
+  try {
+    await window.fbAdminWrite("profiles", uid, { missionRewardBalance: nextBalance, adminCreditUpdatedAt: Date.now() }, true);
     member.missionRewardBalance = nextBalance;
     const creditId = "admcredit_" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
     await window.fbAdminWrite("adminCredits", creditId, {
       id: creditId, userId: uid, amount, type: "Crédit administrateur",
       createdAt: Date.now(), adminEmail: window.fbAuth.currentUser.email
     }, false);
-    renderAdmin(); renderAll();
-    fbToast(amount.toLocaleString("fr-FR") + " FCFA crédités au membre.");
+    asmClear(); renderAdmin(); renderAll();
+    adminResultPopup(true, "Félicitations !", "Vous avez envoyé " + amount.toLocaleString("fr-FR") + " FCFA à " + (member.email || "ce client") + ".");
   } catch (err) {
-    console.error("Crédit admin:", err);
-    fbToast("Échec du crédit Firebase : " + (err.message || "vérifiez les règles Firestore"));
-  }
-};
-
-window.adminAssignVip = async function(uid) {
-  if (!adminMode || !window.isFirebaseReady?.() || !window.fbAuth?.currentUser ||
-      (window.fbAuth.currentUser.email || "").toLowerCase() !== (window.ADMIN_EMAIL_FIREBASE || "")) {
-    fbToast("Accès administrateur Firebase requis."); return;
-  }
-  const member = chooseAdminMember(uid);
-  if (!member) return;
-  uid = String(member.uid || member.id);
-  const plan = prompt("Plan VIP à attribuer (ex. VIP 3000, VIP 6000, VIP 12000) :", member.vipPlan || "VIP 3000");
-  if (!plan || !plan.trim()) return;
-  try {
-    await window.fbAdminWrite("profiles", uid, {
-      vipPlan: plan.trim(), vipActive: true, vipAssignedByAdmin: true,
-      vipAssignedAt: Date.now()
-    }, true);
-    Object.assign(member, { vipPlan: plan.trim(), vipActive: true, vipAssignedByAdmin: true });
-    renderAdmin(); renderAll();
-    fbToast("VIP attribué à " + (member.email || "ce membre") + ".");
-  } catch (err) {
-    console.error("Attribution VIP:", err);
-    fbToast("Échec VIP Firebase : " + (err.message || "vérifiez les règles Firestore"));
-  }
+    console.error("Envoi argent admin:", err);
+    adminResultPopup(false, "Envoi non effectué", "L’argent n’est pas parti vers " + (member.email || "ce client") + ". " + (err.message || "Vérifiez les règles Firestore."));
+  } finally { btn.disabled = false; }
 };
 
 function review(type, itemId, approved) {
@@ -7292,6 +7554,13 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     fbToast("Vérifie les champs. Le mot de passe doit contenir au moins 6 caractères.");
     return;
   }
+  const phoneCheck = window.validateCountryPhone(country, phone);
+  if (!phoneCheck.ok) {
+    fbToast(phoneCheck.message);
+    document.getElementById("regPhone").focus();
+    return;
+  }
+  document.getElementById("regPhone").value = phoneCheck.value;
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, pass);
     await updateProfile(cred.user, { displayName: name });
