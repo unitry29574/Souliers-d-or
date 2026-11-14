@@ -4980,6 +4980,12 @@ hr,.divider{border-color:#765b14!important}
             </div>
           </div>
         </div>
+        <div class="section" id="adminCommissionsSection">
+          <h2>🤝 Commissions de parrainage</h2>
+          <p class="small" style="margin:-6px 0 10px;color:var(--muted)">20 % du premier investissement de chaque filleul, versé une seule fois au parrain.</p>
+          <button type="button" class="primary" onclick="adminCommissionsPreview()">Calculer les commissions à verser</button>
+          <div id="adminCommissionsBox" style="margin-top:12px"></div>
+        </div>
         <div class="section"><h2>Demandes de dépôt</h2><div id="adminDeposits" class="list"></div></div>
         <div class="section"><h2>Demandes de retrait</h2><div id="adminWithdrawals" class="list"></div></div>
         <div class="section">
@@ -5621,33 +5627,12 @@ function invest(i) {
       created: Date.now(),
       email: (current.email || "").toLowerCase()
     };
-    // SECOURS TEMPORAIRE : tant que la Cloud Function createInvestment plante, on laisse investir
-    // en écriture directe (les commissions seront rattrapées par le script). Passer à false une fois la fonction réparée.
-    const ALLOW_INVEST_FALLBACK = true;
+    // Investissement direct (fiable). Les commissions de parrainage sont versées depuis le panneau admin.
     try {
-      let created = null;
-      if (typeof window.createInvestmentCallable === "function") {
-        try {
-          const result = await window.createInvestmentCallable({ planIndex: i });
-          created = result && result.data && result.data.investment;
-        } catch (cfErr) {
-          console.error("Cloud Function createInvestment en échec:", cfErr);
-          if (!ALLOW_INVEST_FALLBACK) {
-            throw new Error((cfErr && cfErr.message) ? cfErr.message : "Le service d’investissement est momentanément indisponible. Réessayez dans quelques minutes.");
-          }
-        }
-      }
-      if (!created || !created.id) {
-        if (!ALLOW_INVEST_FALLBACK) {
-          throw new Error("Le service d’investissement est momentanément indisponible. Réessayez dans quelques minutes.");
-        }
-        if (!window.fbAuth || !window.fbAuth.currentUser) throw new Error("Session Firebase requise.");
-        if (typeof window.syncInvestmentToFirebase !== "function") {
-          throw new Error("Service d’écriture investissement indisponible.");
-        }
-        await window.syncInvestmentToFirebase(inv);
-        created = inv;
-      }
+      if (!window.fbAuth || !window.fbAuth.currentUser) throw new Error("Session Firebase requise. Reconnectez-vous.");
+      if (typeof window.syncInvestmentToFirebase !== "function") throw new Error("Service d’investissement indisponible.");
+      await window.syncInvestmentToFirebase(inv);
+      const created = inv;
       Object.assign(inv, created);
       if (!inv.daily) inv.daily = p.daily;
       if (!inv.days) inv.days = p.days;
@@ -6315,6 +6300,7 @@ function renderAll() {
         <b>${escapeHtml(u.name || u.email || "Filleul")}</b>
         <div class="small">${escapeHtml(u.email || "")}</div>
         <div class="small">Code ${escapeHtml(u.code || "")} • ${COUNTRIES[u.country] || u.country || ""}${u.created ? " • " + new Date(u.created).toLocaleDateString("fr-FR") : ""}</div>
+        <div class="small" style="color:#f2cc82;font-weight:700">${(() => { const cm = (window.__myCommissions || []).find(c => c.childUid === u.id); return cm ? "Commission reçue : " + money(cm.amount) + " ✓" : "Commission : en attente du 1er investissement"; })()}</div>
       </div>
       <span class="badge">${u.status}</span>
     </div>
@@ -7035,7 +7021,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 import {
   getFirestore, initializeFirestore, doc, getDoc, setDoc, getDocs, collection, query, where,
-  serverTimestamp
+  serverTimestamp, runTransaction
 } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
 import {
   getStorage, ref as storageRef, uploadBytes, getDownloadURL
@@ -7266,6 +7252,10 @@ window.loadMyReferrals = async function () {
     if (!current || !current.code) return;
     const snap = await getDocs(query(collection(db, "referrals"), where("parentCode", "==", String(current.code).toUpperCase())));
     window.__myReferrals = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    try {
+      const cs = await getDocs(query(collection(db, "commissions"), where("parentUid", "==", auth.currentUser.uid)));
+      window.__myCommissions = cs.docs.map(d => ({ ...d.data(), id: d.id }));
+    } catch (_) { window.__myCommissions = []; }
     if (typeof renderAll === "function") renderAll();
   } catch (e) { console.warn("Lecture des filleuls:", e); }
 };
@@ -7419,10 +7409,107 @@ async function loadAdminData() {
   document.getElementById("adminPanel").classList.remove("hidden");
   renderAll();
   renderAdmin();
+  setTimeout(() => { try { window.adminCommissionsPreview(); } catch (_) {} }, 600);
   if (errors.length) {
     fbToast("Chargement partiel : " + errors.join(" | ") + ". Vérifiez les règles Firestore.");
   }
 }
+// ===== Commissions de parrainage : niveau 1, 20 %, UNE SEULE FOIS par filleul =====
+function computeCommissionRows(users, refs, paidIds, investments, plans) {
+  const refByChild = new Map(refs.map(r => [String(r.childUid || r.id), r]));
+  const byCode = new Map(users.map(u => [String(u.code || "").toUpperCase(), u]));
+  const rows = [];
+  for (const child of users) {
+    const childUid = String(child.uid || child.id);
+    if (paidIds.has(childUid + "_L1")) continue;
+    const r = refByChild.get(childUid);
+    const code = String((r && r.parentCode) || child.referralCodeEntered || "").toUpperCase();
+    if (!code) continue;
+    const parent = byCode.get(code);
+    if (!parent) continue;
+    const parentUid = String(parent.uid || parent.id);
+    if (parentUid === childUid || parent.status === "Banni") continue;
+    const first = investments
+      .filter(i => String(i.userId) === childUid && !i.adminGranted && i.status !== "Annulé" && i.status !== "Supprimé")
+      .sort((a, b) => (a.created || 0) - (b.created || 0))[0];
+    if (!first) continue;
+    const plan = plans[first.planIndex];
+    const ok = !!plan && plan.price === Number(first.price);
+    const base = plan ? plan.price : Number(first.price) || 0;
+    const amount = Math.round(base * 0.20);
+    if (!(amount > 0)) continue;
+    rows.push({ key: childUid, childUid, parentUid, parentEmail: parent.email || "", childEmail: child.email || "",
+      plan: first.plan || "", base, amount, invId: first.id, ok });
+  }
+  return rows;
+}
+window.adminCommissionsPreview = async function() {
+  const box = document.getElementById("adminCommissionsBox");
+  if (!box) return;
+  if (!adminMode || !auth.currentUser || (auth.currentUser.email || "").toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
+    fbToast("Accès administrateur Firebase requis."); return;
+  }
+  box.innerHTML = '<div class="small">Calcul en cours…</div>';
+  try {
+    const refs = await restList("referrals");
+    let comms = []; try { comms = await restList("commissions"); } catch (_) {}
+    const rows = computeCommissionRows(state.users, refs, new Set(comms.map(c => c.id)), state.investments, PLANS);
+    window.__commRows = rows;
+    if (!rows.length) { box.innerHTML = '<div class="empty">Aucune commission en attente. Tout est à jour ✅</div>'; return; }
+    const total = rows.filter(r => r.ok).reduce((s, r) => s + r.amount, 0);
+    box.innerHTML = rows.map(r => `
+      <label class="item" style="cursor:pointer;align-items:flex-start">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <input type="checkbox" id="comm_${escapeHtml(r.key)}" ${r.ok ? "checked" : ""} style="min-height:auto;width:20px;height:20px;margin-top:3px">
+          <div>
+            <b>${escapeHtml(r.parentEmail)}</b> reçoit <b style="color:#f2cc82">${money(r.amount)}</b>
+            <div class="small">Filleul : ${escapeHtml(r.childEmail)} · ${escapeHtml(r.plan)} (${money(r.base)})</div>
+            ${r.ok ? "" : '<div class="small" style="color:#ff8797">⚠ Montant de l’investissement incohérent avec le plan : vérifiez avant de cocher.</div>'}
+          </div>
+        </div>
+      </label>`).join("") +
+      `<div class="small" style="margin:10px 0">Total proposé : <b>${money(total)}</b>. Décochez les parrains déjà payés à la main.</div>
+       <button type="button" class="success" style="width:100%;min-height:52px;font-size:16px" onclick="adminCommissionsPay()">✅ Verser les commissions cochées</button>`;
+  } catch (e) {
+    console.error("Commissions:", e);
+    box.innerHTML = '<div class="empty">Calcul impossible : ' + escapeHtml(e.message || "erreur") + '. Vérifiez les règles Firestore (collection commissions).</div>';
+  }
+};
+window.adminCommissionsPay = async function() {
+  if (!adminMode || !auth.currentUser || (auth.currentUser.email || "").toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
+    fbToast("Accès administrateur Firebase requis."); return;
+  }
+  const rows = (window.__commRows || []).filter(r => document.getElementById("comm_" + r.key)?.checked);
+  if (!rows.length) { fbToast("Aucune ligne cochée."); return; }
+  let done = 0, total = 0;
+  for (const r of rows) {
+    try {
+      const paid = await runTransaction(db, async (tx) => {
+        const cRef = doc(db, "commissions", r.key + "_L1");
+        const pRef = doc(db, "profiles", r.parentUid);
+        const cSnap = await tx.get(cRef);
+        if (cSnap.exists()) return 0;               // déjà payé : jamais deux fois
+        const pSnap = await tx.get(pRef);
+        if (!pSnap.exists()) return 0;
+        tx.update(pRef, { missionRewardBalance: Number(pSnap.data().missionRewardBalance || 0) + r.amount, adminCreditUpdatedAt: Date.now() });
+        tx.set(cRef, { childUid: r.childUid, parentUid: r.parentUid, level: 1, rate: 0.2, investmentId: r.invId,
+          basePrice: r.base, amount: r.amount, createdAt: Date.now(), paidBy: auth.currentUser.email });
+        tx.set(doc(db, "profiles", r.childUid), { parentId: r.parentUid, referralCommissionPaid: true }, { merge: true });
+        return r.amount;
+      });
+      if (paid) {
+        done++; total += paid;
+        const parent = state.users.find(u => String(u.uid || u.id) === r.parentUid);
+        if (parent) parent.missionRewardBalance = Number(parent.missionRewardBalance || 0) + paid;
+        const child = state.users.find(u => String(u.uid || u.id) === r.childUid);
+        if (child) child.parentId = r.parentUid;
+      }
+    } catch (e) { console.error("Versement commission:", r, e); }
+  }
+  fbToast(done + " commission(s) versée(s) : " + total.toLocaleString("fr-FR") + " FCFA.");
+  try { renderAdmin(); } catch (_) {}
+  await window.adminCommissionsPreview();
+};
 window.persistVipPlanLocks = async function(locks) {
   if (!auth.currentUser || !firebaseReady || !adminMode ||
       (auth.currentUser.email || "").toLowerCase() !== ADMIN_EMAIL_FIREBASE) {
