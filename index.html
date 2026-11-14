@@ -5621,6 +5621,9 @@ function invest(i) {
       created: Date.now(),
       email: (current.email || "").toLowerCase()
     };
+    // SECOURS TEMPORAIRE : tant que la Cloud Function createInvestment plante, on laisse investir
+    // en écriture directe (les commissions seront rattrapées par le script). Passer à false une fois la fonction réparée.
+    const ALLOW_INVEST_FALLBACK = true;
     try {
       let created = null;
       if (typeof window.createInvestmentCallable === "function") {
@@ -5629,12 +5632,21 @@ function invest(i) {
           created = result && result.data && result.data.investment;
         } catch (cfErr) {
           console.error("Cloud Function createInvestment en échec:", cfErr);
-          throw new Error((cfErr && cfErr.message) ? cfErr.message : "Le service d’investissement est momentanément indisponible. Réessayez dans quelques minutes.");
+          if (!ALLOW_INVEST_FALLBACK) {
+            throw new Error((cfErr && cfErr.message) ? cfErr.message : "Le service d’investissement est momentanément indisponible. Réessayez dans quelques minutes.");
+          }
         }
       }
       if (!created || !created.id) {
-        // Pas de contournement : sans la Cloud Function, les commissions de parrainage ne sont pas versées.
-        throw new Error("Le service d’investissement est momentanément indisponible. Réessayez dans quelques minutes.");
+        if (!ALLOW_INVEST_FALLBACK) {
+          throw new Error("Le service d’investissement est momentanément indisponible. Réessayez dans quelques minutes.");
+        }
+        if (!window.fbAuth || !window.fbAuth.currentUser) throw new Error("Session Firebase requise.");
+        if (typeof window.syncInvestmentToFirebase !== "function") {
+          throw new Error("Service d’écriture investissement indisponible.");
+        }
+        await window.syncInvestmentToFirebase(inv);
+        created = inv;
       }
       Object.assign(inv, created);
       if (!inv.daily) inv.daily = p.daily;
